@@ -1,9 +1,7 @@
 from flask import render_template,request,session,redirect
 from flask import url_for
-from app import app
+from ace import app
 from libs import api
-import dbHandler
-import satchelHandler
 
 def auth():
 	if (session['username']!=""):
@@ -14,10 +12,11 @@ def auth():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+	return render_template('landingpage.html')
 	if 'username' in session:
 		#return 'Logged in as %s' %session['username']		
 		return redirect(url_for('main'))
-
+"""
 	if request.method == 'POST':
 		cl1= request.form['uname']
 		pw1 = request.form['pword']
@@ -28,7 +27,7 @@ def index():
 		#l1=satchelHandler.authTeacher(tup1)
 		l1 = True
 		if(l1==False):
-			return render_template('studentform.html',fail="Not Found ... !")
+			return render_template('form.html',fail="Not Found ... !")
 		else:
 			session['teachername']=cl1
 			#studlist=satchelHandler.queryStudentForTeachers(cl1)
@@ -38,7 +37,7 @@ def index():
 		return redirect(url_for('main'))	
 	#return redirect(url_for('login'))
 	return render_template('landingpage.html')
-
+""""""
 
 @app.route('/debug')
 def debug():
@@ -87,11 +86,11 @@ def login():
 def loginGuest():
 	session['username'] = "guest"
 	return redirect(url_for('main'))
-"""
+
 @app.route('/fail/<errorcode>')
 def fail():
 	return render_template('fail.html',fail=errorcode)
-"""
+
 @app.route('/homepage.html')
 def main():
 	return render_template('homepage.html', name=session['username'])
@@ -146,8 +145,7 @@ def viewSatchelForStudent(studname):
 		print type(obj[0])
 		objectList.append(obj[0])
 	return render_template('studentssatchel.html', name=studname, count=count, artifactList=objectList)
-
-"""@app.route('/artifact-category.html/<tribeid>')
+@app.route('/artifact-category.html/<tribeid>')
 def queryAllArtifacts():
 	# show the user profile for that user
 	if(tribeid!=""):
@@ -156,7 +154,7 @@ def queryAllArtifacts():
 	str1="wow"
 	for myelement in mylist:
 		str1=str1+myelement['teachername']
-	return str1"""
+	return str1
 
 
 @app.route('/artifact-category.html/<tribename>')
@@ -226,3 +224,4 @@ def classAdminRender():
 @app.route('/fail')
 def fail():
 	return render_template('fail.html')
+"""
