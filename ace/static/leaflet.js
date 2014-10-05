@@ -35,8 +35,19 @@ var line_points3 = [
   ];
 
 
-var polyline_options = {
-  color: '#000'
+var polyline_options1 = {
+  color: '#000',
+  weight: 3,
+};
+
+var polyline_options2 = {
+  color: '#000',
+  weight: 2,
+};
+
+var polyline_options3 = {
+  color: '#000',
+  weight: 5,
 };
 
 
@@ -92,7 +103,7 @@ function drawGrid(map, gridCoords, grid) {
 
 	if (trans == 1) {
 		fillOp = 0;
-	}
+	};
 
 	//map.addLayer(grid);
 
@@ -204,9 +215,9 @@ function drawGrid(map, gridCoords, grid) {
         marker4 = new L.marker([point3[0], point3[1]], {icon: uberMarker}).
         bindPopup("Destination 2");
 
-        polyline1 = L.polyline(line_points1, polyline_options).addTo(map);
-        polyline2 = L.polyline(line_points2, polyline_options).addTo(map);
-        polyline3 = L.polyline(line_points3, polyline_options).addTo(map);
+        polyline1 = L.polyline(line_points1, polyline_options1).addTo(map);
+        polyline2 = L.polyline(line_points2, polyline_options2).addTo(map);
+        polyline3 = L.polyline(line_points3, polyline_options3).addTo(map);
 
         map.addLayer(marker);
         map.addLayer(marker2);
@@ -302,6 +313,7 @@ function drawGrid(map, gridCoords, grid) {
 }
 
 $('#test').click(function() {
+	trans = 1;
 	drawGrid(map, gridCoords, grid);
 	map.removeLayer(marker);
 	map.removeLayer(marker2);
