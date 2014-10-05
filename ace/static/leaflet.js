@@ -41,12 +41,12 @@ var polyline_options = {
 
 
 var uberMarker = L.icon({
-	iconUrl: 'static/uberMarker.png',
+	iconUrl: '/static/uberMarker.png',
 	iconAnchor: [25,15]
 });
 
 var uberMarkerGrey = L.icon({
-	iconUrl: 'static/uberMarkerGrey.png',
+	iconUrl: '/static/uberMarkerGrey.png',
 	iconAnchor: [25,15]
 });
 

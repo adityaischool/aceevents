@@ -28,23 +28,55 @@ def getUber():
 	url = 'https://api.uber.com/v1/estimates/price'
 	print "12312312312321312321"
 
-	parameters = {
+	parameters1 = {
 		'server_token': 'b86gyCo1Y9e5cmU40Gi9pHy5PNWmzBHMDS_TpE1W',
-		'start_latitude': 37.775818,
-		'start_longitude': -122.418028,
+		'start_latitude': 37.743254,
+		'start_longitude': -122.497206,
 		'end_latitude': 37.771212,
 		'end_longitude': -122.416767,
 	}
-	data = urllib.urlencode(parameters)
-	url = url + '?' + data
-	req = Request(url)
-	result = urlopen(req).read()
+	parameters2 = {
+		'server_token': 'b86gyCo1Y9e5cmU40Gi9pHy5PNWmzBHMDS_TpE1W',
+		'start_latitude': 37.743254,
+		'start_longitude': -122.497206,
+		'end_latitude': 37.771212,
+		'end_longitude': -122.416767,
+	}
+
+	parameters3 = {
+		'server_token': 'b86gyCo1Y9e5cmU40Gi9pHy5PNWmzBHMDS_TpE1W',
+		'start_latitude': 37.743254,
+		'start_longitude': -122.497206,
+		'end_latitude': 37.771212,
+		'end_longitude': -122.416767,
+	}
+	#37.743254,-122.497206
+	data1 = urllib.urlencode(parameters1)
+	data2 = urllib.urlencode(parameters2)
+	data3 = urllib.urlencode(parameters3)
+
+	url1 = url + '?' + data1
+	url2 = url + '?' + data2
+	url3 = url + '?' + data3
+
+	req1 = Request(url1)
+	req2 = Request(url2)
+	req3 = Request(url3)
+
+	result1 = urlopen(req1).read()
+	result2 = urlopen(req2).read()
+	result3 = urlopen(req3).read()
+
 	"""r = Payload(result)
 	response = requests.get(url, params=parameters)
 	kittens = response.read()"""
-	obj1=Payload(result)
-	return obj1.prices[3]['high_estimate']
+	obj1=Payload(result1)
+	obj3=Payload(result3)
+	obj2=Payload(result2)
 
+	sum1= int(obj1.prices[3]['high_estimate'])+int(obj2.prices[3]['high_estimate'])+int(obj3.prices[3]['high_estimate'])
+	ave1=int(sum1/3)
+	return ave1
 
 
 	#data = response.json()
