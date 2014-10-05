@@ -98,18 +98,16 @@ def addSatchelData(username,artifact_id):
 	conn.close()
 
 def addUserData():
-	conn = sqlite3.connect("app/dbase/hearstdata.db")
+	conn = sqlite3.connect("ace/dbase/eventmain.db")
 	c = conn.cursor()
 	#hearstmain (teacher text not null,student text not null,obj1 text not null,obj2 text not null,obj3 text not null	)
 	#objtoadd= [('RobinWollowski','Teacher','null','null'),('MikeAdams','Teacher','null','null'),('JimmyPage','Teacher','null','null'),('LarryKing','Teacher','null','null')]
 	#objtoadd= [('Mark','Student','null','RobinWollowski'),('Viny','Student','null','RobinWollowski'), ('Anand','Student','null','JimmyPage'), ('Bruce','Student','null','RobinWollowski'), ('Andy','Student','null','RobinWollowski'), ('Bradley','Student','null','RobinWollowski'), ('Suhen','Student','null','JimmyPage'), ('Katey','Student','null','JimmyPage'), ('Ashwin','Student','null','RobinWollowski'), ('Carlos','Student','null','JimmyPage'), ('Walt','Student','null','RobinWollowski'), ('Noah','Student','null','RobinWollowski'), ('Adams','Student','null','RobinWollowski'), ('Jacques','Student','null','RobinWollowski'), ('Alex','Student','null','MikeAdams'), ('HurtingFoot','Student','null','MikeAdams'), ('Kiddy','Student','null','MikeAdams')]
 	#entries=( teachername, studname, objid,'1','2')
-	objtoadd= [('John','Teacher','class','null'),('Amy','Student','class','John'),('Alice','Student','class','John'),('Mark','Student','class','John'), ('Ben','Student','class','John'),
-				('Warren','Student','class','John'), ('Tim','Student','class','John'), ('Penny','Student','class','John'), ('Emily','Student','class','John'), ('Judith','Student','class','John'),
-				('Diana','Student','class','John')]
+	objtoadd= [('john','pass'),('Tim','Student')]
 
-	query='insert into usermap values (?,?,?,?)'
-	c.executemany('insert into usermap values (?,?,?,?)',objtoadd)
+	query='insert into usermain values (?,?)'
+	c.executemany('insert into usermain values (?,?)',objtoadd)
 	#results = [dict(myname=row[0], fname=row[1], srcname=row[2]) for row in c.fetchall()]
 	#conn.close()
 	#return results
@@ -136,22 +134,7 @@ def addClassLogin():
 	conn.commit()
 	conn.close()
 
-def addToSatchel(tup):
-	conn = sqlite3.connect("app/dbase/hearstdata.db")
-	c = conn.cursor()
-	teachername,studname,obid=objid
-	#entries=('MRs Robin', 'Jinny', objid,'1','2')
-	entries=( tup[0], tup[1])
 
-	query='insert into hearstmain values (?,?)'
-	c.execute('insert into hearstmain values (?,?)',entries)
-	#results = [dict(myname=row[0], fname=row[1], srcname=row[2]) for row in c.fetchall()]
-	#conn.close()
-	#return results
-
-	#querytoExec="create table hearstmain (teacher text not null,student text not null,obj1 text not null,obj2 text not null,obj3 text not null	);"
-	conn.commit()
-	conn.close()
 
 def qSatchel():
 	conn = sqlite3.connect("app/dbase/hearstdata.db")
@@ -166,15 +149,30 @@ def qSatchel():
 #c.execute(query)
 #results = [dict(myname=row[0], fname=row[1], srcname=row[2]) for row in c.fetchall()]
 
+def buildMainDB():
+	conn = sqlite3.connect("ace/dbase/eventmain.db")
+	c = conn.cursor()
+	#query='select id, friendname,data from friends where id=\''+myname+'\''+'order by id desc'
+	#c.execute(query)
+	#results = [dict(myname=row[0], fname=row[1], srcname=row[2]) for row in c.fetchall()]
+	#conn.close()
+	#return results
+
+	querytoExec="create table usermain (username not null, password not null);"
+	c.execute(querytoExec)
+	conn.commit()
+	conn.close()
+
+
 if __name__ == '__main__':
 	"""addTable("")
 	addMappingTable("")
 	createClassLoginTable("")
 	addUserData()conn.cursor()"""
-	qSatchel()
+	#qSatchel()
 	#conn.close()
 	#return results
-
+	addUserData()
 	
 	#addMappingTable("not")
 	"""d= getBuds('aditya')
