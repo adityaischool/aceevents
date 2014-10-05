@@ -18,7 +18,7 @@ def index():
 @app.route('/leaflet', methods=['GET', 'POST'])
 def leaflet():
 	grid=gridCalculator.initMap()
-	listmap=eventbrite.GetEventsWrapper(listmap)
+	listmap=eventbrite.GetEventsWrapper(grid)
 	return render_template('leaflet.html',grid=grid,listmap=listmap)
 	"""if 'username' in session:
 		#return 'Logged in as %s' %session['username']		

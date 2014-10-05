@@ -5,30 +5,64 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 var grid = new L.featureGroup();
+var rects = new L.featureGroup();
+var root = [37.742255, -122.494016];
+var point1 = [37.791757, -122.414597];
+var point2 = [37.767335, -122.416314];
+var point3 = [37.787687, -122.400178];
 //var ebEvents = new L.featureGroup();
+
+var line_points1 = [
+      [37.742255, -122.494016],
+      [37.791757, -122.414597]
+  ];
+
+var line_points2 = [
+      [37.742255, -122.494016],
+      [37.767335, -122.416314]
+  ];
+
+var line_points3 = [
+      [37.742255, -122.494016],
+      [37.787687, -122.400178]
+  ];
+
+  // Define polyline options
+  // http://leafletjs.com/reference.html#polyline
+  var polyline_options = {
+      color: '#000'
+  };
+
+  // Defining a polygon here instead of a polyline will connect the
+  // endpoints and fill the path.
+  // http://leafletjs.com/reference.html#polygon
+  
 
 
 var gridCoords = [[[37.81, -122.5155], [37.81, -122.47891125000001], [37.7833015, -122.5155], [37.7833015, -122.47891125000001]], [[37.81, -122.47891125000001], [37.81, -122.4423225], [37.7833015, -122.47891125000001], [37.7833015, -122.4423225]], [[37.81, -122.4423225], [37.81, -122.40573375], [37.7833015, -122.4423225], [37.7833015, -122.40573375]], [[37.81, -122.40573375], [37.81, -122.369145], [37.7833015, -122.40573375], [37.7833015, -122.369145]], [[37.7833015, -122.5155], [37.7833015, -122.47891125000001], [37.756603, -122.5155], [37.756603, -122.47891125000001]], [[37.7833015, -122.47891125000001], [37.7833015, -122.4423225], [37.756603, -122.47891125000001], [37.756603, -122.4423225]], [[37.7833015, -122.4423225], [37.7833015, -122.40573375], [37.756603, -122.4423225], [37.756603, -122.40573375]], [[37.7833015, -122.40573375], [37.7833015, -122.369145], [37.756603, -122.40573375], [37.756603, -122.369145]], [[37.756603, -122.5155], [37.756603, -122.47891125000001], [37.7299045, -122.5155], [37.7299045, -122.47891125000001]], [[37.756603, -122.47891125000001], [37.756603, -122.4423225], [37.7299045, -122.47891125000001], [37.7299045, -122.4423225]], [[37.756603, -122.4423225], [37.756603, -122.40573375], [37.7299045, -122.4423225], [37.7299045, -122.40573375]], [[37.756603, -122.40573375], [37.756603, -122.369145], [37.7299045, -122.40573375], [37.7299045, -122.369145]], [[37.7299045, -122.5155], [37.7299045, -122.47891125000001], [37.703206, -122.5155], [37.703206, -122.47891125000001]], [[37.7299045, -122.47891125000001], [37.7299045, -122.4423225], [37.703206, -122.47891125000001], [37.703206, -122.4423225]], [[37.7299045, -122.4423225], [37.7299045, -122.40573375], [37.703206, -122.4423225], [37.703206, -122.40573375]], [[37.7299045, -122.40573375], [37.7299045, -122.369145], [37.703206, -122.40573375], [37.703206, -122.369145]]];
 
-var ebEventCoords = [[37.80100, -122.49], [37.7914, -122.48]];
+var ebEvents = [[37.80100, -122.49], [37.7914, -122.48], [37.758650, -122.425927], [37.742905, -122.480515], [37.731231, -122.473649], [37.747792, -122.440690], [37.758542, -122.439964]];
 
 function drawGrid(map, gridCoords, grid) {
 
 	var polyindex = 0;
 
-	map.addLayer(grid);
+	//map.addLayer(grid);
 
 	rectangle1 = new L.rectangle([gridCoords[0][0], gridCoords[0][3]]);
-	grid.addLayer(rectangle1);
+	rects.addLayer(rectangle1);
+	//grid.addLayer(rectangle1);
 	rectangle1.on("click", function (e) {
 		var bounds = rectangle1.getBounds();
+		//rectangle1.addLayer(ebEvents1);
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
 	});
 
 	rectangle2 = new L.rectangle([gridCoords[1][0], gridCoords[1][3]]);
-	grid.addLayer(rectangle2);
+	rects.addLayer(rectangle2);
+	//grid.addLayer(rectangle2);
 	rectangle2.on("click", function (e) {
 		var bounds = rectangle2.getBounds();
         console.log(bounds);
@@ -37,7 +71,8 @@ function drawGrid(map, gridCoords, grid) {
 	});
 
 	rectangle3 = new L.rectangle([gridCoords[2][0], gridCoords[2][3]]);
-	grid.addLayer(rectangle3);
+	rects.addLayer(rectangle3);
+	//grid.addLayer(rectangle3);
 	rectangle3.on("click", function (e) {
 		var bounds = rectangle3.getBounds();
         console.log(bounds);
@@ -46,7 +81,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle4 = new L.rectangle([gridCoords[3][0], gridCoords[3][3]]);
-	grid.addLayer(rectangle4);
+	rects.addLayer(rectangle4);
+	//grid.addLayer(rectangle4);
 	rectangle4.on("click", function (e) {
 		var bounds = rectangle4.getBounds();
         console.log(bounds);
@@ -55,7 +91,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle5 = new L.rectangle([gridCoords[4][0], gridCoords[4][3]]);
-	grid.addLayer(rectangle5);
+	rects.addLayer(rectangle5);
+	//grid.addLayer(rectangle5);
 	rectangle5.on("click", function (e) {
 		var bounds = rectangle5.getBounds();
         console.log(bounds);
@@ -64,7 +101,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle6 = new L.rectangle([gridCoords[5][0], gridCoords[5][3]]);
-	grid.addLayer(rectangle6);
+	rects.addLayer(rectangle6);
+	//grid.addLayer(rectangle6);
 	rectangle6.on("click", function (e) {
 		var bounds = rectangle6.getBounds();
         console.log(bounds);
@@ -73,7 +111,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle7 = new L.rectangle([gridCoords[6][0], gridCoords[6][3]]);
-	grid.addLayer(rectangle7);
+	rects.addLayer(rectangle7);
+	//grid.addLayer(rectangle7);
 	rectangle7.on("click", function (e) {
 		var bounds = rectangle7.getBounds();
         console.log(bounds);
@@ -82,7 +121,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle8 = new L.rectangle([gridCoords[7][0], gridCoords[7][3]]);
-	grid.addLayer(rectangle8);
+	rects.addLayer(rectangle8);
+	//grid.addLayer(rectangle8);
 	rectangle8.on("click", function (e) {
 		var bounds = rectangle8.getBounds();
         console.log(bounds);
@@ -91,16 +131,34 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle9 = new L.rectangle([gridCoords[8][0], gridCoords[8][3]]);
-	grid.addLayer(rectangle9);
+	rects.addLayer(rectangle9);
+	//grid.addLayer(rectangle9);
 	rectangle9.on("click", function (e) {
 		var bounds = rectangle9.getBounds();
         console.log(bounds);
+        marker = new L.marker([root[0], root[1]]);
+        marker2 = new L.marker([point1[0], point1[1]]);
+        marker3 = new L.marker([point2[0], point2[1]]);
+        marker4 = new L.marker([point3[0], point3[1]]);
+
+        polyline1 = L.polyline(line_points1, polyline_options).addTo(map);
+        polyline2 = L.polyline(line_points2, polyline_options).addTo(map);
+        polyline3 = L.polyline(line_points3, polyline_options).addTo(map);
+
+        map.addLayer(marker);
+        map.addLayer(marker2);
+        map.addLayer(marker3);
+        map.addLayer(marker4);
+
+        console.log(rects);
+        map.removeLayer(rects);
                 //map.setCenter();
-        map.fitBounds(bounds);
+        //map.fitBounds(bounds);
 	}); 
 
 	rectangle10 = new L.rectangle([gridCoords[9][0], gridCoords[9][3]]);
-	grid.addLayer(rectangle10);
+	rects.addLayer(rectangle10);
+	//grid.addLayer(rectangle10);
 	rectangle10.on("click", function (e) {
 		var bounds = rectangle10.getBounds();
         console.log(bounds);
@@ -109,7 +167,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle11 = new L.rectangle([gridCoords[10][0], gridCoords[10][3]]);
-	grid.addLayer(rectangle11);
+	rects.addLayer(rectangle11);
+	//grid.addLayer(rectangle11);
 	rectangle11.on("click", function (e) {
 		var bounds = rectangle11.getBounds();
         console.log(bounds);
@@ -118,7 +177,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle12 = new L.rectangle([gridCoords[11][0], gridCoords[11][3]]);
-	grid.addLayer(rectangle12);
+	rects.addLayer(rectangle12);
+	//grid.addLayer(rectangle12);
 	rectangle12.on("click", function (e) {
 		var bounds = rectangle12.getBounds();
         console.log(bounds);
@@ -127,7 +187,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle13 = new L.rectangle([gridCoords[12][0], gridCoords[12][3]]);
-	grid.addLayer(rectangle13);
+	rects.addLayer(rectangle13);	
+	//grid.addLayer(rectangle13);
 	rectangle13.on("click", function (e) {
 		var bounds = rectangle13.getBounds();
         console.log(bounds);
@@ -136,7 +197,8 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle14 = new L.rectangle([gridCoords[13][0], gridCoords[13][3]]);
-	grid.addLayer(rectangle14);
+	rects.addLayer(rectangle14);
+	//grid.addLayer(rectangle14);
 	rectangle14.on("click", function (e) {
 		var bounds = rectangle14.getBounds();
         console.log(bounds);
@@ -145,24 +207,41 @@ function drawGrid(map, gridCoords, grid) {
 	}); 
 
 	rectangle15 = new L.rectangle([gridCoords[14][0], gridCoords[14][3]]);
-	grid.addLayer(rectangle15);
+	rects.addLayer(rectangle15);
+	//grid.addLayer(rectangle15);
 	rectangle15.on("click", function (e) {
 		var bounds = rectangle15.getBounds();
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-	}); 
+	});
 
 	rectangle16 = new L.rectangle([gridCoords[15][0], gridCoords[15][3]]);
-	grid.addLayer(rectangle16);
+	rects.addLayer(rectangle16);
+	//grid.addLayer(rectangle16);
 	rectangle16.on("click", function (e) {
 		var bounds = rectangle16.getBounds();
         console.log(bounds);
+        console.log(rectangle16.getBounds().contains(ebEvents[0][0], ebEvents[0][1]));
                 //map.setCenter();
         map.fitBounds(bounds);
 	}); 
 
+
+	map.addLayer(rects);
 }
+
+$('#test').click(function() {
+	drawGrid(map, gridCoords, grid);
+	map.removeLayer(marker);
+	map.removeLayer(marker2);
+	map.removeLayer(marker3);
+	map.removeLayer(marker4);
+	map.removeLayer(polyline1);
+	map.removeLayer(polyline2);
+	map.removeLayer(polyline3);
+	//grid.removeLayer();
+});
 
 function drawEbEvents(map, eventCoords, events) {
 
@@ -187,6 +266,8 @@ drawGrid(map, gridCoords, grid);
 //drawEbEvents(map, ebEventCoords, ebEvents);
 
 map.fitBounds(grid.getBounds());
+
+
 /*var circle = L.circle([0, 0], 1000, {
     color: '#0000ff',
     fillColor: '#0000ff',
