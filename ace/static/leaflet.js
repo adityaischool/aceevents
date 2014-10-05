@@ -52,12 +52,12 @@ var polyline_options3 = {
 
 
 var uberMarker = L.icon({
-	iconUrl: 'static/uberMarker.png',
+	iconUrl: '/static/uberMarker.png',
 	iconAnchor: [25,15]
 });
 
 var uberMarkerGrey = L.icon({
-	iconUrl: 'static/uberMarkerGrey.png',
+	iconUrl: '/static/uberMarkerGrey.png',
 	iconAnchor: [25,15]
 });
 
@@ -138,9 +138,14 @@ function drawGrid(map, gridCoords, grid) {
 	//grid.addLayer(rectangle3);
 	rectangle3.on("click", function (e) {
 		var bounds = rectangle3.getBounds();
-        console.log(bounds);
-                //map.setCenter();
+        console.log("9080");
         map.fitBounds(bounds);
+        $.getJSON('/_getData', {
+
+          a: $('input[name="a"]').val(),
+        }, function(data) {
+          $("#data").text(data.result);
+        });
 	}); 
 
 	rectangle4 = new L.rectangle([gridCoords[3][0], gridCoords[3][3]]);
@@ -226,6 +231,14 @@ function drawGrid(map, gridCoords, grid) {
 
         console.log(rects);
         map.removeLayer(rects);
+        $.getJSON('/_getData', {
+
+          a: $('input[name="a"]').val(),
+        }, function(data) {
+        	var x=data.result;
+        	
+          $("#data").text(data.result);
+        });
                 //map.setCenter();
         //map.fitBounds(bounds);
 	}); 
