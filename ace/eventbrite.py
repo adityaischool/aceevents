@@ -19,7 +19,7 @@ def GetEvents(x,y,rad):
 	capacityTotal = 0
 	events={}
 
-	for i in range(len(o.events)):
+	for i in range(len(obj.events)):
 		events['name'] = obj.events[i]['name']['html']
 		events['capacity'] = obj.events[i]['capacity']
 		events['venue'] = obj.events[i]['venue']['name']
