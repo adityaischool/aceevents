@@ -1,8 +1,9 @@
-from flask import render_template,request,session,redirect
+from flask import render_template,request,session,redirect,jsonify
 from flask import url_for
 from ace import app
 import gridCalculator
 import eventbrite
+import uber
 
 def auth():
 	if (session['username']!=""):
@@ -13,14 +14,24 @@ def auth():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-	return render_template('landingpage.html')
+	return render_template('index.html')
 
 @app.route('/leaflet', methods=['GET', 'POST'])
 def leaflet():
 	grid=gridCalculator.initMap()
 	listmap=eventbrite.GetEventsWrapper(grid)
 	return render_template('leaflet.html',grid=grid,listmap=listmap)
-	"""if 'username' in session:
+
+@app.route('/_getData')
+def getUber():
+	#a = request.args.get('a', 0, type=int)
+	val=uber.getUber()
+	print "----------------------jsonify----",val
+	return jsonify(result=val) 
+	print "called!!!!"
+	#b = request.args.get('b', 0, type=int)
+		#return jsonify(result=a + b)
+"""		if 'username' in session:
 		#return 'Logged in as %s' %session['username']		
 		return redirect(url_for('main'))
 """"""

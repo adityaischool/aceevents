@@ -1,0 +1,12 @@
+App Parameters
+Client ID
+
+27KiFnCepSKB3sEGqWSx1DFSOTEFSPEr
+
+Server Token
+
+b86gyCo1Y9e5cmU40Gi9pHy5PNWmzBHMDS_TpE1W
+
+Secret
+
+NOxrwJtMSo6OpiQ2RUoera5zSxdKGYqMEwIBGGi8
