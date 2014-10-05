@@ -11,10 +11,11 @@ smallGridCorners = []
 
 
 def main():
-	getBigGridMid(bigGridCorners)
+	#getBigGridMid(bigGridCorners)
 	calcIncrements(bigGridCorners)
 	calcSmallGridLatsLongs(bigGridCorners)
 	calcSmallGridCorners(smallGridLats, smallGridLongs)
+	getBigGridMid(smallGridCorners[8])
 
 def getBigGridMid(corners):
 	
@@ -22,8 +23,8 @@ def getBigGridMid(corners):
 	bigGridLatMid = (corners[1][0] + corners[2][0]) / 2
 	bigGridLongMid = (corners[0][1] + corners[1][1]) / 2
 
-	#print "bigGridLatMid = ", str(bigGridLatMid)
-	#print "bigGridLongMid = ", str(bigGridLongMid)
+	print "bigGridLatMid = ", str(bigGridLatMid)
+	print "bigGridLongMid = ", str(bigGridLongMid)
 
 def calcIncrements(corners):
 	global latIncrement, longIncrement

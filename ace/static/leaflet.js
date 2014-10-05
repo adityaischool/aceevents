@@ -325,7 +325,7 @@ function drawGrid(map, gridCoords, grid) {
 	map.addLayer(rects);
 }
 
-$('#test').click(function() {
+$('#reset').click(function() {
 	trans = 1;
 	drawGrid(map, gridCoords, grid);
 	map.removeLayer(marker);
