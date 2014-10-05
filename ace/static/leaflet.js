@@ -11,6 +11,8 @@ var point1 = [37.791757, -122.429597];
 var point2 = [37.760335, -122.416314];
 var point3 = [37.787687, -122.400178];
 
+var trans = 0;
+
 var gridDensities = [1, 2, 1, 4,
 					3, 5, 6, 6,
 					2, 1, 4, 1,
@@ -87,6 +89,10 @@ function gridColor(rect, density) {
 function drawGrid(map, gridCoords, grid) {
 
 	var fillOp = .4;
+
+	if (trans == 1) {
+		fillOp = 0;
+	}
 
 	//map.addLayer(grid);
 
@@ -186,12 +192,17 @@ function drawGrid(map, gridCoords, grid) {
 	rectangle9.setStyle({fillOpacity: fillOp, stroke: false, fillColor: gridColor(rectangle9, gridDensities[8])});
 	//grid.addLayer(rectangle9);
 	rectangle9.on("click", function (e) {
+		trans = 1;
 		var bounds = rectangle9.getBounds();
         console.log(bounds);
-        marker = new L.marker([root[0], root[1]], {icon: uberMarkerGrey});
-        marker2 = new L.marker([point1[0], point1[1]], {icon: uberMarker});
-        marker3 = new L.marker([point2[0], point2[1]], {icon: uberMarker});
-        marker4 = new L.marker([point3[0], point3[1]], {icon: uberMarker});
+        marker = new L.marker([root[0], root[1]], {icon: uberMarkerGrey}).
+        bindPopup("Event X");
+        marker2 = new L.marker([point1[0], point1[1]], {icon: uberMarker}).
+        bindPopup("Destination 1");
+        marker3 = new L.marker([point2[0], point2[1]], {icon: uberMarker}).
+        bindPopup("Destination 3");
+        marker4 = new L.marker([point3[0], point3[1]], {icon: uberMarker}).
+        bindPopup("Destination 2");
 
         polyline1 = L.polyline(line_points1, polyline_options).addTo(map);
         polyline2 = L.polyline(line_points2, polyline_options).addTo(map);
