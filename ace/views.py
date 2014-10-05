@@ -1,7 +1,6 @@
 from flask import render_template,request,session,redirect
 from flask import url_for
 from ace import app
-from libs import api
 
 def auth():
 	if (session['username']!=""):
@@ -13,10 +12,14 @@ def auth():
 @app.route('/', methods=['GET', 'POST'])
 def index():
 	return render_template('landingpage.html')
-	if 'username' in session:
+
+@app.route('/leaflet', methods=['GET', 'POST'])
+def leaflet():
+	return render_template('leaflet.html')
+	"""if 'username' in session:
 		#return 'Logged in as %s' %session['username']		
 		return redirect(url_for('main'))
-"""
+""""""
 	if request.method == 'POST':
 		cl1= request.form['uname']
 		pw1 = request.form['pword']

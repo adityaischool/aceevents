@@ -1,0 +1,80 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+        
+        <!--<script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>-->
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+        <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'></link>
+        <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>-->
+        
+        
+        
+        
+        <style type="text/css">
+            body {
+            font-family: 'Roboto', sans-serif;
+            }
+            #map {
+            height: 600px;
+            }
+            
+            #pan, #new_quake {
+            position: absolute;
+            z-index: 10;
+            width: 100%;
+            height: 2em;
+            top: 105%;
+            background-color: #ffffff;
+            color: black;
+            border-radius: 5px;
+            }
+            
+            #new_quake {
+            display: none;
+            top: 122%;
+            }
+            
+            #pan:hover, #new_quake:hover {
+            color: #0000ff;
+            font-weight: bold;
+            }
+            
+            #quake_list_shell {
+            position: fixed;
+            z-index: 11;
+            width: 30%;
+            left: 69%;
+            top: 5%;
+            background-color: white;
+            border-radius: 5px;
+            font-size: 12px;
+            }
+            
+            .place:hover {
+            color: blue;
+            font-weight: bold;
+            }
+        </style>
+    </head>
+    
+    <body>
+        
+        <div id='map'></div>
+        
+        <div id='quake_list_shell'>
+            <button id='pan'>Go To Largest Quake</button>
+            <!--<button id='new_quake'>New Quake! Click to Visit</button>-->
+            <ol id='quake_list'>
+                
+            </ol>
+        </div>
+        
+        
+        
+        
+    </body>
+    <script type="text/javascript" src="leaflet.js"></script> 
+    
+</html>

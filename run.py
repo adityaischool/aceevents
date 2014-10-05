@@ -1,5 +1,5 @@
 #!flask/bin/python
-from app import app
-from app import views
+from ace import app
+from ace import views
 
 app.run(debug = True)
