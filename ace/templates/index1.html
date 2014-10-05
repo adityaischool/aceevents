@@ -15,6 +15,9 @@
 		  padding-top: 50px;
 		}
 		
+		#test{
+			
+		}
 		.map_container {
 		  padding: 40px 15px;
 		  text-align: center;
@@ -22,9 +25,7 @@
 		  border-radius: 17px;
 		  width: 800px;
 		  height: 550px;
-		  float: left;
 		}
-		
 		#map{
 		  height: 550px;
 		  width: 800px;
@@ -52,57 +53,6 @@
 		max-width: 100%;
 		max-height: 100%;
 		}
-		
-		.daynavcontainer {
-		display: absolute;
-		background-color: #ffffff;
-		z-index: 1000;
-		height: 40px;
-		left: 55%;
-		top: 20%;
-		border: 0 solid white;
-		}
-		
-		#timenavcontainer {
-		display: absolute;
-		background-color: #ffffff;
-		z-index: 1000;
-		height: 40px;
-		left: 25%;
-		top: 80%;
-		border: 0 solid white;
-		}
-		
-		#daynav, #timenav {
-		max-width: 100%;
-		max-height: 100%;
-		}
-		
-		.data{
-		float: left;
-		text-align:center;
-		margin-top:10%;
-		margin-left:5%;
-		font-size:24px;
-		color:#009900;
-		border: 2px solid #009900;
-		}
-		
-		#amt {
-		font-size: 36px;
-		}
-		
-		ul {
-		list-style-type: none;
-		text-align: center;
-		margin-right: 10px;
-		}
-		
-		.list {
-		left: -10%;
-		}
-		
-		
 		
 	</style>
 
@@ -132,46 +82,29 @@
 	</div>
 	
 	
-	
 
 	<div class="container">
-		
 		<div class="map_container">
-			<button class="daynavcontainer"><img id="daynav" src="/static/devexDayNav.png"</img></button>
-			
 			<div id="map"></div>
-			
 			<button id="reset">EVDEX NOW</button>
 			
-			
-			<button id="timenavcontainer"><img id="timenav" src="/static/devexTimeNav.png"</img></button>
 		</div>
 		
-		<div class="data">
+		<div class="data" style="float: left;text-align:center;margin-top:10%;margin-left:10%;font-size:32px;color:#009900" >
 			<div id="amt">$ Per Ride</div>
-
+			
 			<div id="data"></div>
-			
-			<div class="sidebar">
-				<ul>
-					<li class="list">Route 2: $70</li>
-					<li class="list">Route 3: $48</li>
-				</ul>
-			</div>
-			
-			
-			
-
-			
-		</div>
 	</div>
+	</div>
+	
+	
 
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-	<script src="/static/leaflet.js"></script>
+	<script src="./static/leaflet.js"></script>
 	
 </body>
 </html>
