@@ -1,5 +1,5 @@
 #bigGridCorners are SF bounding box corner coords going from top-left then clockwise
-bigGridCorners = [[37.836698500000004, -122.515500], [37.836698500000004, -122.369145], [37.703206, -122.515500], [37.703206, -122.369145]]
+bigGridCorners = [[37.810000, -122.515500], [37.810000, -122.369145], [37.703206, -122.515500], [37.703206, -122.369145]]
 
 smallGridLats = []
 smallGridLongs = []
@@ -59,29 +59,19 @@ def calcSmallGridCorners(lats, longs):
 	latStart = bigGridCorners[0][0]
 	longStart = bigGridCorners[0][1]
 
-	#for i in range(16):
-	#	smallGridCorners.append([])
-
 	for i in range(16):
 		row = i / 4
 		points = [[0,0], [0,0], [0,0], [0,0]]
 
 		i2 = i % 4
 
-		points[0] = [latStart + row * latIncrement, longStart + i2 * longIncrement]
-		points[1] = [latStart + row * latIncrement, longStart + (i2 + 1) * longIncrement]
-		points[2] = [latStart + (row + 1) * latIncrement, longStart + i2 * longIncrement]
-		points[3] = [latStart + (row + 1) * latIncrement, longStart + (i2 + 1) * longIncrement]
-
-		#val1x=(bigGridCorners[0][0] - (row*latIncrement)) - (row*latIncrement)
-		#val1y=(bigGridCorners[0][1] - (row*longIncrement)) - (col*longIncrement)
+		points[0] = [latStart - row * latIncrement, longStart - i2 * longIncrement]
+		points[1] = [latStart - row * latIncrement, longStart - (i2 + 1) * longIncrement]
+		points[2] = [latStart - (row + 1) * latIncrement, longStart - i2 * longIncrement]
+		points[3] = [latStart - (row + 1) * latIncrement, longStart - (i2 + 1) * longIncrement]
 
 		smallGridCorners.append(points)
 
-	#for i in smallGridCorners:
-	#	print "Grid", str(i), ":",
-	#	for i2 in i:
-	#		print str(i[i2])
 	print "smallGridCorners = ", smallGridCorners
 
 
