@@ -1,20 +1,10 @@
 #bigGridCorners are SF bounding box corner coords going from top-left then clockwise
-bigGridCorners = [[37.810000, -122.515500], [37.810000, -122.369145], [37.703206, -122.515500], [37.703206, -122.369145]]
-
-smallGridLats = []
-smallGridLongs = []
-
-latIncrement = 0
-longIncrement = 0
-
-smallGridCorners = []
-
-
 def main():
 	getBigGridMid(bigGridCorners)
 	calcIncrements(bigGridCorners)
 	calcSmallGridLatsLongs(bigGridCorners)
-	calcSmallGridCorners(smallGridLats, smallGridLongs)
+	grid=calcSmallGridCorners(smallGridLats, smallGridLongs)
+	return grid
 
 def getBigGridMid(corners):
 	
@@ -73,8 +63,20 @@ def calcSmallGridCorners(lats, longs):
 		smallGridCorners.append(points)
 
 	print "smallGridCorners = ", smallGridCorners
+	return smallGridCorners
 
+bigGridCorners = [[37.810000, -122.515500], [37.810000, -122.369145], [37.703206, -122.515500], [37.703206, -122.369145]]
+smallGridLats = []
+smallGridLongs = []
 
+latIncrement = 0
+longIncrement = 0
+
+smallGridCorners = []
+def initMap():
 	
-if __name__ == '__main__':
-	main()
+	print "In init masp"
+
+
+	grid=main()
+	return grid

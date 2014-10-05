@@ -1,6 +1,8 @@
 from flask import render_template,request,session,redirect
 from flask import url_for
 from ace import app
+import gridCalculator
+import eventbrite
 
 def auth():
 	if (session['username']!=""):
@@ -15,7 +17,9 @@ def index():
 
 @app.route('/leaflet', methods=['GET', 'POST'])
 def leaflet():
-	return render_template('leaflet.html')
+	grid=gridCalculator.initMap()
+	listmap=eventbrite.GetEventsWrapper(listmap)
+	return render_template('leaflet.html',grid=grid,listmap=listmap)
 	"""if 'username' in session:
 		#return 'Logged in as %s' %session['username']		
 		return redirect(url_for('main'))
