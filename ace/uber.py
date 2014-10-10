@@ -32,23 +32,23 @@ def getUber():
 		'server_token': 'b86gyCo1Y9e5cmU40Gi9pHy5PNWmzBHMDS_TpE1W',
 		'start_latitude': 37.743254,
 		'start_longitude': -122.497206,
-		'end_latitude': 37.771212,
-		'end_longitude': -122.416767,
+		'end_latitude': 37.795999, 
+		'end_longitude': -122.427312,
 	}
 	parameters2 = {
 		'server_token': 'b86gyCo1Y9e5cmU40Gi9pHy5PNWmzBHMDS_TpE1W',
 		'start_latitude': 37.743254,
 		'start_longitude': -122.497206,
-		'end_latitude': 37.771212,
-		'end_longitude': -122.416767,
+		'end_latitude': 37.787289, 
+		'end_longitude': -122.411143,
 	}
 
 	parameters3 = {
 		'server_token': 'b86gyCo1Y9e5cmU40Gi9pHy5PNWmzBHMDS_TpE1W',
 		'start_latitude': 37.743254,
 		'start_longitude': -122.497206,
-		'end_latitude': 37.771212,
-		'end_longitude': -122.416767,
+		'end_latitude': 37.797463,
+		'end_longitude':  -122.413546,
 	}
 	#37.743254,-122.497206
 	data1 = urllib.urlencode(parameters1)

@@ -9,7 +9,7 @@ def GetEvents(x,y,rad):
 	request = Request('https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km')
 	obj1=''
 	print "000000000000000000000000000000000000000",'https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km'
-	print "JUMBA LAAAYOO", request
+	print  request
 	try:
 		response = urlopen(request)
 		kittens = response.read()
