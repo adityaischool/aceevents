@@ -14,7 +14,8 @@ def GetEvents(x,y,rad):
 		response = urlopen(request)
 		kittens = response.read()
 		obj1=Payload(kittens)
-		print "1231@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#@!#!@#@!#-                     ",obj1
+		print " ---- PAYLOAD --------------                    ",str(obj1)
+		print "-------------------------OBJ LENGTH-------------------------------",len(obj1.events)
 		#print kittens[559:1000]
 	except URLError, e:
 	    print 'No kittez. Got an error code:', e
@@ -24,21 +25,26 @@ def GetEvents(x,y,rad):
 	events={}
 
 	for i in range(len(obj1.events)):
+		events={}
 		events['name'] = obj1.events[i]['name']['html']
 		events['capacity'] = obj1.events[i]['capacity']
 		events['venue'] = obj1.events[i]['venue']['name']
-		events['latitude'] = obj1.events[i]['venue']['latitude']
-		events['longitude'] = obj1.events[i]['venue']['longitude']
+		eventList.append(events)
+		capacityTotal += obj1.events[i]['capacity']
 
 
-	for i in range(len(obj.events)):
+		#events['latitude'] = obj1.events[i]['venue']['latitude']
+		#events['longitude'] = obj1.events[i]['venue']['longitude']
+
+
+	"""for i in range(len(obj.events)):
 		events['name'] = obj.events[i]['name']['html']
 		events['capacity'] = obj.events[i]['capacity']
 		events['venue'] = obj.events[i]['venue']['name']
 		events['latitude'] = obj.events[i]['venue']['latitude']
 		events['longitude'] = obj.events[i]['venue']['longitude']
 		eventList.append(events)
-		capacityTotal += obj1.events[i]['capacity']
+		capacityTotal += obj1.events[i]['capacity']"""
 	
 	return (eventList,capacityTotal)
 

@@ -4,45 +4,6 @@ L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-var gridDensities = [];
-
-Object.size = function(obj) {
-	var size = 0, key;
-	for (key in obj) {
-		if (obj.hasOwnProperty(key)) size++;
-	}
-	return size;
-};
-
-var events = $.getJSON('/_getEbData', {
-
-		
-
-          a: $('input[name="a"]').val(),
-        }, function(data) {
-        	console.log('-----------TEST---------');
-        	console.log(data);
-
-        	var size=Object.size(data);
-        	//console.log(data.result[0][0].capacity);
-        	//console.log('total capacity:'+data.result[1]);
-        	
-          //$("#data").text(data.result[1
-
-        	for (var i=0; i < size; i++) {
-        		console.log(data[i][1]);
-        		gridDensities.push(data[i][1]);
-        		console.log(gridDensities);
-        	};   
-
-        	console.log(gridDensities);
-        	drawGrid(map, gridCoords, grid);
-
-
-
-
-});
-
 var grid = new L.featureGroup();
 var rects = new L.featureGroup();
 var root = [37.742255, -122.494016];
@@ -52,6 +13,10 @@ var point3 = [37.787687, -122.400178];
 
 var trans = 0;
 
+var gridDensities = [1, 2, 1, 4,
+					3, 5, 6, 6,
+					2, 1, 4, 1,
+					1, 1, 2, 1];
 
 
 var line_points1 = [
@@ -103,43 +68,36 @@ var ebEvents = [[37.80100, -122.49], [37.7914, -122.48], [37.758650, -122.425927
 
 function gridColor(rect, density) {
 	var gridColors = ['#ffff4d', '#ffff00', '#ff944d', 
-					'#ff6600', '#FF3333', '#ff0000', '#ff44ff']
+					'#ff6600', '#FF3333', '#ff0000']
 
-		if (density >= 0 && density < 250) {
+		if (density == 1) {
 			return gridColors[0]
 		}
 
-		else if (density >= 250 && density < 500) {
+		else if (density == 2) {
 			return gridColors[1]
 		}
 
-		else if (density >= 500 && density < 1000) {
+		else if (density == 3) {
 			return gridColors[2]
 		}
 
-		else if (density >= 1000 && density < 5000) {
+		else if (density == 4) {
 			return gridColors[3]
 		}
 
-		else if (density >= 5000 && density < 10000) {
+		else if (density == 5) {
 			return gridColors[4]
 		}
 
-		else if (density >= 10000 && density < 30000) {
+		else if (density == 6) {
 			return gridColors[5]
-		}
-
-		else if (density >= 30000) {
-			return gridColors[6]
 		}
 }
 
 
-var tempRect = new L.featureGroup();
 
 function drawGrid(map, gridCoords, grid) {
-
-
 
 	var fillOp = .4;
 
@@ -156,24 +114,10 @@ function drawGrid(map, gridCoords, grid) {
 	//grid.addLayer(rectangle1);
 	rectangle1.on("click", function (e) {
 		var bounds = rectangle1.getBounds();
+		//rectangle1.addLayer(ebEvents1);
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle1);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle1);
 	});
 
 	//rectangle1.setStyle({fillColor: '#FF0000'});
@@ -187,21 +131,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle2);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle2);
 	});
 
 	rectangle3 = new L.rectangle([gridCoords[2][0], gridCoords[2][3]]);
@@ -210,25 +139,8 @@ function drawGrid(map, gridCoords, grid) {
 	//grid.addLayer(rectangle3);
 	rectangle3.on("click", function (e) {
 		var bounds = rectangle3.getBounds();
-        console.log(bounds);
-                //map.setCenter();
+        console.log("9080");
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle3);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle3);
-
         $.getJSON('/_getData', {
 
           a: $('input[name="a"]').val(),
@@ -246,21 +158,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle4);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle4);
 	}); 
 
 	rectangle5 = new L.rectangle([gridCoords[4][0], gridCoords[4][3]]);
@@ -272,21 +169,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle5);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle5);
 	}); 
 
 	rectangle6 = new L.rectangle([gridCoords[5][0], gridCoords[5][3]]);
@@ -298,21 +180,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle6);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle6);
 	}); 
 
 	rectangle7 = new L.rectangle([gridCoords[6][0], gridCoords[6][3]]);
@@ -324,21 +191,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle7);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle7);
 	}); 
 
 	rectangle8 = new L.rectangle([gridCoords[7][0], gridCoords[7][3]]);
@@ -350,21 +202,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle8);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle8);
 	}); 
 
 	rectangle9 = new L.rectangle([gridCoords[8][0], gridCoords[8][3]]);
@@ -373,9 +210,9 @@ function drawGrid(map, gridCoords, grid) {
 	//grid.addLayer(rectangle9);
 	rectangle9.on("click", function (e) {
 		trans = 1;
-		//var bounds = grid.getBounds();
-        //console.log(bounds);
-        /*marker = new L.marker([root[0], root[1]], {icon: uberMarkerGrey}).
+		var bounds = grid.getBounds();
+        console.log(bounds);
+        marker = new L.marker([root[0], root[1]], {icon: uberMarkerGrey}).
         bindPopup("Event X").addTo(map);
         marker2 = new L.marker([point1[0], point1[1]], {icon: uberMarker}).
         bindPopup("Destination 1");
@@ -393,28 +230,10 @@ function drawGrid(map, gridCoords, grid) {
         map.addLayer(marker);
         map.addLayer(marker2);
         map.addLayer(marker3);
-        map.addLayer(marker4);*/
+        map.addLayer(marker4);
 
-        var bounds = rectangle9.getBounds();
-        console.log(bounds);
-                //map.setCenter();
-        map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle9);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle9);
-
+        console.log(rects);
+        map.removeLayer(rects);
         $.getJSON('/_getData', {
 
           a: $('input[name="a"]').val(),
@@ -436,21 +255,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle10);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle10);
 	}); 
 
 	rectangle11 = new L.rectangle([gridCoords[10][0], gridCoords[10][3]]);
@@ -462,21 +266,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle11);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle11);
 	}); 
 
 	rectangle12 = new L.rectangle([gridCoords[11][0], gridCoords[11][3]]);
@@ -488,21 +277,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle12);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle12);
 	}); 
 
 	rectangle13 = new L.rectangle([gridCoords[12][0], gridCoords[12][3]]);
@@ -514,21 +288,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle13);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle13);
 	}); 
 
 	rectangle14 = new L.rectangle([gridCoords[13][0], gridCoords[13][3]]);
@@ -540,21 +299,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle14);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle14);
 	}); 
 
 	rectangle15 = new L.rectangle([gridCoords[14][0], gridCoords[14][3]]);
@@ -566,21 +310,6 @@ function drawGrid(map, gridCoords, grid) {
         console.log(bounds);
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle15);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle15);
 	});
 
 	rectangle16 = new L.rectangle([gridCoords[15][0], gridCoords[15][3]]);
@@ -590,23 +319,9 @@ function drawGrid(map, gridCoords, grid) {
 	rectangle16.on("click", function (e) {
 		var bounds = rectangle16.getBounds();
         console.log(bounds);
+        console.log(rectangle16.getBounds().contains(ebEvents[0][0], ebEvents[0][1]));
                 //map.setCenter();
         map.fitBounds(bounds);
-
-        if (tempRect.getLayers().length > 0){
-        map.addLayer(tempRect.getLayers()[0]);
-    	};
-    	
-        var tempLen = tempRect.getLayers();
-        console.log(tempLen);
-
-        tempRect.clearLayers();
-        tempRect.addLayer(rectangle16);
-
-        console.log(tempRect.getLayers());
-
-        //console.log(rects);
-        map.removeLayer(rectangle16);
 	}); 
 
 
@@ -615,33 +330,19 @@ function drawGrid(map, gridCoords, grid) {
 
 $('#reset').click(function() {
 	trans = 1;
-
-	var bounds = rects.getBounds();
-    console.log(bounds);
-
-    map.fitBounds(bounds);
-
-    if (tempRect.getLayers().length > 0){
-    	map.addLayer(tempRect.getLayers()[0]);
-	};
-	
-    var tempLen = tempRect.getLayers();
-    console.log(tempLen);
-
-    tempRect.clearLayers();
-	/*drawGrid(map, gridCoords, grid);
+	drawGrid(map, gridCoords, grid);
 	map.removeLayer(marker);
 	map.removeLayer(marker2);
 	map.removeLayer(marker3);
 	map.removeLayer(marker4);
 	map.removeLayer(polyline1);
 	map.removeLayer(polyline2);
-	map.removeLayer(polyline3);*/
+	map.removeLayer(polyline3);
 	//grid.removeLayer();
-	//map.fitBounds(grid.getBounds());
+	map.fitBounds(rects.getBounds());
 });
 
 
-//drawGrid(map, gridCoords, grid);
+drawGrid(map, gridCoords, grid);
 
 

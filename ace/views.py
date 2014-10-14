@@ -22,6 +22,29 @@ def leaflet():
 	listmap=eventbrite.GetEventsWrapper(grid)
 	return render_template('leaflet.html',grid=grid,listmap=listmap)
 
+@app.route('/_getEbData')
+def getEbData():
+	centerCoords = []
+	centerCoords = gridCalculator.main()
+	grids = {}
+
+	for i in range(len(centerCoords)):
+		print "CENTER COORDS", i, centerCoords[i]
+
+	for i in range(16):
+		print
+		print "center lat =", centerCoords[i][0], "center long =", centerCoords[i][1]
+		val=eventbrite.GetEvents(str(round(centerCoords[i][0], 6)), str(round(centerCoords[i][1], 6)), '2')
+		grids[i] = val
+
+	return jsonify(grids)
+
+	#val=eventbrite.GetEvents('37.742255', '-122.494016', '2')
+
+	#print "----------------------jsonify----",val	
+	#return jsonify(result=val) 
+	print "called!!!!"
+
 @app.route('/_getData')
 def getUber():
 	#a = request.args.get('a', 0, type=int)
