@@ -25,10 +25,13 @@ def GetEvents(x,y,rad):
 	events={}
 
 	for i in range(len(obj1.events)):
+		#print "obj", i, "=", obj1.events[i]
 		events={}
 		events['name'] = obj1.events[i]['name']['html']
 		events['capacity'] = obj1.events[i]['capacity']
 		events['venue'] = obj1.events[i]['venue']['name']
+		events['lat'] = obj1.events[i]['venue']['location']['latitude']
+		events['lng'] = obj1.events[i]['venue']['location']['longitude']
 		eventList.append(events)
 		capacityTotal += obj1.events[i]['capacity']
 

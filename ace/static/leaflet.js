@@ -14,6 +14,9 @@ Object.size = function(obj) {
 	return size;
 };
 
+
+var eventCoords = [];
+
 var events = $.getJSON('/_getEbData', {
 
 		
@@ -25,12 +28,24 @@ var events = $.getJSON('/_getEbData', {
         	var size=Object.size(data);
 
         	for (var i=0; i < size; i++) {
-        		console.log(data[i][1]);
+        		console.log(data[i][0][0].lat);
         		gridDensities.push(data[i][1]);
         		console.log(gridDensities);
+        		eventCoords.push([]);
+
+        		for (var i2=0; i2 < data[i][0].length; i2++) {
+        			eventCoords[i].push([
+        				data[i][0][i2].lat,
+        				data[i][0][i2].lng,
+        				data[i][0][i2].name,
+        				data[i][0][i2].capacity,
+        				data[i][0][i2].venue]);
+        		};
         	};   
 
         	console.log(gridDensities);
+        	console.log(eventCoords);
+        	console.log(eventCoords[0][0][0]);
         	drawGrid2(map, gridCoords, grid);
 
 });
@@ -93,6 +108,7 @@ var gridCoords = [[[37.81, -122.5155], [37.81, -122.47891125000001], [37.7833015
 var ebEvents = [[37.80100, -122.49], [37.7914, -122.48], [37.758650, -122.425927], [37.742905, -122.480515], [37.731231, -122.473649], [37.747792, -122.440690], [37.758542, -122.439964]];
 
 
+
 function gridColor(rect, density) {
 	var gridColors = ['#ffff4d', '#ffff00', '#ff944d', 
 					'#ff6600', '#FF3333', '#ff0000', '#ff44ff']
@@ -129,6 +145,8 @@ function gridColor(rect, density) {
 
 var tempRect = new L.featureGroup();
 
+var eventMarkers = new L.featureGroup();
+
 
 function drawGrid2(map, gridCoords, grid) {
 	var fillOp = .4;
@@ -151,14 +169,19 @@ function drawGrid2(map, gridCoords, grid) {
 	
 	for (var i=0; i < gridCoords.length; i++) {
 
+
+
 		//console.log(rectNames[i]);
 
 		rectNames[i] = new L.rectangle([gridCoords[i][0], gridCoords[i][3]]);
 		rects.addLayer(rectNames[i]);
 		rectNames[i].setStyle({fillOpacity: fillOp, stroke: false, fillColor: gridColor(rectNames[i], gridDensities[i])});
+		rectNames[i]._leaflet_id = i + 1;
+		console.log(rectNames[i]._leaflet_id);
 		//grid.addLayer(rectangle1);
 		//console.log(rectNames[i]);
 		rectNames[i].on("click", function (e) {
+
 			var bounds = this.getBounds();
 			//console.log(bounds);
 			    //map.setCenter();
@@ -173,6 +196,27 @@ function drawGrid2(map, gridCoords, grid) {
 
 			tempRect.clearLayers();
 			tempRect.addLayer(this);
+
+			eventMarkers.clearLayers();
+
+			console.log(this);
+
+			var rectId = this._leaflet_id - 1;
+			console.log(rectId);
+
+			//console.log(eventCoords);
+			//console.log(eventCoords[1]);
+
+			for (var i2=0; i2 < eventCoords[rectId].length; i2++) {
+				marker = new L.marker([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]);
+				console.log([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]);
+				eventMarkers.addLayer(marker);
+			};
+
+			console.log(eventMarkers);
+			map.addLayer(eventMarkers);
+
+			//or (var i=0; )
 
 			//console.log(tempRect.getLayers());
 
@@ -223,6 +267,7 @@ $('#reset').click(function() {
     console.log(tempLen);
 
     tempRect.clearLayers();
+    eventMarkers.clearLayers();
 	/*drawGrid(map, gridCoords, grid);
 	map.removeLayer(marker);
 	map.removeLayer(marker2);
