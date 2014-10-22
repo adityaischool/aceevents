@@ -16,6 +16,7 @@ Object.size = function(obj) {
 
 
 var eventCoords = [];
+var viewDay = "20141021"
 
 var events = $.getJSON('/_getEbData', {
 
@@ -29,6 +30,8 @@ var events = $.getJSON('/_getEbData', {
 
         	for (var i=0; i < size; i++) {
         		console.log(data[i][0][0].lat);
+        		//gridDensities.push([0]);
+        		console.log(data[i][1]);
         		gridDensities.push(data[i][1]);
         		console.log(gridDensities);
         		eventCoords.push([]);
@@ -39,7 +42,13 @@ var events = $.getJSON('/_getEbData', {
         				data[i][0][i2].lng,
         				data[i][0][i2].name,
         				data[i][0][i2].capacity,
-        				data[i][0][i2].venue]);
+        				data[i][0][i2].venue,
+        				data[i][0][i2].end,
+        				data[i][0][i2].date]);
+
+        			//if (data[i][0][i2].date = viewDay) {
+        			//		gridDensities[i] += data[i][0][i2].capacity)
+        			//};
         		};
         	};   
 
@@ -208,8 +217,11 @@ function drawGrid2(map, gridCoords, grid) {
 			//console.log(eventCoords[1]);
 
 			for (var i2=0; i2 < eventCoords[rectId].length; i2++) {
-				marker = new L.marker([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]);
-				console.log([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]);
+				marker = new L.marker([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]).
+				bindPopup("Event: "+eventCoords[rectId][i2][2]+"<br>Location: "+eventCoords[rectId][i2][4]+"<br>Capacity: "+eventCoords[rectId][i2][3]+"<br><a href=http://maps.google.com/?daddr="+eventCoords[rectId][i2][0]+","+eventCoords[rectId][i2][1]+" target=_blank>Navigate</a>");
+				
+				//console.log([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]);
+				
 				eventMarkers.addLayer(marker);
 			};
 
