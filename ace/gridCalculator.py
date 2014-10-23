@@ -1,19 +1,40 @@
 #bigGridCorners are SF bounding box corner coords going from top-left then clockwise
+bigGridCorners = [[37.810000, -122.515500], [37.810000, -122.369145], [37.703206, -122.515500], [37.703206, -122.369145]]
+
+smallGridLats = []
+smallGridLongs = []
+
+latIncrement = 0
+longIncrement = 0
+
+smallGridCorners = []
+
+gridCenters = []
+
+
 def main():
-	getBigGridMid(bigGridCorners)
+	global gridCenters
+	#getMids(bigGridCorners)
 	calcIncrements(bigGridCorners)
 	calcSmallGridLatsLongs(bigGridCorners)
-	grid=calcSmallGridCorners(smallGridLats, smallGridLongs)
-	return grid
+	calcSmallGridCorners(smallGridLats, smallGridLongs)
+	for i in range(len(smallGridCorners)):
+		gridCenters.append(getMids(smallGridCorners[i]))
 
-def getBigGridMid(corners):
+	#print gridCenters
+	return gridCenters
+
+def getMids(corners):
 	
 
-	bigGridLatMid = (corners[1][0] + corners[2][0]) / 2
-	bigGridLongMid = (corners[0][1] + corners[1][1]) / 2
+	midLat = (corners[0][0] + corners[2][0]) / 2
+	midLong = (corners[0][1] + corners[1][1]) / 2
 
-	#print "bigGridLatMid = ", str(bigGridLatMid)
-	#print "bigGridLongMid = ", str(bigGridLongMid)
+	#print "midLat = ", str(midLat)
+	#print "midLong = ", str(midLong)
+	#print midLat, midLong
+
+	return [midLat, midLong]
 
 def calcIncrements(corners):
 	global latIncrement, longIncrement
@@ -62,21 +83,9 @@ def calcSmallGridCorners(lats, longs):
 
 		smallGridCorners.append(points)
 
-	print "smallGridCorners = ", smallGridCorners
-	return smallGridCorners
+	#print "smallGridCorners = ", smallGridCorners
 
-bigGridCorners = [[37.810000, -122.515500], [37.810000, -122.369145], [37.703206, -122.515500], [37.703206, -122.369145]]
-smallGridLats = []
-smallGridLongs = []
 
-latIncrement = 0
-longIncrement = 0
-
-smallGridCorners = []
-def initMap():
 	
-	print "In init masp"
-
-
-	grid=main()
-	return grid
+if __name__ == '__main__':
+	main()

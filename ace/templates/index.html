@@ -34,9 +34,20 @@
 		position: absolute;
 		top: 88%;
 		left: 10%;
+		height: 25px;
 		border-radius: 5px;
-		background-color: #ffffff;
+		color: #ffffff;
+		border: 0px solid white;
+		background: -webkit-linear-gradient(180deg, #FF820D, #FF310D); /* For Safari 5.1 to 6.0 */
+  		background: -moz-linear-gradient(180deg, #FF820D, #FF310D); /* For Firefox 3.6 to 15 */
+  		background: linear-gradient(180deg, #FF820D, #FF310D); /* Standard syntax */
 		font-weight: bold;		
+		}
+		
+		#reset:hover {
+		background: -webkit-linear-gradient(180deg, #FF310D, #FF820D); /* For Safari 5.1 to 6.0 */
+  		background: -moz-linear-gradient(180deg, #FF310D, #FF820D); /* For Firefox 3.6 to 15 */
+  		background: linear-gradient(180deg, #FF310D, #FF820D); /* Standard syntax */
 		}
 		
 		.logo {
@@ -57,13 +68,32 @@
 		display: absolute;
 		background-color: #ffffff;
 		z-index: 1000;
-		height: 40px;
-		left: 55%;
+		height: 60px;
 		top: 20%;
-		border: 0 solid white;
+		border: none;
 		}
+
+		#leftArrow {
+			max-width: 100%;
+			max-height: 100%;
+			left: 55%;
+		}
+
+		#day {
+			max-width: 100%;
+			max-height: 8\70%;
+			left: 67%;
+		}
+
+		#rightArrow {
+			max-width: 100%;
+			max-height: 100%;
+			left: 85%;
+		}
+
+
 		
-		#timenavcontainer {
+		/*.#timenavcontainer {
 		display: absolute;
 		background-color: #ffffff;
 		z-index: 1000;
@@ -73,10 +103,11 @@
 		border: 0 solid white;
 		}
 		
-		#daynav, #timenav {
+		daynavcontainer, #timenav {
 		max-width: 100%;
 		max-height: 100%;
-		}
+		border: none;
+		}*/
 		
 		.data{
 		float: left;
@@ -95,12 +126,16 @@
 		ul {
 		list-style-type: none;
 		text-align: center;
-		margin-right: 10px;
+		margin-right: 20px;	
+		}
+		
+		#sidebar {
+		display: none;
 		}
 		
 		.list {
 		left: -10%;
-		}
+		}*/
 		
 		
 		
@@ -137,7 +172,17 @@
 	<div class="container">
 		
 		<div class="map_container">
-			<button class="daynavcontainer"><img id="daynav" src="/static/devexDayNav.png"</img></button>
+			<button class="daynavcontainer"><img id="leftArrow" src="/static/leftArrow.png"</img></button>
+
+			<button class="daynavcontainer"><img id="day" src="/static/day.png"</img></button>
+
+			<button class="daynavcontainer"><img id="rightArrow" src="/static/rightArrow.png"</img></button>
+
+
+
+			<!--<button class="daynavcontainer"><img id="daynav" src="/static/devexDayNav.png"</img></button>-->
+
+
 			
 			<div id="map"></div>
 			
@@ -152,7 +197,7 @@
 
 			<div id="data"></div>
 			
-			<div class="sidebar">
+			<div id="sidebar">
 				<ul>
 					<li class="list">Route 2: $70</li>
 					<li class="list">Route 3: $48</li>

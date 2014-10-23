@@ -1,11 +1,13 @@
 from urllib2 import Request, urlopen, URLError
 import json
+import pprint
 
 class Payload(object):
     def __init__(self, j):
         self.__dict__ = json.loads(j)
 
 def GetEvents(x,y,rad):
+	noEndCount = 0
 	request = Request('https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km')
 	obj1=''
 	print "000000000000000000000000000000000000000",'https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km'
@@ -14,7 +16,8 @@ def GetEvents(x,y,rad):
 		response = urlopen(request)
 		kittens = response.read()
 		obj1=Payload(kittens)
-		print "1231@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#!@#@!#!@#@!#-                     ",obj1
+		print " ---- PAYLOAD --------------                    ",str(obj1)
+		print "-------------------------OBJ LENGTH-------------------------------",len(obj1.events)
 		#print kittens[559:1000]
 	except URLError, e:
 	    print 'No kittez. Got an error code:', e
@@ -24,21 +27,48 @@ def GetEvents(x,y,rad):
 	events={}
 
 	for i in range(len(obj1.events)):
+
+		tempTime = 0
+		tempDate = 0
+
+		#pprint.pprint(obj1.events)
+		#print "obj", i, "=", obj1.events[i]
+		events={}
 		events['name'] = obj1.events[i]['name']['html']
 		events['capacity'] = obj1.events[i]['capacity']
 		events['venue'] = obj1.events[i]['venue']['name']
-		events['latitude'] = obj1.events[i]['venue']['latitude']
-		events['longitude'] = obj1.events[i]['venue']['longitude']
+		events['lat'] = obj1.events[i]['venue']['location']['latitude']
+		events['lng'] = obj1.events[i]['venue']['location']['longitude']
+		try:
+
+			tempDate = obj1.events[i]['start']['local'][:10]
+			print "TEMPDATE =", tempDate
+			tempTime = obj1.events[i]['end']['local'][11:]
+			events['end'] = tempTime
+			events['date'] = tempDate
+
+		except:
+			print "NO END TIME!!"
+			events['end'] = 'NO END TIME!!'
+			noEndCount += 1
+		eventList.append(events)
+		capacityTotal += obj1.events[i]['capacity']
+
+	print "noEndCount =", noEndCount
 
 
-	for i in range(len(obj.events)):
+		#events['latitude'] = obj1.events[i]['venue']['latitude']
+		#events['longitude'] = obj1.events[i]['venue']['longitude']
+
+
+	"""for i in range(len(obj.events)):
 		events['name'] = obj.events[i]['name']['html']
 		events['capacity'] = obj.events[i]['capacity']
 		events['venue'] = obj.events[i]['venue']['name']
 		events['latitude'] = obj.events[i]['venue']['latitude']
 		events['longitude'] = obj.events[i]['venue']['longitude']
 		eventList.append(events)
-		capacityTotal += obj1.events[i]['capacity']
+		capacityTotal += obj1.events[i]['capacity']"""
 	
 	return (eventList,capacityTotal)
 
