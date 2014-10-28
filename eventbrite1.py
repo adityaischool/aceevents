@@ -2,6 +2,7 @@ from urllib2 import Request, urlopen, URLError
 import json
 import pprint
 import gridCalculator
+import pymongo
 from eventClass import Event
 
 class Payload(object):
@@ -10,7 +11,7 @@ class Payload(object):
 
 
 
-evDex = []
+
 
 today = 20141021
 
@@ -18,10 +19,31 @@ day = [today, today+1, today+2, today+3, today+4, today+5, today+6]
 
 
 
-def GetEvents():
-	global evDex
+	
+client = pymongo.MongoClient()
+
+db = client.evDexMaster
+
+"""collectionName = 'evDex'
+evDex = db.collectionName"""
 
 
+evDex = db.evDex
+
+print "TESTTTTT-------------", evDex
+
+def refreshEvents():
+	global db, client, evDex
+
+	if db.evDex:
+		db.evDex.remove()
+
+	evDex = db.evDex
+
+	currentGridNumber = 0
+
+	#evDex = []
+	
 	centerCoords = []
 	centerCoords = gridCalculator.main()
 	grids = {}
@@ -29,7 +51,11 @@ def GetEvents():
 	for i in range(len(centerCoords)):
 		print "CENTER COORDS", i, centerCoords[i]
 
-	for i3 in range(3):
+	for i3 in range(16):
+
+		print
+		print "Current Grid Number:", currentGridNumber
+
 		print
 		print "center lat =", centerCoords[i3][0], "center long =", centerCoords[i3][1]
 		
@@ -55,7 +81,7 @@ def GetEvents():
 		eventsRaw = []
 		eventList = []
 		#capacityTotal = 0
-		events={}
+		#events={}
 
 		for i in range(len(obj1.events)):
 
@@ -116,94 +142,95 @@ def GetEvents():
 				end = 'NO END TIME!!'
 				noEndCount += 1
 
-			event = Event(name, capacity, venue, lat, lng, date, end)
+			#event = Event(name, capacity, venue, lat, lng, date, end)
+
+			#source, start time, price, ebID
+
+			event = {"name": name,
+						"capacity": capacity,
+						"venue": venue,
+						"lat": lat,
+						"lng": lng,
+						"date": date,
+						"endTime": end,
+						"grid": currentGridNumber}
+
+			post_id = evDex.insert(event)
+
+			#post_id
+
+			print db.collection_names()
+
+		currentGridNumber += 1
+
+	#print evDex.find_one()
+	#print db.collectionName.find_one()
 
 
-			eventsRaw.append(event)
-
-		"""for event in eventsRaw:
-			print "event", event.name, "has a capacity of", event.capacity
-			print "date is", event.date, "end time is", event.end
-		print "noEndCount =", noEndCount"""
 
 
-			#events['latitude'] = obj1.events[i]['venue']['latitude']
-			#events['longitude'] = obj1.events[i]['venue']['longitude']
+def filterEvents(eventDate, eventEndTime):
+	global db, client, evDex
 
+	print
+	print "TESTING FILTER EVENTS FOR", eventDate
+	print
 
-		"""for i in range(len(obj.events)):
-			events['name'] = obj.events[i]['name']['html']
-			events['capacity'] = obj.events[i]['capacity']
-			events['venue'] = obj.events[i]['venue']['name']
-			events['latitude'] = obj.events[i]['venue']['latitude']
-			events['longitude'] = obj.events[i]['venue']['longitude']
-			eventList.append(events)
-			capacityTotal += obj1.events[i]['capacity']"""
-		
-		evDex.append({})
+	result = {}
 
-		#print evDex
+	temp = {}
+	eventList = []
 
+	grids = 16
 
-		for i2 in eventsRaw:
-			try:
-				evDex[i3][i2.date].append(i2)
-			except:
-				evDex[i3][i2.date] = [i2]
-
-	
-		#print "EVDEX = ", evDex
-
-	#sortEvents(eventList)
-	#return (eventList,capacityTotal)
-
-
-def sortEvents(events):
-	pass
-
-
-def callDateTime(grid, date, time):
-	
-	#print evDex[0].keys()
-
-	counter = 0
 	capacityTotal = 0
 
-	if date in evDex[grid].keys():
-		print "there is/are", len(evDex[grid][date]), "event(s) in grid", grid, "on the date", date, "!"
-		for event in evDex[grid][date]:
-			if (event.end >= time - .50) and (event.end <= time + .50):
-				counter += 1
-				capacityTotal += event.capacity
-				print event.name
-				print event.end
-				print event.capacity
-				print
+	endTimeHigh = eventEndTime + .50
+	endTimeLow = eventEndTime - .50
 
-		print "There are", counter, "event(s) in grid", grid, "on the date", date, "at", time, "(+/- 30 min), with total capacity of all events =", capacityTotal, "!"
+	print "endTimeHigh", endTimeHigh
+	print "endTimeLow", endTimeLow
 
+	for i in range(grids):
+		temp = {} 
+		capacityTotal = 0
+		eventList = []
 
-def GetEventsWrapper(grid):
-	listMap=[]
-	for i in range(len(grid)):
-		coodsx=(grid[i][0][0]+grid[i][3][0])/2
-		coodsy=(grid[i][0][1]+grid[i][3][1])/2
-		print "---------------------------------------------",str(coodsx),str(coodsy),str(2)
-		ev=GetEvents(str(coodsx),str(coodsy),str(2))
-		list1=[i,ev[1]]
-		listMap.append(list1)
-	return listMap
+		tempEvent = {}
+
+		print "EVENTS FOR GRID #", i
+		
+		for event in evDex.find({"date": eventDate, "endTime": {'$lte': endTimeHigh, '$gte': endTimeLow}, "grid": i}):
+			
+			capacityTotal += event['capacity']
+
+			tempEvent = {}
+
+			tempEvent['name'] = event['name']
+			tempEvent['capacity'] = event['capacity']
+			tempEvent['venue'] = event['venue']
+			tempEvent['lat'] = event['lat']
+			tempEvent['lng'] = event['lng']
+			tempEvent['date'] = event['date']
+			tempEvent['endTime'] = event['endTime']
+
+			eventList.append(tempEvent)
+
+			print "TEMP EVENT=", tempEvent
+
+			print "individual mongo events are type:", type(event)
+
+		result[i] = [eventList, capacityTotal]
+
+		print "Capacity Total for Grid", i, "=", capacityTotal
+
+	print "RESULT: ", type(result)
+	
+	return result
 
 
 if __name__ == '__main__':
-	GetEvents()
-	for i in range(len(evDex)):
-		print "Grid", i, ":\n\t"
-		for i2 in evDex[i]:
-			print i2, ": ",
-			print len(evDex[i][i2])
-			for i3 in evDex[i][i2]:
-				print i3.end
 
-	callDateTime(2, "20141023", 20.5)
+	refreshEvents()
+	#filterEvents("20141031", 20.0)
 
