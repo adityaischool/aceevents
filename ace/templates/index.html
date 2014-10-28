@@ -14,20 +14,86 @@
 		body {
 		  padding-top: 50px;
 		}
+
+		.logo {
+		display: relative;
+		width: 100px;
+		margin-left: 10px;
+		margin-top: 3px;
+		float: left;
+		margin-right: 30px;
+		}
 		
+		#uberlogo {
+		display: none;
+		max-width: 100%;
+		max-height: 100%;
+		}
+
+		
+		.navcontainer {
+			position: absolute;
+			width: 480px;
+			height: 30px;
+			left: 15%;
+			z-index: 1000;
+		}
+
+		#timenavcontainer {
+			display: absolute;
+			top: 90%;
+			z-index: 10000;
+			background: none;
+			border: none;
+			max-height: 100%;
+			max-width: 100%;
+		}
+		
+		.daynavcontainer {
+			border: none;
+			background: none;
+		}
+
+		#leftArrow {
+			display: inline-block;
+			top: 10%;
+			max-width: 100%;
+			max-height: 35px;
+			float: left;
+		}
+
+		#dayofweek {
+			width: 150px;
+			margin-left: 40px;
+			margin-right: 40px;
+			display: inline-block;
+			font-size: 24px;
+			float: center;
+			text-align: center;
+		}
+
+		#rightArrow {
+			display: inline-block;
+			max-width: 100%;
+			max-height: 35px;
+			float: right;
+		}
+
+
 		.map_container {
-		  padding: 40px 15px;
-		  text-align: center;
-		  overflow: hidden;
-		  border-radius: 17px;
-		  width: 800px;
-		  height: 550px;
-		  float: left;
+			display: absolute;
+			/*padding: 40px 15px;*/
+			text-align: center;
+			overflow: hidden;
+			border-radius: 17px;
+			width: 480px;
+			height: 600px;
+			top: 30%;
 		}
 		
 		#map{
-		  height: 550px;
-		  width: 800px;
+			width: 480px;
+			height: 600px;
 		}
 		
 		#reset{
@@ -48,47 +114,6 @@
 		background: -webkit-linear-gradient(180deg, #FF310D, #FF820D); /* For Safari 5.1 to 6.0 */
   		background: -moz-linear-gradient(180deg, #FF310D, #FF820D); /* For Firefox 3.6 to 15 */
   		background: linear-gradient(180deg, #FF310D, #FF820D); /* Standard syntax */
-		}
-		
-		.logo {
-		display: relative;
-		width: 100px;
-		margin-left: 10px;
-		margin-top: 3px;
-		float: left;
-		margin-right: 30px;
-		}
-		
-		#uberlogo {
-		max-width: 100%;
-		max-height: 100%;
-		}
-		
-		.daynavcontainer {
-		display: absolute;
-		background-color: #ffffff;
-		z-index: 1000;
-		height: 60px;
-		top: 20%;
-		border: none;
-		}
-
-		#leftArrow {
-			max-width: 100%;
-			max-height: 100%;
-			left: 55%;
-		}
-
-		#day {
-			max-width: 100%;
-			max-height: 8\70%;
-			left: 67%;
-		}
-
-		#rightArrow {
-			max-width: 100%;
-			max-height: 100%;
-			left: 85%;
 		}
 
 
@@ -171,28 +196,34 @@
 
 	<div class="container">
 		
-		<div class="map_container">
+		<div class="navcontainer">
 			<button class="daynavcontainer"><img id="leftArrow" src="/static/leftArrow.png"</img></button>
 
-			<button class="daynavcontainer"><img id="day" src="/static/day.png"</img></button>
+			<p class="daynavcontainer" id="dayofweek">Loading...</p>
 
 			<button class="daynavcontainer"><img id="rightArrow" src="/static/rightArrow.png"</img></button>
 
-
+		</div>
 
 			<!--<button class="daynavcontainer"><img id="daynav" src="/static/devexDayNav.png"</img></button>-->
 
 
-			
+		<div class="map_container">	
 			<div id="map"></div>
 			
 			<button id="reset">EVDEX NOW</button>
 			
 			
-			<button id="timenavcontainer"><img id="timenav" src="/static/devexTimeNav.png"</img></button>
+			
 		</div>
 		
-		<div class="data">
+		<div data-role="main" class="navcontainer">
+		    <form method="post" action="demoform.asp">
+		      <label for="points">Time</label>
+		      <input type="range" name="points" id="timenavcontainer" value="50" min="0" max="100">
+		    </form>
+		</div>
+		<!--<div class="data">
 			<div id="amt">$ Per Ride</div>
 
 			<div id="data"></div>
@@ -202,7 +233,7 @@
 					<li class="list">Route 2: $70</li>
 					<li class="list">Route 3: $48</li>
 				</ul>
-			</div>
+			</div>-->
 			
 			
 			
@@ -214,9 +245,10 @@
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-	<script src="/static/leaflet.js"></script>
+	<script src="/static/leafletTest.js"></script>
 	
 </body>
 </html>
