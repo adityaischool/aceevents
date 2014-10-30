@@ -39,6 +39,16 @@
 			z-index: 1000;
 		}
 
+		#timeNav {
+			position: absolute;
+			width: 480px;
+			height: 30px;
+			left: 15%;
+			z-index: 1000;
+
+			
+		}
+
 		#timenavcontainer {
 			display: absolute;
 			top: 90%;
@@ -115,25 +125,7 @@
   		background: -moz-linear-gradient(180deg, #FF310D, #FF820D); /* For Firefox 3.6 to 15 */
   		background: linear-gradient(180deg, #FF310D, #FF820D); /* Standard syntax */
 		}
-
-
-		
-		/*.#timenavcontainer {
-		display: absolute;
-		background-color: #ffffff;
-		z-index: 1000;
-		height: 40px;
-		left: 25%;
-		top: 80%;
-		border: 0 solid white;
-		}
-		
-		daynavcontainer, #timenav {
-		max-width: 100%;
-		max-height: 100%;
-		border: none;
-		}*/
-		
+	
 		.data{
 		float: left;
 		text-align:center;
@@ -199,7 +191,8 @@
 		<div class="navcontainer">
 			<button class="daynavcontainer"><img id="leftArrow" src="/static/leftArrow.png"</img></button>
 
-			<p class="daynavcontainer" id="dayofweek">Loading...</p>
+			<p class="daynavcontainer" id="dayofweek"></p>
+
 
 			<button class="daynavcontainer"><img id="rightArrow" src="/static/rightArrow.png"</img></button>
 
@@ -217,12 +210,15 @@
 			
 		</div>
 		
-		<div data-role="main" class="navcontainer">
+		<div data-role="main" class="navcontainer" data-slider data-options="step: 30;">
 		    <form method="post" action="demoform.asp">
-		      <label for="points">Time</label>
-		      <input type="range" name="points" id="timenavcontainer" value="50" min="0" max="100">
+		      <label for="points" id="timenavtime"></label>
+		      <input type="range" name="points" id="selectedTime" value="20" min="0" max="23">
 		    </form>
 		</div>
+
+		
+
 		<!--<div class="data">
 			<div id="amt">$ Per Ride</div>
 
@@ -248,7 +244,10 @@
 
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-	<script src="/static/leafletTest.js"></script>
+	<script src="/static/leaflet2.js"></script>
+
+	<script src="https://maps.googleapis.com/maps/api/js?sensor=false">
+	</script>
 	
 </body>
 </html>
