@@ -14,6 +14,8 @@ Object.size = function(obj) {
 	return size;
 };
 
+var selectedTime = 20;
+
 var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 var eventCoords = [];
@@ -22,7 +24,9 @@ var today = new Date();
 
 var selectedDate = today;
 
-var dateTime = []
+var dateTime = [];
+
+var dayCounter = 0;
 
 function setDefault() {
 
@@ -51,6 +55,8 @@ function setDefault() {
 
 	$.getJSON('/_getEbData', {
 		params: JSON.stringify(dateTime),
+		time: JSON.stringify(selectedTime)
+
 	}, function(data) {
 		console.log(data.result);
 		gridDensities = [];
@@ -100,21 +106,88 @@ function setDefault() {
 
 }
 
-console.log('x' + 'y');
 
-setDefault();
+//setDefault();
 
-dayCounter = 0
 
-$(".daynavcontainer").click(function() {
+$("#selectedTime").change(function () {
+
+	console.log(dateTime);
+
+	//console.log($("#selectedTime").val());
+	selectedTime = $("#selectedTime").val();
+
+	console.log(selectedTime);
 
 	map.fitBounds(rects);
 
-	eventCoords = []
+	var eventCoords = [];
+
+	prettyTime = String(selectedTime % 12) + ":00"
+
+	document.getElementById('timenavtime').innerHTML = (prettyTime);
+
+	$.getJSON('/_getEbData', {
+	params: JSON.stringify(dateTime),
+	time: selectedTime
+
+	}, function(data) {
+		console.log(data.result);
+		gridDensities = [];
+
+		rects.clearLayers();
+		//grid.clearLayers();
+		//tempRect.clearLayers();
+		eventMarkers.clearLayers();
+
+		var size=Object.size(data);
+
+    	for (var i=0; i < size; i++) {
+ 
+    		console.log(data[i][1]);
+    		gridDensities.push(data[i][1]);
+    		console.log(gridDensities);
+    		eventCoords.push([]);
+
+    		for (var i2=0; i2 < data[i][0].length; i2++) {
+    			if (data[i][0].length > 0) {
+    			eventCoords[i].push([
+    				data[i][0][i2].lat,
+    				data[i][0][i2].lng,
+    				data[i][0][i2].name,
+    				data[i][0][i2].capacity,
+    				data[i][0][i2].venue,
+    				data[i][0][i2].endTime,
+    				data[i][0][i2].date]);}
+
+    		};
+    	};   
+
+    	console.log(gridDensities);
+    	console.log(eventCoords);
+
+    	rectangles = rects.getLayers();
+
+    	for (var i=0; i < gridCoords.length; i++) {
+    		if (gridDensities[i] > 0) {		
+			rectangles[i].setStyle({fillOpacity: 0.4, fillColor: gridColor(gridDensities[i])});
+			} else {
+			rectangles[i].setStyle({stroke: false, fillOpacity: 0});
+			}
+		};
+	});
+
+});
+
+$(".daynavcontainer").click(function() {
 
 	dateTime = [];
+
+	map.fitBounds(rects);
+
+	var eventCoords = [];
 	
-	plusMinus = 0
+	var plusMinus = 0;
 
 	if (this.children[0].id == 'rightArrow') {
 		plusMinus = 1;
@@ -147,9 +220,13 @@ $(".daynavcontainer").click(function() {
 	dateTime.push(formattedDate);
 
 	console.log(dateTime);
+	console.log(selectedTime);
+
 
 	$.getJSON('/_getEbData', {
 		params: JSON.stringify(dateTime),
+		time: selectedTime
+
 	}, function(data) {
 		console.log(data.result);
 		gridDensities = [];
@@ -369,18 +446,20 @@ function drawGrid2(map, gridCoords, grid) {
 			//console.log(eventCoords);
 			//console.log(eventCoords[1]);
 
-			for (var i2=0; i2 < eventCoords[rectId].length; i2++) {
+			/* HERE for (var i2=0; i2 < eventCoords[rectId].length; i2++) {
 				marker = new L.marker([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]).
 				bindPopup("Event: "+eventCoords[rectId][i2][2]+"<br>Location: "+eventCoords[rectId][i2][4]+"<br>Capacity: "+eventCoords[rectId][i2][3]+"<br><a href=http://maps.google.com/?daddr="+eventCoords[rectId][i2][0]+","+eventCoords[rectId][i2][1]+" target=_blank>Navigate</a>");
 				
 				//console.log([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]);
 				
 				eventMarkers.addLayer(marker);
-			};
+			}; TO HERE*/
+
+			drawMarkers(rectId);
 
 			console.log(eventMarkers);
 			map.removeLayer(this);
-			map.addLayer(eventMarkers);
+			map.addLayer(eventMarkers); 
 
 			//or (var i=0; )
 
@@ -411,6 +490,17 @@ function drawGrid2(map, gridCoords, grid) {
     eventMarkers.clearLayers();
 }
 
+
+function drawMarkers(rectId) {
+	for (var i2=0; i2 < eventCoords[rectId].length; i2++) {
+		marker = new L.marker([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]).
+		bindPopup("Event: "+eventCoords[rectId][i2][2]+"<br>Location: "+eventCoords[rectId][i2][4]+"<br>Capacity: "+eventCoords[rectId][i2][3]+"<br><a href=http://maps.google.com/?daddr="+eventCoords[rectId][i2][0]+","+eventCoords[rectId][i2][1]+" target=_blank>Navigate</a>");
+
+		//console.log([eventCoords[rectId][i2][0], eventCoords[rectId][i2][1]]);
+
+		eventMarkers.addLayer(marker);
+	};
+}
 
         /*marker = new L.marker([root[0], root[1]], {icon: uberMarkerGrey}).
         bindPopup("Event X").addTo(map);

@@ -6,36 +6,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
+    <link rel="stylesheet" href="/static/css/leaflet-label.css"/>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+	<!-- <link href='http://fonts.googleapis.com/css?family=Karla:400,700' rel='stylesheet' type='text/css'> -->
+	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
 	
 	<style type="text/css">
 		body {
-		  padding-top: 50px;
+			padding-top: 50px;
+			font-family: 'Lato', sans-serif;
 		}
 
+		.navbar {
+			width: 480px;
+		}
+
+		.navbar-header {
+			margin-left: -100px;
+		}
+
+		/* navbar-inverse navbar-fixed-top */
+
 		.logo {
-		display: relative;
-		width: 100px;
-		margin-left: 10px;
-		margin-top: 3px;
-		float: left;
-		margin-right: 30px;
+			display: relative;
+			width: 100px;
+			margin-left: 10px;
+			margin-top: 3px;
+			float: left;
+			margin-right: 30px;
 		}
 		
 		#uberlogo {
-		display: none;
-		max-width: 100%;
-		max-height: 100%;
+			display: none;
+			max-width: 100%;
+			max-height: 100%;
 		}
 
+
+		.container {
+			margin: 0;
+			padding: 0;
+			left: 0;
+		}
+
+		.navbarcontainer {
+			margin: 0;
+			padding: 0;
+			left: 0;
+		}
 		
 		.navcontainer {
 			position: absolute;
 			width: 480px;
 			height: 30px;
-			left: 15%;
+			left: 100px;
 			z-index: 1000;
 		}
 
@@ -45,8 +72,14 @@
 			height: 30px;
 			left: 15%;
 			z-index: 1000;
-
 			
+		}
+
+		#timenavtime {
+			margin-left: 10%;
+			margin-top: 1%;
+			margin-bottom: -1%;
+			font-size: 20px;
 		}
 
 		#timenavcontainer {
@@ -58,6 +91,13 @@
 			max-height: 100%;
 			max-width: 100%;
 		}
+
+		.timenavcontainer {
+			border: none;
+			background: none;
+			left: 0;
+			width: 480px;
+		}
 		
 		.daynavcontainer {
 			border: none;
@@ -66,7 +106,7 @@
 
 		#leftArrow {
 			display: inline-block;
-			top: 10%;
+			top: 7%;
 			max-width: 100%;
 			max-height: 35px;
 			float: left;
@@ -77,9 +117,12 @@
 			margin-left: 40px;
 			margin-right: 40px;
 			display: inline-block;
+			margin-top: 10px;
 			font-size: 24px;
 			float: center;
 			text-align: center;
+			color: white;
+			font-weight: bold;
 		}
 
 		#rightArrow {
@@ -97,43 +140,76 @@
 			overflow: hidden;
 			border-radius: 17px;
 			width: 480px;
-			height: 600px;
+			height: 550px;
 			top: 30%;
+			left: 0;
+		}
+
+		.buttoncontainer {
+			display: absolute;
+			/*padding: 40px 15px;*/
+			text-align: center;
+			overflow: hidden;
+			border-radius: 17px;
+			width: 480px;
+			height: 550px;
+			top: 30%;
+			left: 0;
 		}
 		
 		#map{
 			width: 480px;
-			height: 600px;
+			height: 550px;
+			left: 0;
 		}
 		
 		#reset{
-		position: absolute;
-		top: 88%;
-		left: 10%;
-		height: 25px;
-		border-radius: 5px;
-		color: #ffffff;
-		border: 0px solid white;
-		background: -webkit-linear-gradient(180deg, #FF820D, #FF310D); /* For Safari 5.1 to 6.0 */
-  		background: -moz-linear-gradient(180deg, #FF820D, #FF310D); /* For Firefox 3.6 to 15 */
-  		background: linear-gradient(180deg, #FF820D, #FF310D); /* Standard syntax */
-		font-weight: bold;		
+			position: absolute;
+			top: 540px;
+			left: 25px;
+			height: 35px;
+			border-radius: 5px;
+			color: #ffffff;
+			border: 0px solid white;
+			background: -webkit-linear-gradient(180deg, #FF820D, #FF310D); /* For Safari 5.1 to 6.0 */
+	  		background: -moz-linear-gradient(180deg, #FF820D, #FF310D); /* For Firefox 3.6 to 15 */
+	  		background: linear-gradient(180deg, #FF820D, #FF310D); /* Standard syntax */
+			font-weight: bold;		
 		}
 		
 		#reset:hover {
-		background: -webkit-linear-gradient(180deg, #FF310D, #FF820D); /* For Safari 5.1 to 6.0 */
-  		background: -moz-linear-gradient(180deg, #FF310D, #FF820D); /* For Firefox 3.6 to 15 */
-  		background: linear-gradient(180deg, #FF310D, #FF820D); /* Standard syntax */
+			background: -webkit-linear-gradient(180deg, #FF310D, #FF820D); /* For Safari 5.1 to 6.0 */
+	  		background: -moz-linear-gradient(180deg, #FF310D, #FF820D); /* For Firefox 3.6 to 15 */
+	  		background: linear-gradient(180deg, #FF310D, #FF820D); /* Standard syntax */
 		}
+
+		#markers{
+			position: absolute;
+			top: 540px;
+			left: 385px;
+			height: 35px;
+			border-radius: 5px;
+			color: #FFFFFF;
+			border: 2px solid #FF310D;
+			background: none;
+			font-weight: bold;		
+		}
+
+		#markers:hover {
+			background: #FF3300;
+			color: white;
+		}
+		
+		
 	
 		.data{
-		float: left;
-		text-align:center;
-		margin-top:10%;
-		margin-left:5%;
-		font-size:24px;
-		color:#009900;
-		border: 2px solid #009900;
+			float: left;
+			text-align:center;
+			margin-top:10%;
+			margin-left:5%;
+			font-size:24px;
+			color:#009900;
+			border: 2px solid #009900;
 		}
 		
 		#amt {
@@ -152,7 +228,82 @@
 		
 		.list {
 		left: -10%;
-		}*/
+		}
+
+		.leaflet-popup-content {
+			text-align: center;
+			font-weight: bold;
+		}
+
+		.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+			border: 5px solid #75b5e3;
+			box-shadow: none;
+		}
+
+		.leaflet-popup-close-button {
+			color: #33ccff;
+			font-weight: bold;
+		}
+
+		a:link {
+			text-decoration: none;
+			color: #75b5e3;
+		}
+
+		a:hover {
+			text-decoration: none;
+			color: #75b5e3;
+		}
+
+
+		 input[type="range"]{
+		   -webkit-appearance:none !important;
+		 }
+
+		 input[type="range"]::-webkit-slider-thumb{
+		   -webkit-appearance:none !important;  
+		 }
+
+		#slider .bar {
+			width: 86%;
+			height: 3px;
+
+			position: relative;
+			top: 10px;
+			left: 7%;	
+			
+			background: #dbdbdb;
+			
+			-webkit-border-radius: 40px;
+			-moz-border-radius: 40px;
+			border-radius: 40px;
+		}
+
+		input[type="range"]::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			position: relative;
+			top: 0px;
+			z-index: 1;
+			width: 55px;
+			height: 25px;
+			cursor: pointer;
+
+			border: 1px solid #dcdcdc;
+			-webkit-box-shadow: 0px 1px 2px 0px #dadada;
+			-moz-box-shadow: 0px 1px 2px 0px #dadada;
+			box-shadow: 0px 1px 2px 0px #dadada;
+
+
+			-webkit-border-radius: 7px;
+			-moz-border-radius: 7px;
+			border-radius: 7px;
+
+			background: -webkit-linear-gradient(180deg, #FF820D, #FF310D); /* For Safari 5.1 to 6.0 */
+	  		background: -moz-linear-gradient(180deg, #FF820D, #FF310D); /* For Firefox 3.6 to 15 */
+	  		background: linear-gradient(180deg, #FF820D, #FF310D); /* Standard syntax */
+
+			
+		}
 		
 		
 		
@@ -162,7 +313,7 @@
 </head>
 <body>
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-		<div class="container">
+		<div class="navbarcontainer">
 			<div class="logo"><img id="uberlogo" src="/static/uberLogo.png"></img></div>
 			<div class="navbar-header">
 	          	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -201,24 +352,27 @@
 			<!--<button class="daynavcontainer"><img id="daynav" src="/static/devexDayNav.png"</img></button>-->
 
 
-		<div class="map_container">	
+
+
+		<div class="buttoncontainer">	
+			
 			<div id="map"></div>
 			
 			<button id="reset">EVDEX NOW</button>
-			
-			
-			
+
+			<button id="markers">MARKERS</button>
+				
 		</div>
 		
-		<div data-role="main" class="navcontainer" data-slider data-options="step: 30;">
+		<div data-role="main" class="timenavcontainer" id="slider">
 		    <form method="post" action="demoform.asp">
 		      <label for="points" id="timenavtime"></label>
-		      <input type="range" name="points" id="selectedTime" value="20" min="0" max="23">
+		      <input type="range" class="bar" name="points" id="selectedTime" value="20" min="0" max="23.5" step=".5">
 		    </form>
+		    <span class="highlight"></span>
 		</div>
 
 		
-
 		<!--<div class="data">
 			<div id="amt">$ Per Ride</div>
 
@@ -232,9 +386,6 @@
 			</div>-->
 			
 			
-			
-
-			
 		</div>
 	</div>
 
@@ -243,8 +394,15 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
 	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+
+	<script src="http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+
 	<script src="/static/leaflet2.js"></script>
+
+	<script src="/static/leaflet-label.js"></script>
+
 
 	<script src="https://maps.googleapis.com/maps/api/js?sensor=false">
 	</script>
