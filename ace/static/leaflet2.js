@@ -289,9 +289,9 @@ function createHeatCoords() {
 
 function getData() {
 
-	$('#markers').css({"color":"#ff310d", "background": "-webkit-linear-gradient(#FFFFFF, #FFFFFF)",/* For Safari 5.1 to 6.0 */
-	  		"background": "-moz-linear-gradient(#FFFFFF, #FFFFFF)", /* For Firefox 3.6 to 15 */
-	  		"background": "linear-gradient(#FFFFFF, #FFFFFF)"});
+	$('#markers').css({"color":"#FF310D", "background": "none",/* For Safari 5.1 to 6.0 */
+	  		"background": "none", /* For Firefox 3.6 to 15 */
+	  		"background": "none"});
 
 	map.removeLayer(eventMarkers);
 
@@ -444,9 +444,9 @@ $('#markers').click(function() {
 		markerSwitch = true;
 
 	} else if (markerSwitch == true) {
-		$('#markers').css({"color":"#ff310d", "background": "-webkit-linear-gradient(#FFFFFF, #FFFFFF)",/* For Safari 5.1 to 6.0 */
-	  		"background": "-moz-linear-gradient(#FFFFFF, #FFFFFF)", /* For Firefox 3.6 to 15 */
-	  		"background": "linear-gradient(#FFFFFF, #FFFFFF)"});
+		$('#markers').css({"color":"#FF310D", "background": "none",/* For Safari 5.1 to 6.0 */
+	  		"background": "none", /* For Firefox 3.6 to 15 */
+	  		"background": "none"});
 		map.removeLayer(eventMarkers);
 		markerSwitch = false;
 	}
