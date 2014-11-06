@@ -459,3 +459,9 @@ $("#selectedTime").change(changeTime);
 $(".daynavcontainer").click(changeDay);
 
 setDefault();
+
+var markercluster = new L.MarkerClusterGroup();
+
+markercluster.addLayer(markers);
+
+map.addLayer(markercluster);
