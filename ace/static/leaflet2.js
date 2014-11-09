@@ -368,17 +368,23 @@ function createMarkersPages() {
 
 function drawMarkerList() {
 
-		var markerList = "";
+		var markerList = "<br>No Events!<br><br>Try selecting a different time or day";
 
 		var mi = markersIndex;
 
-		for (var i=0; i < markersPages[mi].length; i++) {
-
-			markerList += (
-
-            '<li class="place">'+markersPages[mi][i][2].slice(0, 20)+'  | Cap '+markersPages[mi][i][3]+' | <a href=http://maps.google.com/?daddr='+markersPages[mi][i][0]+','+markersPages[mi][i][1]+'target=_blank>Nav</a></li>');
 		
-		};
+		if (markersPages.length > 0) {
+
+			markerList = "";
+
+			for (var i=0; i < markersPages[mi].length; i++) {
+
+				markerList += (
+
+	            '<li class="place">'+markersPages[mi][i][2].slice(0, 20)+'  | Cap '+markersPages[mi][i][3]+' | <a href=http://maps.google.com/?daddr='+markersPages[mi][i][0]+','+markersPages[mi][i][1]+'target=_blank>Nav</a></li>');
+			
+			};
+		}
 
 		$('#eventInfoList').html(markerList);
 
@@ -436,18 +442,21 @@ function drawMarkers() {
 	
 	var mi = markersIndex;
 
-	for (var i=0; i < markersPages[mi].length; i++) {
+	if (markersPages.length > 0) {
 
-		marker = new L.marker([markersPages[mi][i][0], markersPages[mi][i][1]], {riseOnHover: true}).
-		bindPopup("Event: "+markersPages[mi][i][2]+"<br>Location: "+markersPages[mi][i][4]+"<br>Capacity: "+markersPages[mi][i][3]+"<br><a href=http://maps.google.com/?daddr="+markersPages[mi][i][0]+","+markersPages[mi][i][1]+" target=_blank>Navigate</a>");
+		for (var i=0; i < markersPages[mi].length; i++) {
 
-	/*setTimeout(function() {
+			marker = new L.marker([markersPages[mi][i][0], markersPages[mi][i][1]], {riseOnHover: true}).
+			bindPopup("Event: "+markersPages[mi][i][2]+"<br>Location: "+markersPages[mi][i][4]+"<br>Capacity: "+markersPages[mi][i][3]+"<br><a href=http://maps.google.com/?daddr="+markersPages[mi][i][0]+","+markersPages[mi][i][1]+" target=_blank>Navigate</a>");
 
-		eventMarkers.addLayer(marker)}, 400);*/
+		/*setTimeout(function() {
 
-		eventMarkers.addLayer(marker);
+			eventMarkers.addLayer(marker)}, 400);*/
 
-	};
+			eventMarkers.addLayer(marker);
+
+		};
+	}
 
 		map.addLayer(eventMarkers);
 
