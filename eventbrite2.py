@@ -28,8 +28,8 @@ evDex = db.evDex
 
 print "TESTTTTT-------------", evDex
 
-def refreshEvents():
-	global db, client, evDex
+def refreshEvents(db):
+	evDex = db
 
 	if db.evDex:
 		db.evDex.remove()
@@ -165,7 +165,7 @@ def refreshEvents():
 		evDex.insert(event)
 
 
-	print db.collection_names()
+	#print db.collection_names()
 
 
 
@@ -201,7 +201,7 @@ def filterEvents(eventDate, eventEndTime):
 
 	#print "EVENTS FOR GRID #", i
 	
-	for event in evDex.find({"date": eventDate, "endTime": {'$lte': endTimeHigh, '$gte': endTimeLow}}):
+	for event in evDex.find({"date": eventDate, "endTime": {'$lte': endTimeHigh, '$gte': endTimeLow}}).sort("capacity", pymongo.DESCENDING):
 	#for event in evDex.find({"date": eventDate}):
 		tempEvent = {}
 
@@ -221,16 +221,31 @@ def filterEvents(eventDate, eventEndTime):
 
 	result[0] = [eventList]
 
-	print result
+	pprint.pprint(result)
+
+	#resultSorted = result.sort("capacity", 1)
+
+	#print resultSorted
 
 	#print "RESULT: ", type(result)
 	
 	return result
 
 
-if __name__ == '__main__':
+def eventStats():
 
-	refreshEvents()
-	filterEvents('20141031', 20.0)
+	eventCaps = {}
+
+	for event in evDex.find():
+		eventCaps[event['capacity']] = eventCaps.get(event['capacity'], 0) + 1
+
+	print eventCaps
+
+
+if __name__ == '__main__':
+	refreshEvents(evDex)
+
+	#filterEvents('20141031', 20.0)
 	#filterEvents("20141031", 20.0)
 
+	eventStats()

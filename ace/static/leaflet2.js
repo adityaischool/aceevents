@@ -1,8 +1,39 @@
-var map = L.map('map').setView([37.756631, -122.442222], 12);
+//var center = [37.756631, -122.442222];
+var center = [37.756631, -122.442222];
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else { 
+        alert("Geolocation is not supported by this browser.");
+    }
+};
+
+
+function showPosition(position) {
+
+	//UNCOMMENT THE NEXT LINE IN ORDER TO ACTIVATE GEOLOCATED-CENTERING
+	//center = [position.coords.latitude, position.coords.longitude];
+
+	map.setView(center, 12);
+
+    //alert("Latitude: " + position.coords.latitude + 
+    //"Longitude: " + position.coords.longitude);	
+};
+
+//$(document).ready(getLocation);
+
+
+
+var map = L.map('map');
+
+getLocation();
 
 L.tileLayer('https://{s}.tiles.mapbox.com/v3/ajones620.k4bkhnfi/{z}/{x}/{y}.png', {
     attribution: '© <a href="http://www.mapbox.com/about/maps/" target="_blank"> Mapbox Terms &amp; Feedback</a>'
 }).addTo(map);
+
+
 
 var selectedTime;
 
@@ -27,7 +58,7 @@ var grid = new L.featureGroup();
 
 var heatCoords = [];
 
-var heat = L.heatLayer(heatCoords, {radius: 13, blur: 15, max: 1, gradient:{.1: 'blue', .3: 'lime', .5: 'yellow', .7: 'orange', 1: 'red'}}).addTo(map);
+var heat = L.heatLayer(heatCoords, {radius: 13, blur: 15, max: 1, gradient:{.1: 'blue', .2: 'lime', .3: 'yellow', .5: 'orange', .8: 'red'}}).addTo(map);
 
 var eventMarkers = new L.featureGroup();
 
@@ -292,6 +323,66 @@ function createHeatCoords() {
 
 };
 
+var zoomedEvents = [];
+
+
+map.on('load', fenceEvents);
+map.on('zoomend', fenceEvents);
+map.on('dragend', fenceEvents);
+
+var markerIcon = L.icon({
+
+	iconUrl: '/static/marker-master1.png',
+
+	iconSize: [30, 40],
+
+	iconAnchor: [15, 36]
+
+});
+
+
+function fenceEvents() {
+
+	markersIndex = 0;
+
+	zoomedEvents = [];
+
+	var bounds = map.getBounds();
+
+	var lats = [bounds['_northEast'].lat, bounds['_southWest'].lat];
+	var lngs = [bounds['_northEast'].lng, bounds['_southWest'].lng];
+
+
+	for (var i=0; i < eventCoords.length; i++) {
+
+		//console.log('event lat =', eventCoords[i][0]);
+		//console.log('event lng =', eventCoords[i][1]);
+		//console.log('lat bounds =', lats);
+		//console.log('lng bounds =', lngs);
+
+		if (eventCoords[i][0] <= lats[0] && eventCoords[i][0] >= lats[1] && eventCoords[i][1] <= lngs[0] && eventCoords[i][1] >= lngs[1]) {
+
+			console.log("Event "+String(i + 1)+" is in the bounding box!");
+
+			zoomedEvents.push(eventCoords[i]);
+
+		};
+
+	}
+
+	console.log(zoomedEvents);
+
+	createMarkersPages(zoomedEvents);
+
+	//console.log('before zoomed bounds: '+[bounds['_northEast'].lat, bounds['_northEast'].lng], [bounds['_southWest'].lat, bounds['_southWest'].lng]);
+
+};
+
+$('.leaflet-control-zoom-in').click(function() {
+
+	
+
+});
 
 function getData() {
 
@@ -333,7 +424,8 @@ function getData() {
 		//console.log(eventCoords[eventCoords.length-1]);
 		//console.log(eventCoords);
 
-    	createMarkersPages();
+		fenceEvents();
+    	
 
     	createHeatCoords();
 
@@ -342,13 +434,17 @@ function getData() {
 
 
 
-function createMarkersPages() {
+function createMarkersPages(boundedEvents) {
 
-	markersPages = [];
+	var events = boundedEvents;
+
+	console.log(events);
 
 	var count = 0;
 
-	for (var i2=0; i2 < eventCoords.length; i2++) {
+	markersPages = [];
+
+	for (var i2=0; i2 < events.length; i2++) {
 
 		if (count % 5 == 0) {
 
@@ -356,7 +452,7 @@ function createMarkersPages() {
 
 		}
 
-		markersPages[markersPages.length - 1].push(eventCoords[count]);
+		markersPages[markersPages.length - 1].push(events[count]);
 
 		count += 1;
 
@@ -364,14 +460,18 @@ function createMarkersPages() {
 
 	console.log(markersPages);
 
+	if (markerSwitch == true) {
+
+		drawMarkerList();
+
+	}
 };
 
 function drawMarkerList() {
 
-		var markerList = "<br>No Events!<br><br>Try selecting a different time or day";
+		var markerList = "<br>No Events Found!<br><br>Try selecting a different date or time.";
 
 		var mi = markersIndex;
-
 		
 		if (markersPages.length > 0) {
 
@@ -379,61 +479,23 @@ function drawMarkerList() {
 
 			for (var i=0; i < markersPages[mi].length; i++) {
 
+				var num = (markersIndex * 5) + (i + 1);
+
 				markerList += (
 
-	            '<li class="place">'+markersPages[mi][i][2].slice(0, 20)+'  | Cap '+markersPages[mi][i][3]+' | <a href=http://maps.google.com/?daddr='+markersPages[mi][i][0]+','+markersPages[mi][i][1]+'target=_blank>Nav</a></li>');
+	            '<li class="place">'+num+'. '+markersPages[mi][i][2].slice(0, 20)+'  | Cap '+markersPages[mi][i][3]+' | <a href=http://maps.google.com/?daddr='+markersPages[mi][i][0]+','+markersPages[mi][i][1]+'target=_blank>Nav</a></li>');
 			
 			};
 		}
 
 		$('#eventInfoList').html(markerList);
 
-		/*if (markersIndex = 0) {
+		if (markerSwitch == true) {
 
-			$('#eventsArrowLeft').css({"display": "none"});
-
-		} else if (markersIndex > 0 && markersIndex < markersPages.length - 1) {
-
-			$('#eventsArrowLeft').css({"display": "block"});
-
-			$('#eventsArrowRight').css({"display": "block"});
-
-		} else if (markersIndex == markersPages.length - 1) {
-
-			$('#eventsArrowRight').css({"display": "none"});
-
-		} */
+			drawMarkers();
+		}
 
 }
-
-
-
-
-
-
-function getLocation() {
-    if (navigator.geolocation) {
-        var center = navigator.geolocation.getCurrentPosition(showPosition);
-
-        return center;
-
-    } else {
-        alert("Geolocation is not supported by this browser.");
-    }
-
-}
-
-function showPosition(position) {
-    var center = [position.coords.latitude, position.coords.longitude];
-
-    console.log(center);
-
-    return center;
-}
-
-
-
-
 
 
 function drawMarkers() {
@@ -446,7 +508,7 @@ function drawMarkers() {
 
 		for (var i=0; i < markersPages[mi].length; i++) {
 
-			marker = new L.marker([markersPages[mi][i][0], markersPages[mi][i][1]], {riseOnHover: true}).
+			marker = new L.marker([markersPages[mi][i][0], markersPages[mi][i][1]], {icon: markerIcon, riseOnHover: true}).
 			bindPopup("Event: "+markersPages[mi][i][2]+"<br>Location: "+markersPages[mi][i][4]+"<br>Capacity: "+markersPages[mi][i][3]+"<br><a href=http://maps.google.com/?daddr="+markersPages[mi][i][0]+","+markersPages[mi][i][1]+" target=_blank>Navigate</a>");
 
 		/*setTimeout(function() {
