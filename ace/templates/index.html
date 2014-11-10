@@ -4,7 +4,7 @@
     <title>Evdex</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
     <link rel="stylesheet" href="/static/css/leaflet-label.css"/>
@@ -15,13 +15,62 @@
 
 	
 	<style type="text/css">
+
+	
+
+	@media screen and (min-width: 0) and (max-width: 449px) {
+
+		.navcontainer {
+
+			width: 150px;
+			margin-left: -20%;
+
+		}
+
+		.buttoncontainer {
+			height: 50%;
+		}
+
+		.mapcontainer {
+			height: 65%;
+		}
+
+		#map {
+			height: 60%;
+		}
+
+		#markers{
+
+			margin-left: -20%;
+		}
+
+
+	}
+
+
+	@media screen and (min-width: 450px) and (max-width: 1023px) {
+
+		.navcontainer {
+
+			margin-left: -10%;
+		}
+
+		#markers{
+
+			margin-left: -10%;
+		}
+
+
+	}
+
 		body {
+			width: 100%;
 			padding-top: 50px;
 			font-family: 'Lato', sans-serif;
 		}
 
 		.navbar {
-			width: 480px;
+			width: 100%;
 		}
 
 		.navbar-header {
@@ -47,6 +96,8 @@
 
 
 		.container {
+			width: 100%;
+			height: 100%;
 			margin: 0;
 			padding: 0;
 			left: 0;
@@ -60,10 +111,12 @@
 		
 		.navcontainer {
 			position: absolute;
-			width: 480px;
-			height: 30px;
-			left: 100px;
+			width: 500px;
+			height: 50px;
+			left: 30%;
 			z-index: 1000;
+			/*background: black;
+			opacity: .3;*/
 		}
 
 		#timeNav {
@@ -77,14 +130,14 @@
 
 		#timenavtime {
 			margin-left: 10%;
-			margin-top: 1%;
+			margin-top: 2%;
 			margin-bottom: -1%;
 			font-size: 20px;
 		}
 
 		#timenavcontainer {
 			display: absolute;
-			top: 90%;
+			top: 91%;
 			z-index: 10000;
 			background: none;
 			border: none;
@@ -102,6 +155,18 @@
 		.daynavcontainer {
 			border: none;
 			background: none;
+			top: 8px;
+		}
+
+		#daysbox {
+			position: absolute;
+			z-index: -1;
+			width: 100%;
+			height: 100%;
+			background: black;
+			opacity: .4;
+			border-bottom-right-radius: 5px;
+			border-bottom-left-radius: 5px;
 		}
 
 		#leftArrow {
@@ -110,12 +175,14 @@
 			max-width: 100%;
 			max-height: 35px;
 			float: left;
+			opacity: 1;
 		}
 
 		#dayofweek {
-			width: 150px;
+			width: 350px;
 			margin-left: 40px;
 			margin-right: 40px;
+			margin-top: -3px;
 			display: inline-block;
 			margin-top: 10px;
 			font-size: 24px;
@@ -123,6 +190,7 @@
 			text-align: center;
 			color: white;
 			font-weight: bold;
+			opacity: 1;
 		}
 
 		#rightArrow {
@@ -130,6 +198,7 @@
 			max-width: 100%;
 			max-height: 35px;
 			float: right;
+			opacity: 1;
 		}
 
 
@@ -139,8 +208,8 @@
 			text-align: center;
 			overflow: hidden;
 			border-radius: 17px;
-			width: 480px;
-			height: 550px;
+			width: 100%;
+			height: 80%;
 			top: 30%;
 			left: 0;
 		}
@@ -151,30 +220,34 @@
 			text-align: center;
 			overflow: hidden;
 			border-radius: 17px;
-			width: 480px;
+			width: 100%;
 			height: 550px;
 			top: 30%;
 			left: 0;
 		}
 		
 		#map{
-			width: 480px;
-			height: 550px;
+			width: 100%;
+			height: 95%;
 			left: 0;
 		}
 		
 		#reset{
-			position: absolute;
-			top: 540px;
-			left: 25px;
-			height: 35px;
-			border-radius: 5px;
+			left: 3%;
 			color: #ffffff;
 			border: 0px solid white;
 			background: -webkit-linear-gradient(180deg, #FF820D, #FF310D); /* For Safari 5.1 to 6.0 */
 	  		background: -moz-linear-gradient(180deg, #FF820D, #FF310D); /* For Firefox 3.6 to 15 */
-	  		background: linear-gradient(180deg, #FF820D, #FF310D); /* Standard syntax */
-			font-weight: bold;		
+	  		background: linear-gradient(180deg, #FF820D, #FF310D); /* Standard syntax */		
+		}
+
+		.button {
+			position: absolute;
+			top: 80%;
+			height: 35px;
+			border-radius: 5px;
+			font-weight: bold;
+
 		}
 		
 		#reset:hover {
@@ -184,15 +257,10 @@
 		}
 
 		#markers{
-			position: absolute;
-			top: 540px;
-			left: 385px;
-			height: 35px;
-			border-radius: 5px;
+			left: 90%;
 			color: #FFFFFF;
 			border: 2px solid #FF310D;
-			background: none;
-			font-weight: bold;		
+			background: none;	
 		}
 
 		#markers:hover {
@@ -200,7 +268,52 @@
 			color: white;
 		}
 		
-		
+
+		.eventInfoShell {
+			display: none;
+			position: absolute;
+			z-index: 1000000;
+			width: 25%;
+			top: 80%;
+			left: 70.7%;
+			background: #ffffff;
+			border-radius: 3px;
+		}
+
+		#eventInfoList {
+			padding-left: 10px;
+			margin: 0px;
+			display: none;
+			list-style: none;
+		}
+
+		.place {
+			font-size: 16px;
+			line-height: 2.0em;
+		}
+
+		.eventsListArrow {
+			position: absolute;
+			width: 18%;
+			height: 12%;
+			top: 86%;
+			font-weight: bold;
+			font-size: 12px;
+			background: none;
+			border: none;
+			box-shadow: none;
+		}
+
+		#eventsArrowLeft {
+			display: block;
+			left: 2%;
+		}
+
+		#eventsArrowRight {
+			display: block;
+			left: 80%;
+		}
+
 	
 		.data{
 			float: left;
@@ -235,6 +348,7 @@
 			font-weight: bold;
 		}
 
+
 		.leaflet-popup-content-wrapper, .leaflet-popup-tip {
 			border: 5px solid #75b5e3;
 			box-shadow: none;
@@ -264,6 +378,11 @@
 		   -webkit-appearance:none !important;  
 		 }
 
+		#slider {
+			width: 100%;
+			margin-top: -3%;
+			}
+
 		#slider .bar {
 			width: 86%;
 			height: 3px;
@@ -288,7 +407,7 @@
 			height: 25px;
 			cursor: pointer;
 
-			border: 1px solid #dcdcdc;
+			/*border: 1px solid #dcdcdc;*/
 			-webkit-box-shadow: 0px 1px 2px 0px #dadada;
 			-moz-box-shadow: 0px 1px 2px 0px #dadada;
 			box-shadow: 0px 1px 2px 0px #dadada;
@@ -340,6 +459,7 @@
 	<div class="container">
 		
 		<div class="navcontainer">
+			<div id="daysbox"></div>
 			<button class="daynavcontainer"><img id="leftArrow" src="/static/leftArrow.png"</img></button>
 
 			<p class="daynavcontainer" id="dayofweek"></p>
@@ -358,9 +478,9 @@
 			
 			<div id="map"></div>
 			
-			<button id="reset">EVDEX NOW</button>
+			<button class="button" id="reset">EVDEX NOW</button>
 
-			<button id="markers">MARKERS</button>
+			<button class="button" id="markers">MARKERS</button>
 				
 		</div>
 		
@@ -389,6 +509,15 @@
 		</div>
 	</div>
 
+	<div class="eventInfoShell">
+
+	<ol id="eventInfoList">
+	</ol>
+
+	<button class="eventsListArrow" id="eventsArrowLeft">Prev 5</button>
+	<button class="eventsListArrow" id="eventsArrowRight">Next 5</button>		
+	</div>
+
 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -403,6 +532,9 @@
 
 	<script src="/static/leaflet-label.js"></script>
 
+	<script src="/static/markercluster-src.js"></script>
+
+	<script src="/static/markercluster.js"></script>
 
 	<script src="https://maps.googleapis.com/maps/api/js?sensor=false">
 	</script>
