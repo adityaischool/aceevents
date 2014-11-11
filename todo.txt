@@ -1,0 +1,16 @@
+historical data - base
+user interface
+parking - 
+checkins - f,yelp,fb
+--------------------------
+
+landing page
+home app - filter
+
+google maps in house
+
+
+think of a different layer ?
+
+Code restudy
+javascript - obfuscate
