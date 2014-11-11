@@ -41,6 +41,7 @@ def filterEvents(eventDate, eventEndTime):
 	
 	for event in evDex.find({"date": eventDate, "endTime": {'$lte': endTimeHigh, '$gte': endTimeLow}}).sort("capacity", pymongo.DESCENDING):
 	#for event in evDex.find({"date": eventDate}):
+		print "event found!!!!!"+str(event)
 		tempEvent = {}
 
 		tempEvent['name'] = event['name']

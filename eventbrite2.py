@@ -34,7 +34,7 @@ def refreshEvents(db):
 	if db.evDex:
 		db.evDex.remove()
 
-	evDex = db.evDex
+	#evDex = db.evDex
 
 	#evDex = []
 	

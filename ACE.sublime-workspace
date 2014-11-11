@@ -1,0 +1,840 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"lis",
+				"listOfBusiness	statement"
+			],
+			[
+				"oa",
+				"oauth_request	statement"
+			],
+			[
+				"file",
+				"fileToOut	statement"
+			],
+			[
+				"pa",
+				"parseYelp	function"
+			],
+			[
+				"fina",
+				"finalDict	statement"
+			],
+			[
+				"__get",
+				"__getitem__	function"
+			],
+			[
+				"final",
+				"finalDict	param"
+			],
+			[
+				"find",
+				"find_all	function"
+			],
+			[
+				"ret",
+				"retword	statement"
+			],
+			[
+				"main",
+				"mainDictToPrint	statement"
+			],
+			[
+				"b",
+				"booklistval	param"
+			],
+			[
+				"W",
+				"Words	statement"
+			],
+			[
+				"id",
+				"idkey	statement"
+			],
+			[
+				"book",
+				"booklistval	param"
+			],
+			[
+				"boo",
+				"booklist	statement"
+			],
+			[
+				"list",
+				"listnew	statement"
+			],
+			[
+				"f",
+				"filepath	statement"
+			],
+			[
+				"url",
+				"urlopen	function"
+			],
+			[
+				"bo",
+				"bindPopup"
+			],
+			[
+				"add",
+				"addTomap"
+			],
+			[
+				"re",
+				"requestFunction"
+			],
+			[
+				"rea",
+				"readlines	function"
+			],
+			[
+				"j",
+				"jsonify	statement"
+			],
+			[
+				"get",
+				"getUber	function"
+			],
+			[
+				"GetE",
+				"GetEventsWrapper	function"
+			],
+			[
+				"for",
+				"for	For Loop"
+			],
+			[
+				"te",
+				"text-align"
+			],
+			[
+				"p",
+				"password	statement"
+			],
+			[
+				"fon",
+				"font-weight"
+			],
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"to",
+				"todo-list-remove"
+			],
+			[
+				"bu",
+				"button-num"
+			],
+			[
+				"l",
+				"log"
+			],
+			[
+				"fu",
+				"function"
+			],
+			[
+				"tu",
+				"tuple1	param"
+			],
+			[
+				"q",
+				"queryStudentForTeachers	function"
+			],
+			[
+				"satche",
+				"satchelHandler	module"
+			],
+			[
+				"qu",
+				"queryAll	function"
+			],
+			[
+				"E",
+				"Exception	class"
+			],
+			[
+				"hearst",
+				"hearstmain"
+			],
+			[
+				"cl",
+				"close	function"
+			],
+			[
+				"w",
+				"write	function"
+			],
+			[
+				"ename",
+				"enamelist"
+			],
+			[
+				"enam",
+				"enamelist"
+			],
+			[
+				"rost",
+				"rosterfile"
+			],
+			[
+				"if",
+				"ifmain	if __name__ == '__main__'"
+			],
+			[
+				"pr",
+				"printtable"
+			],
+			[
+				"t",
+				"texti"
+			],
+			[
+				"ch",
+				"checkinrange"
+			],
+			[
+				"rotate",
+				"rotateby"
+			],
+			[
+				"s",
+				"stringtorotate"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "ace/templates/index.html",
+			"settings":
+			{
+				"buffer_size": 5389,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "from flask import render_template,request,session,redirect,jsonify\nfrom flask import url_for\nimport Flask-OAuth\nfrom ace import app\nimport gridCalculator\nimport eventbrite1\nimport uber\n\n#eventbrite library called 3 times below\n\ndef auth():\n	if (session['username']!=\"\"):\n		return\n	else:\n		return redirect(url_for('main'))\n\n\n@app.route('/', methods=['GET', 'POST'])\ndef index():\n	return render_template('index.html')\n\n@app.route('/leaflet', methods=['GET', 'POST'])\ndef leaflet():\n	grid=gridCalculator.initMap()\n	listmap=eventbrite1.GetEventsWrapper(grid)\n	return render_template('leaflet.html',grid=grid,listmap=listmap)\n\n@app.route('/_getEbData')\ndef getEbData():\n	centerCoords = []\n	centerCoords = gridCalculator.main()\n	grids = {}\n\n	for i in range(len(centerCoords)):\n		print \"CENTER COORDS\", i, centerCoords[i]\n\n	for i in range(2):\n		print\n		print \"center lat =\", centerCoords[i][0], \"center long =\", centerCoords[i][1]\n		val=eventbrite1.GetEvents(str(round(centerCoords[i][0], 6)), str(round(centerCoords[i][1], 6)), '2')\n		grids[i] = val\n		\n	return jsonify(grids)\n	\n\n	#val=eventbrite.GetEvents('37.742255', '-122.494016', '2')\n\n	#print \"----------------------jsonify----\",val	\n	#return jsonify(result=val) \n	print \"called!!!!\"\n\n@app.route('/_getData')\ndef getUber():\n	#a = request.args.get('a', 0, type=int)\n	val=uber.getUber()\n	print \"----------------------jsonify----\",val\n	return jsonify(result=val) \n	print \"called!!!!\"\n	#b = request.args.get('b', 0, type=int)\n		#return jsonify(result=a + b)\n\"\"\"		if 'username' in session:\n		#return 'Logged in as %s' %session['username']		\n		return redirect(url_for('main'))\n\"\"\"\"\"\"\n	if request.method == 'POST':\n		cl1= request.form['uname']\n		pw1 = request.form['pword']\n		tup1=('teacher',cl1,pw1)\n		session['username']=cl1\n\n		# TODO : Authentication!!!\n		#l1=satchelHandler.authTeacher(tup1)\n		l1 = True\n		if(l1==False):\n			return render_template('form.html',fail=\"Not Found ... !\")\n		else:\n			session['teachername']=cl1\n			#studlist=satchelHandler.queryStudentForTeachers(cl1)\n			studlist=dbHandler.queryStudentForTeachers(cl1)\n			coursewrok=dbHandler.queryCoursework(cl1)\n			return redirect(url_for('classAdminRender'))\n		return redirect(url_for('main'))	\n	#return redirect(url_for('login'))\n	return render_template('landingpage.html')\n\"\"\"\"\"\"\n\n@app.route('/debug')\ndef debug():\n	#return \"Static URL\"+url_for('static', filename='css/bootstrap.min.css')\n	return app.config['DATABASE']+apis.printme()\n\n@app.route('/artifacts.html/<tribename>')\ndef queryAllArtifactsForTribe(tribename):\n	# show the user profile for that user\n	if(tribename==\"\"):\n		return \"No tribe selected\"\n	print \"view: getting artifacts for tribe: \", tribename\n	artifact_tribes, category_tribes = api.get_artifacts_category_for_tribe(tribename)\n	print type(artifact_tribes), len(artifact_tribes), type(artifact_tribes[0])\n	print type(category_tribes), len(category_tribes), type(category_tribes[0])\n	\n	categ_arts = dict()\n	link_categ = list()\n	for categ in category_tribes:\n		categ_arts[categ] = [arty for arty in artifact_tribes if categ in arty['objfilecode_ss']]\n		categ_copy = categ[:]\n		categ_copy=categ_copy.replace(\" \", \"ZZZZZ\")\n		link_categ.append(categ_copy)\n		\n	#print categ_arts\n	return render_template('artifacts.html',artifact_list=categ_arts, category_list=category_tribes, tribe_name = tribename, link_categlist=link_categ, total_count=len(artifact_tribes))\n\n@app.route('/artifact-category.html/<tribename>/<categoryname>')\ndef queryAllArtifactsForCategoryinTribe(tribename,categoryname) :\n	# show the user profile for that user\n	if(tribename==\"\"):\n		return \"No tribe selected\"\n\n	newCateg=categoryname.replace(\"ZZZZZ\", \" \")\n	artifacts_category = api.get_artifacts_tribe_category(tribename, newCateg)\n	return render_template('artifact-category.html',artifact_list=artifacts_category, categ_name = newCateg, tribe_name = tribename, count = len(artifacts_category))\n\n@app.route('/login', methods=['GET', 'POST'])\ndef login():\n	if request.method == 'POST':\n		session['username'] = request.form['username']\n		return redirect(url_for('main'))\n	return render_template('landingpage.html')\n\n@app.route('/guestlogin', methods=['GET', 'POST'])\ndef loginGuest():\n	session['username'] = \"guest\"\n	return redirect(url_for('main'))\n\n@app.route('/fail/<errorcode>')\ndef fail():\n	return render_template('fail.html',fail=errorcode)\n\n@app.route('/homepage.html')\ndef main():\n	return render_template('homepage.html', name=session['username'])\n\n\n@app.route('/satchel.html')\ndef satrender():\n    satchelContents = satchelHandler.querySatchel()\n    coursework = satchelHandler.queryCourseworkForStudent(session['username'])\n    count = len(satchelContents)\n    objectList = []\n    for item in satchelContents:\n        print \"item in satchel\",item\n        print \"CALLING ARTIFACT LIST\"\n        obj = api.getArtifactById(item['obj'])\n        print type(obj[0])\n        objectList.append(obj[0])\n    return render_template('satchel.html', name=session['username'], count=count, artifactList=objectList, coursework=coursework)\n\n@app.route('/user/<username>')\ndef show_user_profile(username):\n	# show the user profile for that user\n	return 'User %s' % username\n\n@app.route('/addtosatchel/<objid>')\ndef satchelAdd(objid):\n	# This is going to add objid to the current requestor\n	satchelHandler.addToSatchel(objid)\n	return \"Success !!!!\"\n\n@app.route('/queryAll')\ndef queryAll():\n	# show the user profile for that user\n	mylist=[]\n	mylist=satchelHandler.querySatchel()\n	str1=\"wow\"\n	for myelement in mylist:\n		str1=str1+myelement['teachername']\n	return str1\n\n@app.route('/viewSatchel/<studname>')\ndef viewSatchelForStudent(studname):\n	# show the user profile for that user\n	mylist=[]\n	satchelContents=satchelHandler.querySatchelForStudent(studname)\n	count = len(satchelContents)\n	objectList = []\n	for item in satchelContents:\n		print \"item in satchel\",item\n		print \"CALLING ARTIFACT LIST\"\n		obj = api.getArtifactById(item['obj'])\n		print type(obj[0])\n		objectList.append(obj[0])\n	return render_template('studentssatchel.html', name=studname, count=count, artifactList=objectList)\n@app.route('/artifact-category.html/<tribeid>')\ndef queryAllArtifacts():\n	# show the user profile for that user\n	if(tribeid!=\"\"):\n		return \"No tribe selected\"\n	mylist=satchelHandler.queryAllArtifacts(tribeid)\n	str1=\"wow\"\n	for myelement in mylist:\n		str1=str1+myelement['teachername']\n	return str1\n\n\n@app.route('/artifact-category.html/<tribename>')\ndef queryAll1Artifacts(tribename):\n	artifact_list=api.get_all_artifacts(tribename)\n	count = len(artifact_list)\n	# show the user profile for that user\n	return render_template('artifact-category.html',artifact_list=artifact_list,count=count)\n\n@app.route('/logout')\ndef terminate():\n	# remove the username from the session if it's there\n	session.pop('username', None)\n	session.pop('teachername', None)\n\n	return redirect(url_for('index'))\n\n@app.route('/studentlogin', methods=['GET', 'POST'])\ndef studlogin():\n	if request.method == 'POST':\n		print \"form control\"\n		cl1= request.form['classname']\n		pw1 = request.form['password1']\n		print \"form req\"\n		tup1=(cl1,pw1)\n		print \"wow\",tup1\n		l1=satchelHandler.getStudentLogin(tup1)\n		print \"list of studs\", l1\n		if(l1 is None):\n			return render_template('studentform.html',fail=\"Not Found ... !\")\n		else:\n			session['teachername']=l1['teachername']\n			return render_template('choosename.html',studlist=l1['liststuds'])\n		return redirect(url_for('main'))\n	return render_template('studentform.html')\n\n@app.route('/studentrender/<studlogin>')\ndef studentRender(studlogin):\n	if 'teachername' in session:\n		session['username']= studlogin\n		return redirect(url_for('main'))\n	else:\n		return redirect(url_for('fail'))\n	return render_template('teacherform.html')\n\n@app.route('/classadmin', methods=['GET', 'POST'])\ndef classAdminRender():\n	if 'teachername' in session:\n		cl1=session['teachername']\n\n		if request.method == 'POST':\n			coursework= request.form.get('coursework')\n			added_student = request.form.get('student-added')\n			if coursework != None:\n				print 'coursework:'+coursework\n				dbHandler.updateCoursework(cl1, coursework)\n			elif added_student != None:\n				dbHandler.addStudentToClass(cl1, added_student)\n\n		student_list=dbHandler.queryStudentForTeachers(cl1)\n		coursewrok=dbHandler.queryCoursework(cl1)\n\n		return render_template('classadmin.html', student_list = student_list, coursewrok = coursewrok)\n	else:\n		return redirect(url_for('fail'))	\n\n@app.route('/fail')\ndef fail():\n	return render_template('fail.html')\n\"\"\"",
+			"file": "ace/views.py",
+			"file_size": 8486,
+			"file_write_time": 130585688533169872,
+			"settings":
+			{
+				"buffer_size": 8490,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "eventbrite1.py",
+			"settings":
+			{
+				"buffer_size": 5355,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "agent.py",
+			"settings":
+			{
+				"buffer_size": 5355,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "ace/index.html",
+			"settings":
+			{
+				"buffer_size": 1856,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/aditya/berkeleyhackers/CloudAndDeploy/Hanuspace-apache-install.txt",
+			"settings":
+			{
+				"buffer_size": 19773,
+				"line_ending": "Unix",
+				"name": "aditya@tyrionLannister:~$ ssh root@104.131.159.159"
+			}
+		},
+		{
+			"file": "ace/static/leaflet.js",
+			"settings":
+			{
+				"buffer_size": 8835,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "23 night -\n\nSB\n24 - 25 - SB\n26 - LA\n27 - LA\n28,29 - SD\n30,31 - vegas\n",
+			"settings":
+			{
+				"buffer_size": 69,
+				"line_ending": "Unix",
+				"name": "23 night -"
+			}
+		},
+		{
+			"settings":
+			{
+				"buffer_size": 0,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"selected_items":
+		[
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/aditya/UCB/i206/hw7/restaurants2.Mishra.txt",
+		"/home/aditya/UCB/i206/hw7/hw7xtracredit.mishra.py",
+		"/home/aditya/UCB/i206/hw7/aa",
+		"/home/aditya/UCB/i206/hw7/restaurants.Mishra.txt",
+		"/home/aditya/UCB/i206/hw7/a",
+		"/home/aditya/UCB/i206/hw7/untitled",
+		"/home/aditya/UCB/i206/hw7/hw7.py",
+		"/home/aditya/UCB/i206/hw7/untitled.html",
+		"/home/aditya/UCB/290TA/info290ta/homework5/_css/style.css",
+		"/home/aditya/UCB/290TA/info290ta/homework5/index.html",
+		"/home/aditya/UCB/290TA/info290ta/homework5/leaflet/leaflet.js",
+		"/home/aditya/UCB/290TA/info290ta/homework5/_js/script.js",
+		"/home/aditya/UCB/290TA/info290ta/homework5/ind2.html",
+		"/home/aditya/berkeleyhackers/AceEvents/ace/static/leaflet.js",
+		"/home/aditya/berkeleyhackers/AceEvents/ace/index.html",
+		"/home/aditya/berkeleyhackers/AceEvents/ace/views.py",
+		"/home/aditya/berkeleyhackers/AceEvents/ace/templates/leaflet.html",
+		"/home/aditya/berkeleyhackers/AceEvents/ace/templates/index.html",
+		"/home/aditya/berkeleyhackers/AceEvents/eventbrite.py",
+		"/home/aditya/berkeleyhackers/AceEvents/ace/uber.py",
+		"/home/aditya/berkeleyhackers/AceEvents/ace/eventbrite.py",
+		"/home/aditya/berkeleyhackers/AceEvents/ace/leaflet.js",
+		"/home/aditya/UCB/290TA/info290ta/homework2/iolab/homework3/index.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/choosename.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/dbHandler.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/studentssatchel.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/classadmin.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/studentform.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/satchelHandler.py",
+		"/home/aditya/berkeleyhackers/hearstapp/scripts.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/views.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/teacherform.html",
+		"/home/aditya/berkeleyhackers/hearstapp/bj2",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/artifact-category.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/libs/api.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/homepage.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/bkuptxt",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/form.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/libs/apis.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/libHandler.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/landing.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/templates/guest.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/sessionex.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/backend_details.txt",
+		"/home/aditya/berkeleyhackers/hearstapp/app/config.py",
+		"/home/aditya/berkeleyhackers/hearstapp/temp.html",
+		"/home/aditya/berkeleyhackers/hearstapp/config.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/static/artifact-category.html",
+		"/home/aditya/berkeleyhackers/hearstapp/app/__init__.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/run_b.py",
+		"/home/aditya/berkeleyhackers/hearstapp/run.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/tester.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/lib/__init__.py",
+		"/home/aditya/berkeleyhackers/hearstapp/app/lib/apis.py",
+		"/home/aditya/berkeleyhackers/itagnew/models/models.py",
+		"/home/aditya/berkeleyhackers/itagnew/app/views.py",
+		"/home/aditya/berkeleyhackers/itagnew/templates/index.html",
+		"/home/aditya/berkeleyhackers/itagnew/app/run.py",
+		"/home/aditya/berkeleyhackers/itagnew/app.py",
+		"/home/aditya/bootcamp/bootcamp.sublime-project",
+		"/home/aditya/bootcamp/test.py",
+		"/home/aditya/bootcamp/t.txt",
+		"/home/aditya/bootcamp/Class 1 - unix",
+		"/home/aditya/bootcamp/testover.py",
+		"/home/aditya/bootcamp/e1.py",
+		"/home/aditya/bootcamp/osexamples.py",
+		"/home/aditya/bootcamp/files.py",
+		"/home/aditya/bootcamp/lab_files_aditya_roster.py",
+		"/home/aditya/bootcamp/filee.py",
+		"/home/aditya/bootcamp/imp notes",
+		"/home/aditya/bootcamp/assignments",
+		"/home/aditya/bootcamp/lab2_textadventure_aditya.py",
+		"/home/aditya/bootcamp/exx.py",
+		"/home/aditya/bootcamp/google_string2.py",
+		"/home/aditya/bootcamp/split.py",
+		"/home/aditya/bootcamp/print \"Hello World\"",
+		"/home/aditya/bootcamp/passing2.py",
+		"/home/aditya/bootcamp/passargs.py",
+		"/home/aditya/bootcamp/output.txt",
+		"/home/aditya/bootcamp/lab2_loops_withoutnested_aditya.py",
+		"/home/aditya/bootcamp/lab2_loops.py",
+		"/home/aditya/bootcamp/lab1_aditya.py",
+		"/home/aditya/bootcamp/lab1.py",
+		"/home/aditya/bootcamp/helloworld.oy",
+		"/home/aditya/bootcamp/fnex.py",
+		"/home/aditya/bootcamp/exxcept.py",
+		"/home/aditya/bootcamp/ex8_12_aditya.py"
+	],
+	"find":
+	{
+		"height": 25.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"lou",
+			"cafe",
+			"media-sto",
+			"abominate",
+			".",
+			"1",
+			"<>",
+			">>",
+			"\\n",
+			"<<",
+			"^",
+			"destination 2",
+			"gridColor",
+			"polyline",
+			"app",
+			"/------------------------------------------\n",
+			"yapi",
+			"queryclasslogin",
+			"artifact_lis",
+			"artifact_",
+			",null,null",
+			"route",
+			"@app.",
+			"Admin",
+			")\n",
+			"\\n",
+			"        start()\n",
+			"option",
+			"kevin",
+			" "
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"",
+			">",
+			">\\n",
+			"<",
+			",'null','null'",
+			"",
+			"Route to ",
+			"Player",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 5,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "ace/templates/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5389,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1060,
+								1060
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 714.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "ace/views.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8490,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1046,
+								1046
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "eventbrite1.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5355,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5355,
+								5355
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "agent.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5355,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "ace/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1856,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1172,
+								1172
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 255.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/aditya/berkeleyhackers/CloudAndDeploy/Hanuspace-apache-install.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 19773,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								19773,
+								19773
+							]
+						],
+						"settings":
+						{
+							"auto_name": "aditya@tyrionLannister:~$ ssh root@104.131.159.159",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5678.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "ace/static/leaflet.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8835,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								425,
+								425
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 204.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 69,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"auto_name": "23 night -",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 188.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "ACE.sublime-project",
+	"replace":
+	{
+		"height": 46.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"tes",
+				"test.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 221.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
