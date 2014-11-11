@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="/static/css/leaflet-label.css"/>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 
+	<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css' rel='stylesheet' />
+	<link href='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css' rel='stylesheet' />
+
 	<!-- <link href='http://fonts.googleapis.com/css?family=Karla:400,700' rel='stylesheet' type='text/css'> -->
 	<link href='http://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
@@ -18,11 +21,11 @@
 
 	
 
-	@media screen and (min-width: 0) and (max-width: 449px) {
+	@media screen and (max-width: 449px) {
 
 		.navcontainer {
 
-			width: 150px;
+			width: 60px;
 			margin-left: -20%;
 
 		}
@@ -31,19 +34,18 @@
 			height: 50%;
 		}
 
-		.mapcontainer {
-			height: 65%;
+		.map_container {
+			height: 45%;
 		}
 
 		#map {
-			height: 60%;
+			height: 45%;
 		}
 
-		#markers{
+		/*#markers{
 
 			margin-left: -20%;
-		}
-
+		}*/
 
 	}
 
@@ -51,14 +53,19 @@
 	@media screen and (min-width: 450px) and (max-width: 1023px) {
 
 		.navcontainer {
-
-			margin-left: -10%;
+			position: absolute;
+			width: 100px;
+			height: 50px;
+			left: 10%;
+			z-index: 1000;
+			/*background: black;
+			opacity: .3;*/
 		}
 
-		#markers{
+		/*#markers{
 
 			margin-left: -10%;
-		}
+		}*/
 
 
 	}
@@ -111,8 +118,8 @@
 		
 		.navcontainer {
 			position: absolute;
-			width: 500px;
-			height: 50px;
+			width: 300px;
+			height: 90px;
 			left: 30%;
 			z-index: 1000;
 			/*background: black;
@@ -179,9 +186,9 @@
 		}
 
 		#dayofweek {
-			width: 350px;
-			margin-left: 40px;
-			margin-right: 40px;
+			width: 150px;
+			margin-left: 50px;
+			margin-right: 25px;
 			margin-top: -3px;
 			display: inline-block;
 			margin-top: 10px;
@@ -256,20 +263,10 @@
 	  		background: linear-gradient(180deg, #FF310D, #FF820D); /* Standard syntax */
 		}
 
-		#markers{
-			left: 90%;
-			color: #FFFFFF;
-			border: 2px solid #FF310D;
-			background: none;	
-		}
-
-		#markers:hover {
-			background: #FF3300;
-			color: white;
-		}
+		
 		
 
-		.eventInfoShell {
+		/*.eventInfoShell {
 			display: none;
 			position: absolute;
 			z-index: 1000000;
@@ -281,16 +278,18 @@
 		}
 
 		#eventInfoList {
-			padding-left: 10px;
+			padding-left: 0px;
 			margin: 0px;
 			display: none;
 			list-style: none;
 		}
 
 		.place {
+
+			border-bottom: 1px solid #e6e6e6;
 			font-size: 16px;
 			line-height: 2.0em;
-		}
+		}*/
 
 		.eventsListArrow {
 			position: absolute;
@@ -446,7 +445,7 @@
         	<div class="collapse navbar-collapse">
 	          	<ul class="nav navbar-nav">
 	            <li class="active"><a href="#">Home</a></li>
-	            <li><a href="#about">About</a></li>
+	            <li><a id="markers">Markers</a></li>
 	            <li><a href="#contact">Contact</a></li>
           		</ul>
         	</div>
@@ -480,7 +479,7 @@
 			
 			<button class="button" id="reset">EVDEX NOW</button>
 
-			<button class="button" id="markers">MARKERS</button>
+			
 				
 		</div>
 		
@@ -509,13 +508,13 @@
 		</div>
 	</div>
 
-	<div class="eventInfoShell">
+	<div class="nav navbar-nav"  class="eventInfoShell">
 
 	<ol id="eventInfoList">
 	</ol>
 
-	<button class="eventsListArrow" id="eventsArrowLeft">Prev 5</button>
-	<button class="eventsListArrow" id="eventsArrowRight">Next 5</button>		
+	<!--<button class="eventsListArrow" id="eventsArrowLeft">Prev 5</button>
+	<button class="eventsListArrow" id="eventsArrowRight">Next 5</button>-->		
 	</div>
 
 
@@ -532,9 +531,9 @@
 
 	<script src="/static/leaflet-label.js"></script>
 
-	<script src="/static/markercluster-src.js"></script>
 
-	<script src="/static/markercluster.js"></script>
+	<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
+	
 
 	<script src="https://maps.googleapis.com/maps/api/js?sensor=false">
 	</script>

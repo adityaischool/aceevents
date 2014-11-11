@@ -25,9 +25,9 @@ function showPosition(position) {
 
 
 
-var map = L.map('map');
+var map = L.map('map').setView(center, 12);
 
-getLocation();
+//getLocation();
 
 L.tileLayer('https://{s}.tiles.mapbox.com/v3/ajones620.k4bkhnfi/{z}/{x}/{y}.png', {
     attribution: '© <a href="http://www.mapbox.com/about/maps/" target="_blank"> Mapbox Terms &amp; Feedback</a>'
@@ -110,11 +110,17 @@ function setDefault() {
 
 	var n = formattedDate.getDay();
 
-	var minutes = '';
+	var minutesLow = '';
 
-	var ampm = '';
+	var minutesHigh = '';
 
-	var hours = '';
+	var ampmLow = '';
+
+	var ampmHigh = '';
+
+	var hoursLow = '';
+
+	var hoursHigh = '';
 
 	eventCoords = [];	
 
@@ -131,6 +137,7 @@ function setDefault() {
 	//console.log(selectedTime);
 
 	document.getElementById('dayofweek').innerHTML = (days[n]+'\t'+dateMonthString);
+
 
 	if (x.getMinutes() < 10) {
 
@@ -149,7 +156,6 @@ function setDefault() {
 
 		ampm = 'pm';
 	}
-
 
 	if (x.getHours() % 12 == 0) {
 
@@ -284,7 +290,7 @@ function changeDay() {
 
 	var n = formattedDate.getDay();
 
-	document.getElementById('dayofweek').innerHTML = (days[n]+'\t\t'+dateMonthString);
+	document.getElementById('dayofweek').innerHTML = (days[n]+'<br>'+dateMonthString);
 
 	//console.log(dateTime);
 
@@ -316,6 +322,8 @@ function createHeatCoords() {
 	};
 
 	//console.log(heatCoords);
+
+	console.log(eventCoords);
 
 	heat.setLatLngs(heatCoords);
 
@@ -390,7 +398,7 @@ function getData() {
 
 	markersIndex = 0;
 
-	clickMarkerButton();
+	//clickMarkerButton();
 
 	$.getJSON('/_getEbData', {
 		params: JSON.stringify(dateTime),
@@ -483,12 +491,12 @@ function drawMarkerList() {
 
 				markerList += (
 
-	            '<li class="place">'+num+'. '+markersPages[mi][i][2].slice(0, 20)+'  | Cap '+markersPages[mi][i][3]+' | <a href=http://maps.google.com/?daddr='+markersPages[mi][i][0]+','+markersPages[mi][i][1]+'target=_blank>Nav</a></li>');
+	            '<li class="place">&nbsp;&nbsp;&nbsp;&nbsp;'+num+'. '+markersPages[mi][i][2].slice(0, 20)+'  | Cap '+markersPages[mi][i][3]+' | <a href=http://maps.google.com/?daddr='+markersPages[mi][i][0]+','+markersPages[mi][i][1]+'target=_blank>Nav</a></li>');
 			
 			};
 		}
 
-		$('#eventInfoList').html(markerList);
+		//$('#eventInfoList').html(markerList);
 
 		if (markerSwitch == true) {
 
@@ -525,6 +533,25 @@ function drawMarkers() {
 }
 
 
+//var clusterMarkers = new L.MarkerClusterGroup();
+
+//map.addLayer(clusterMarkers);
+
+function drawCluster() {
+
+	for (var i=0; i < eventCoords.length; i++) {
+
+		var marker = new L.marker([eventCoords[i][0], eventCoords[i][1]]);
+
+		clusterMarkers.addLayer(marker);
+
+	}
+
+};
+
+//drawCluster();
+
+
 $('#reset').click(function() {
 
 	setDefault();
@@ -557,7 +584,7 @@ $('#eventsArrowRight').click(function() {
 
 		markersIndex += 1;
 
-		drawMarkerList();
+		//drawMarkerList();
 
 		drawMarkers();
 
@@ -573,20 +600,30 @@ function clickMarkerButton() {
 
 	if (markerSwitch == false) {
 
-		$('#markers').css({"color":"#ffffff", "background": "-webkit-linear-gradient(180deg, #FF820D, #FF310D)",/* For Safari 5.1 to 6.0 */
-	  		"background": "-moz-linear-gradient(180deg, #FF820D, #FF310D)", /* For Firefox 3.6 to 15 */
-	  		"background": "linear-gradient(180deg, #FF820D, #FF310D)",
-	  		"border": "none"});
+		/*var tempLayers = markers.getLayers();
 
-		drawMarkerList();
+		var maxCap = 0;
+
+		for (var i = 0; i < tempLayers.length; i++) {
+
+			console.log(tempLayers[i]);
+
+		}*/
+
+		/*$('#markers').css({"color":"#ffffff", "background": "-webkit-linear-gradient(180deg, #FF820D, #FF310D)",
+	  		"background": "-moz-linear-gradient(180deg, #FF820D, #FF310D)",
+	  		"background": "linear-gradient(180deg, #FF820D, #FF310D)",
+	  		"border": "none"});*/
+
+		//drawMarkerList();
 
 		drawMarkers();
 
-		$('.eventInfoShell').css({"display": "block"});
+		//$('.eventInfoShell').css({"display": "block"});
 
-		$('.eventInfoShell').animate({"height": "200px", "top": "48.5%"}, 400, 'swing');
+		//$('.eventInfoShell').animate({"height": "200px", "top": "48.5%"}, 400, 'swing');
 
-		$('#eventInfoList').css({"display": "block"});
+		//$('#eventInfoList').css({"display": "block"});
 
 		//$('#eventInfoList').html("TESTING 1, 2, 3");
 
@@ -594,16 +631,16 @@ function clickMarkerButton() {
 
 	} else if (markerSwitch == true) {
 		
-		$('.eventInfoShell').animate({"height": "0px", "top": "80%"}, 300, 'swing', $('#eventInfoList').css({"display": "block"}));
+		//$('.eventInfoShell').animate({"height": "0px", "top": "80%"}, 300, 'swing', $('#eventInfoList').css({"display": "block"}));
 
-		$('#eventInfoList').html("");
+		//$('#eventInfoList').html("");
 
-		$('#markers').css({"color":"#FF310D", "background": "none",/* For Safari 5.1 to 6.0 */
-	  		"background": "none", /* For Firefox 3.6 to 15 */
+		/*$('#markers').css({"color":"#FF310D", "background": "none",
 	  		"background": "none",
-	  		"border": "2px solid #FF310D"});
+	  		"background": "none",
+	  		"border": "2px solid #FF310D"});*/
 
-		$('#eventInfoList').html("");
+		//$('#eventInfoList').html("");
 
 		map.removeLayer(eventMarkers);	
 
