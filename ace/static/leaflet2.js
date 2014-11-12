@@ -188,7 +188,7 @@ function changeTime() {
 
 	//console.log(selectedTime);
 
-	map.fitBounds(gridCoords);
+	//map.setView(center, 12)
 
 	eventCoords = [];
 
@@ -253,7 +253,7 @@ function changeDay() {
 
 	dateTime = [];
 
-	map.fitBounds(gridCoords);
+	map.setView(center, 12)
 
 	eventCoords = [];
 	
@@ -394,7 +394,7 @@ $('.leaflet-control-zoom-in').click(function() {
 
 function getData() {
 
-	markerSwitch = true;
+	//markerSwitch = true;
 
 	markersIndex = 0;
 
@@ -468,11 +468,8 @@ function createMarkersPages(boundedEvents) {
 
 	console.log(markersPages);
 
-	if (markerSwitch == true) {
+	drawMarkerList();
 
-		drawMarkerList();
-
-	}
 };
 
 function drawMarkerList() {
@@ -498,10 +495,7 @@ function drawMarkerList() {
 
 		//$('#eventInfoList').html(markerList);
 
-		if (markerSwitch == true) {
-
-			drawMarkers();
-		}
+		drawMarkers();
 
 }
 
@@ -528,7 +522,7 @@ function drawMarkers() {
 		};
 	}
 
-		map.addLayer(eventMarkers);
+		//map.addLayer(eventMarkers);
 
 }
 
@@ -556,7 +550,7 @@ $('#reset').click(function() {
 
 	setDefault();
 
-    map.fitBounds(gridCoords);
+    map.setView(center, 12)
 
 });
 
@@ -570,8 +564,6 @@ $('#eventsArrowLeft').click(function() {
 
 		drawMarkerList();
 
-		drawMarkers();
-
 	}
 });
 
@@ -584,9 +576,7 @@ $('#eventsArrowRight').click(function() {
 
 		markersIndex += 1;
 
-		//drawMarkerList();
-
-		drawMarkers();
+		drawMarkerList();
 
 	}
 });
@@ -599,6 +589,8 @@ function clickMarkerButton() {
 	markersIndex = 0;
 
 	if (markerSwitch == false) {
+
+		map.addLayer(eventMarkers);
 
 		/*var tempLayers = markers.getLayers();
 
@@ -617,7 +609,7 @@ function clickMarkerButton() {
 
 		//drawMarkerList();
 
-		drawMarkers();
+		//drawMarkers();
 
 		//$('.eventInfoShell').css({"display": "block"});
 
