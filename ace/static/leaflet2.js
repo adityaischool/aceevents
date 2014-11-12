@@ -136,7 +136,7 @@ function setDefault() {
 
 	//console.log(selectedTime);
 
-	document.getElementById('dayofweek').innerHTML = (days[n]+'\t'+dateMonthString);
+	document.getElementById('dayofweek').innerHTML = (days[n]+'&nbsp;'+dateMonthString);
 
 
 	if (x.getMinutes() < 10) {
@@ -167,7 +167,7 @@ function setDefault() {
 
 	}
 
-	var prettyTime = hours + ":" + minutes + " " + ampm;
+	var prettyTime = "Events ending&nbsp;" + hours + ":" + minutes + " " + ampm;
 
 	//console.log(prettyTime);
 
@@ -238,7 +238,7 @@ function changeTime() {
 
 	//console.log(hours);
 
-	var prettyTime = hours + ":" + min + " " + ampm;
+	var prettyTime = "Events ending&nbsp;" + hours + ":" + min + " " + ampm;
 
 	//console.log(prettyTime);
 
@@ -290,7 +290,7 @@ function changeDay() {
 
 	var n = formattedDate.getDay();
 
-	document.getElementById('dayofweek').innerHTML = (days[n]+'<br>'+dateMonthString);
+	document.getElementById('dayofweek').innerHTML = (days[n]+'&nbsp;'+dateMonthString);
 
 	//console.log(dateTime);
 
@@ -516,7 +516,7 @@ function drawMarkers() {
 
 		for (var i=0; i < markersPages[mi].length; i++) {
 
-			marker = new L.marker([markersPages[mi][i][0], markersPages[mi][i][1]], {icon: markerIcon, riseOnHover: true}).
+			marker = new L.marker([markersPages[mi][i][0], markersPages[mi][i][1]], {riseOnHover: true}).
 			bindPopup("Event: "+markersPages[mi][i][2]+"<br>Location: "+markersPages[mi][i][4]+"<br>Capacity: "+markersPages[mi][i][3]+"<br><a href=http://maps.google.com/?daddr="+markersPages[mi][i][0]+","+markersPages[mi][i][1]+" target=_blank>Navigate</a>");
 
 		/*setTimeout(function() {
