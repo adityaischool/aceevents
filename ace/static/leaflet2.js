@@ -58,7 +58,7 @@ var grid = new L.featureGroup();
 
 var heatCoords = [];
 
-var heat = L.heatLayer(heatCoords, {radius: 13, blur: 15, max: 1, gradient:{.1: 'blue', .2: 'lime', .3: 'yellow', .5: 'orange', .8: 'red'}}).addTo(map);
+var heat = L.heatLayer(heatCoords, {radius: 13, blur: 15, max: 1, gradient:{.1: '#7cd1fc', .2: 'lime', .3: 'yellow', .5: 'orange', .8: 'red'}}).addTo(map);
 
 var eventMarkers = new L.featureGroup();
 
@@ -380,7 +380,9 @@ function fenceEvents() {
 
 	console.log(zoomedEvents);
 
-	createMarkersPages(zoomedEvents);
+	drawMarkers();
+
+	//createMarkersPages(zoomedEvents);
 
 	//console.log('before zoomed bounds: '+[bounds['_northEast'].lat, bounds['_northEast'].lng], [bounds['_southWest'].lat, bounds['_southWest'].lng]);
 
@@ -454,7 +456,9 @@ function createMarkersPages(boundedEvents) {
 
 	for (var i2=0; i2 < events.length; i2++) {
 
-		if (count % 5 == 0) {
+
+		//CHANGE MODULO DIVISOR TO HOWEVER MANY EVENTS YOU WANT PER PAGE
+		if (count % 1 == 0) {
 
 			markersPages.push([]);
 
@@ -472,7 +476,7 @@ function createMarkersPages(boundedEvents) {
 
 };
 
-function drawMarkerList() {
+/*function drawMarkerList() {
 
 		var markerList = "<br>No Events Found!<br><br>Try selecting a different date or time.";
 
@@ -497,8 +501,50 @@ function drawMarkerList() {
 
 		drawMarkers();
 
+};*/
+
+function drawMarkerList() {
+
+		var markerList = "<br>No Events Found!<br><br>Try selecting a different date or time.";
+
+		var mi = markersIndex;
+		
+		if (zoomedEvents.length > 0) {
+
+			markerList = "";
+
+			for (var i=0; i < zoomedEvents.length; i++) {
+
+				var num = (markersIndex * 5) + (i + 1);
+
+				markerList += (
+
+	            '<li class="place">&nbsp;&nbsp;&nbsp;&nbsp;'+num+'. '+zoomedEvents[i][2].slice(0, 20)+'  | Cap '+zoomedEvents[i][3]+' | <a href=http://maps.google.com/?daddr='+zoomedEvents[i][0]+','+zoomedEvents[i][1]+'target=_blank>Nav</a></li>');
+			
+			};
+		}
+
+		//$('#eventInfoList').html(markerList);
+
+		drawMarkers();
+
+};
+
+
+function directions() {
+
+	var start = "37.788869,-122.402059";
+	var finish = "37.777436,-122.453513";
+	var apikey = "sk.eyJ1IjoiYWpvbmVzNjIwIiwiYSI6Ii10Ym9PVGsifQ.WiIr55f28UxPAk-cxQtRiQ";
+
+	var req = "http://api.tiles.mapbox.com/v4/directions/mapbox.driving/"+start+";"+finish+".json?access_token="+apikey;
+
+
+	console.log('alert!');
+
 }
 
+directions();
 
 function drawMarkers() {
 
@@ -506,12 +552,30 @@ function drawMarkers() {
 	
 	var mi = markersIndex;
 
-	if (markersPages.length > 0) {
+	console.log(zoomedEvents);
+	console.log(zoomedEvents.length);
 
-		for (var i=0; i < markersPages[mi].length; i++) {
+	if (zoomedEvents.length > 0) {
 
-			marker = new L.marker([markersPages[mi][i][0], markersPages[mi][i][1]], {riseOnHover: true}).
-			bindPopup("Event: "+markersPages[mi][i][2]+"<br>Location: "+markersPages[mi][i][4]+"<br>Capacity: "+markersPages[mi][i][3]+"<br><a href=http://maps.google.com/?daddr="+markersPages[mi][i][0]+","+markersPages[mi][i][1]+" target=_blank>Navigate</a>");
+		for (var i=0; i < zoomedEvents.length - 1; i++) {
+
+			marker = new L.marker([zoomedEvents[i][0], zoomedEvents[i][1]], {riseOnHover: true}).
+			bindPopup("Event: "+zoomedEvents[i][2]+"<br>Location: "+zoomedEvents[i][4]+"<br>Capacity: "+zoomedEvents[i][3]+"<br><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a>");
+
+			/*marker.on('click', function() {
+
+				//$('#eventInfoList').html('');
+
+				console.log(zoomedEvents);
+				console.log(markersIndex);
+				console.log(zoomedEvents.length);
+				console.log(i);
+				console.log(zoomedEvents[i]);
+
+				$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li><li><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a></li>");
+
+			});
+			//bindPopup("Event: "+zoomedEvents[i][2]+"<br>Location: "+zoomedEvents[i][4]+"<br>Capacity: "+zoomedEvents[i][3]+"<br><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a>");
 
 		/*setTimeout(function() {
 
