@@ -58,11 +58,13 @@ var grid = new L.featureGroup();
 
 var heatCoords = [];
 
-var heat = L.heatLayer(heatCoords, {radius: 13, blur: 15, max: 1, gradient:{.1: '#7cd1fc', .2: 'lime', .3: 'yellow', .5: 'orange', .8: 'red'}}).addTo(map);
+var heat = L.heatLayer(heatCoords, {opacity: 0.2, radius: 13, blur: 15, max: 1, gradient:{.1: '#7cd1fc', .2: 'lime', .3: 'yellow', .5: 'orange', .8: 'red'}}).addTo(map);
 
 var eventMarkers = new L.featureGroup();
 
-var markerSwitch = false;
+map.addLayer(eventMarkers);
+
+var markerSwitch = true;
 
 var gridCoords = [[37.81, -122.5155], [37.81, -122.369145],
 				[37.703206, -122.5155], [37.703206, -122.369145]];
@@ -190,6 +192,8 @@ function changeTime() {
 
 	//map.setView(center, 12)
 
+	selectedMarker = [];
+
 	eventCoords = [];
 
 	var x = selectedTime * 2;
@@ -251,6 +255,8 @@ function changeTime() {
 
 function changeDay() {
 
+	selectedMarker = [];
+
 	dateTime = [];
 
 	map.setView(center, 12)
@@ -307,11 +313,11 @@ function createHeatCoords() {
 
 	for (var i=0; i < eventCoords.length; i++) {
 
-		cap = eventCoords[i][3];
+		var cap = eventCoords[i][3];
 
-		lat = eventCoords[i][0];
+		var lat = eventCoords[i][0];
 
-		lng = eventCoords[i][1];
+		var lng = eventCoords[i][1];
 		
 		for (var i2=0; i2 < cap/6; i2++) {
 
@@ -323,7 +329,7 @@ function createHeatCoords() {
 
 	//console.log(heatCoords);
 
-	console.log(eventCoords);
+	//console.log(eventCoords);
 
 	heat.setLatLngs(heatCoords);
 
@@ -335,16 +341,32 @@ var zoomedEvents = [];
 
 
 map.on('load', fenceEvents);
+
 map.on('zoomend', fenceEvents);
+
 map.on('dragend', fenceEvents);
 
-var markerIcon = L.icon({
 
-	iconUrl: '/static/marker-master1.png',
 
-	iconSize: [30, 40],
+var iconScale = 1.3;
 
-	iconAnchor: [15, 36]
+var markerIconBlue = L.icon({
+
+	iconUrl: '/static/markerblue1.png',
+
+	iconAnchor: [11, 38],
+
+	iconSize: [17 * iconScale, 29.5 * iconScale]
+
+});
+
+var markerIconRed = L.icon({
+
+	iconUrl: '/static/markerred.png',
+
+	iconAnchor: [11, 38],
+
+	iconSize: [17 * iconScale, 29.5 * iconScale]
 
 });
 
@@ -354,6 +376,8 @@ function fenceEvents() {
 	markersIndex = 0;
 
 	zoomedEvents = [];
+
+	console.log(eventCoords);
 
 	var bounds = map.getBounds();
 
@@ -380,7 +404,12 @@ function fenceEvents() {
 
 	console.log(zoomedEvents);
 
-	drawMarkers();
+	
+	if (markerSwitch == true) {
+
+		drawMarkers();
+
+	}
 
 	//createMarkersPages(zoomedEvents);
 
@@ -390,15 +419,70 @@ function fenceEvents() {
 
 $('.leaflet-control-zoom-in').click(function() {
 
-	
+
 
 });
+
+
+var markerZIndex = 200;
+
+var selectedMarker = [];
+
+function redMarker(marker) {
+
+	var newSelection = marker;
+
+	if (selectedMarker.length > 0) {
+
+		selectedMarker[0].setIcon(markerIconBlue);
+
+		selectedMarker[0].setZIndexOffset(0);
+
+		//selectedMarker[0].style.zIndex= "100";
+
+		selectedMarker = [];
+
+		selectedMarker.push(newSelection);
+
+		console.log(selectedMarker[0]);
+
+		selectedMarker[0].setIcon(markerIconRed);
+
+		selectedMarker[0].setZIndexOffset(markerZIndex);
+
+		console.log(selectedMarker[0]);
+
+		markerZIndex++;
+
+	} else {
+
+		selectedMarker.push(newSelection);
+
+		console.log(selectedMarker[0]);
+
+		selectedMarker[0].setIcon(markerIconRed);
+
+		selectedMarker[0].setZIndexOffset(markerZIndex);
+
+		console.log(selectedMarker[0]);
+
+		markerZIndex++;
+
+	}
+
+	
+
+};
 
 function getData() {
 
 	//markerSwitch = true;
 
+	eventCoords = [];
+
 	markersIndex = 0;
+
+	$('#eventInfoList').html("");
 
 	//clickMarkerButton();
 
@@ -476,32 +560,6 @@ function createMarkersPages(boundedEvents) {
 
 };
 
-/*function drawMarkerList() {
-
-		var markerList = "<br>No Events Found!<br><br>Try selecting a different date or time.";
-
-		var mi = markersIndex;
-		
-		if (markersPages.length > 0) {
-
-			markerList = "";
-
-			for (var i=0; i < markersPages[mi].length; i++) {
-
-				var num = (markersIndex * 5) + (i + 1);
-
-				markerList += (
-
-	            '<li class="place">&nbsp;&nbsp;&nbsp;&nbsp;'+num+'. '+markersPages[mi][i][2].slice(0, 20)+'  | Cap '+markersPages[mi][i][3]+' | <a href=http://maps.google.com/?daddr='+markersPages[mi][i][0]+','+markersPages[mi][i][1]+'target=_blank>Nav</a></li>');
-			
-			};
-		}
-
-		//$('#eventInfoList').html(markerList);
-
-		drawMarkers();
-
-};*/
 
 function drawMarkerList() {
 
@@ -523,11 +581,6 @@ function drawMarkerList() {
 			
 			};
 		}
-
-		//$('#eventInfoList').html(markerList);
-
-		drawMarkers();
-
 };
 
 
@@ -546,25 +599,85 @@ function directions() {
 
 directions();
 
-function drawMarkers() {
 
-	eventMarkers.clearLayers();
-	
-	var mi = markersIndex;
+
+function drawInfo(marker) {
+
+	//$('#eventInfoList').html('');
+
+	var i = marker._leaflet_id;
 
 	console.log(zoomedEvents);
+	console.log(markersIndex);
 	console.log(zoomedEvents.length);
+	console.log(i);
+	console.log(zoomedEvents[i]);
+
+	//$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li><li><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a></li>");
+
+	$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li>");
+
+};
+
+var markerNames = [];
+
+function drawMarkers() {
+
+	console.log(markerNames);
+
+	console.log(eventMarkers);
+
+	console.log(eventMarkers.getLayers());
+
+	markerNames = [];
+
+	eventMarkers.clearLayers();
+
+	console.log(zoomedEvents);
+
+	console.log(zoomedEvents.length);
+
+	console.log(markerNames);
+
+	var tempName = '';
+
+	for (var i=0; i< zoomedEvents.length; i++) {
+		tempName = "marker" + i;
+		markerNames.push(tempName);
+	};
 
 	if (zoomedEvents.length > 0) {
 
-		for (var i=0; i < zoomedEvents.length - 1; i++) {
+		//for (var i=0; i < zoomedEvents.length; i++) {
 
-			marker = new L.marker([zoomedEvents[i][0], zoomedEvents[i][1]], {riseOnHover: true}).
-			bindPopup("Event: "+zoomedEvents[i][2]+"<br>Location: "+zoomedEvents[i][4]+"<br>Capacity: "+zoomedEvents[i][3]+"<br><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a>");
+		for (var i=0; i < Math.min(20, zoomedEvents.length); i++) {
 
-			/*marker.on('click', function() {
+			console.log(markerNames);
+			console.log(markerNames[i]);
 
-				//$('#eventInfoList').html('');
+			markerNames[i] = new L.marker([zoomedEvents[i][0], zoomedEvents[i][1]], {riseOnHover: true, icon: markerIconBlue});
+			//bindPopup("Event: "+zoomedEvents[i][2]+"<br>Location: "+zoomedEvents[i][4]+"<br>Capacity: "+zoomedEvents[i][3]+"<br><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a>");
+
+			markerNames[i]._leaflet_id = i + 1;
+
+			console.log(markerNames[i]);
+			console.log(selectedMarker[0]);
+
+			if ((selectedMarker.length > 0) &&
+				(selectedMarker[0]._latlng.lat == markerNames[i]._latlng.lat) &&
+				(selectedMarker[0]._latlng.lng == markerNames[i]._latlng.lng)) {
+
+				console.log('MARKERS MATCH!');
+
+				redMarker(markerNames[i]);
+
+			}
+
+
+			markerNames[i].on("click", function() {
+
+
+				var i = this._leaflet_id - 1;
 
 				console.log(zoomedEvents);
 				console.log(markersIndex);
@@ -572,23 +685,35 @@ function drawMarkers() {
 				console.log(i);
 				console.log(zoomedEvents[i]);
 
-				$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li><li><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a></li>");
+				var link = ("http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]);
+
+				console.log(link);
+
+				//markerNames[i].bringToFront();
+
+				redMarker(this);
+
+				$('#eventInfoList').html("<li>"+zoomedEvents[i][2]+"</li><li>"+zoomedEvents[i][4]+" | Capacity: "+zoomedEvents[i][3]+"</li>");
+
+				$('#navInner').attr("href", link);
+
+				$('#nav').css({"display": "block"});
 
 			});
-			//bindPopup("Event: "+zoomedEvents[i][2]+"<br>Location: "+zoomedEvents[i][4]+"<br>Capacity: "+zoomedEvents[i][3]+"<br><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a>");
 
-		/*setTimeout(function() {
-
-			eventMarkers.addLayer(marker)}, 400);*/
-
-			eventMarkers.addLayer(marker);
+			eventMarkers.addLayer(markerNames[i]);
 
 		};
 	}
 
-		//map.addLayer(eventMarkers);
 
-}
+	/*if (selectedMarker.length > 0) {
+
+		redMarker(selectedMarker[0]);
+		console.log('BLAH!');
+
+	}*/
+};
 
 
 //var clusterMarkers = new L.MarkerClusterGroup();
@@ -645,6 +770,7 @@ $('#eventsArrowRight').click(function() {
 	}
 });
 
+drawMarkers();
 
 $('#markers').click(clickMarkerButton);
 
@@ -654,51 +780,33 @@ function clickMarkerButton() {
 
 	if (markerSwitch == false) {
 
-		map.addLayer(eventMarkers);
-
-		/*var tempLayers = markers.getLayers();
-
-		var maxCap = 0;
-
-		for (var i = 0; i < tempLayers.length; i++) {
-
-			console.log(tempLayers[i]);
-
-		}*/
-
-		/*$('#markers').css({"color":"#ffffff", "background": "-webkit-linear-gradient(180deg, #FF820D, #FF310D)",
-	  		"background": "-moz-linear-gradient(180deg, #FF820D, #FF310D)",
-	  		"background": "linear-gradient(180deg, #FF820D, #FF310D)",
-	  		"border": "none"});*/
-
-		//drawMarkerList();
-
-		//drawMarkers();
-
-		//$('.eventInfoShell').css({"display": "block"});
-
-		//$('.eventInfoShell').animate({"height": "200px", "top": "48.5%"}, 400, 'swing');
-
-		//$('#eventInfoList').css({"display": "block"});
-
-		//$('#eventInfoList').html("TESTING 1, 2, 3");
+		//getData();
 
 		markerSwitch = true;
 
-	} else if (markerSwitch == true) {
+		fenceEvents();
+
+		//map.addLayer(eventMarkers);
+
+		console.log("Marker length = ", document.getElementsByClassName('.leaflet-marker-icon').length);
+
+
+
 		
-		//$('.eventInfoShell').animate({"height": "0px", "top": "80%"}, 300, 'swing', $('#eventInfoList').css({"display": "block"}));
 
-		//$('#eventInfoList').html("");
+	} else if (markerSwitch == true) {
 
-		/*$('#markers').css({"color":"#FF310D", "background": "none",
-	  		"background": "none",
-	  		"background": "none",
-	  		"border": "2px solid #FF310D"});*/
+		console.log(eventMarkers);
 
-		//$('#eventInfoList').html("");
+		eventMarkers.clearLayers();
 
-		map.removeLayer(eventMarkers);	
+		var x = document.getElementsByClassName('.leaflet-marker-icon');
+
+		console.log("Marker length = ", x.length);
+
+		$('#nav').css({"display": "none"});
+
+		$('#eventInfoList').html("");
 
 		markerSwitch = false;
 
@@ -710,9 +818,3 @@ $("#selectedTime").change(changeTime);
 $(".daynavcontainer").click(changeDay);
 
 setDefault();
-
-//var markercluster = new L.MarkerClusterGroup();
-
-//markercluster.addLayer(markers);
-
-//map.addLayer(markercluster);

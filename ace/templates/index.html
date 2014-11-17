@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Evdex</title>
+    <title>Swoop</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -22,8 +22,6 @@
 
 	
 	<style type="text/css">
-
-	
 
 		body {
 			width: 100%;
@@ -81,53 +79,12 @@
 		
 		.navcontainer {
 			position: absolute;
-			width: 250px;
-			height: 50px;
-			left: 15%;
+			width: 80%;
+			height: 30px;
+			left: 10%;
 			z-index: 1000;
 			/*background: black;
 			opacity: .3;*/
-		}
-
-		#bottomcontainer {
-
-			position: absolute;
-			width: 100%;
-			height: 25%;
-			top: 75%;
-		}
-
-		#bottombox {
-			position: absolute;
-			width: 100%;
-			height: 100%;
-			z-index: 10000;
-			background: black;
-			opacity: .4;
-
-		}
-
-
-		#timenavtime {
-			margin-left: 10%;
-			top: -10%;
-			margin-bottom: 3%;
-			font-size: 20px;
-			opacity: 99999999;
-			color: white;
-		}
-
-
-		.timenavcontainer {
-			opacity: 1.0;
-			z-index: 99999999;
-			position: absolute;
-			border: none;
-			background: none;
-			left: 0;
-			top: 55%;
-			width: 100%;
-
 		}
 		
 		.daynavcontainer {
@@ -141,7 +98,7 @@
 			z-index: -1;
 			width: 100%;
 			height: 100%;
-			background: black;
+			background: #181818;
 			opacity: .4;
 			border-bottom-right-radius: 5px;
 			border-bottom-left-radius: 5px;
@@ -150,23 +107,22 @@
 		#leftArrow {
 			display: inline-block;
 			position: absolute;
-			top: 16%;
-			margin-left: 2%;
-			max-width: 100%;
-			max-height: 30px;
+			top: 10%;
+			left: 5%;
+			max-width: 20%;
+			max-height: 80%;
 			opacity: 1;
 		}
 
 		#dayofweek {
 			position: absolute;
-			width: 150px;
+			width: 80%;
 			left: 0;
-			margin-left: 20%;
+			margin-left: 10%;
 			margin-right: 10%;
-			top: 3%;
+			top: 0.2em;
 			display: inline-block;
-			margin-top: 10px;
-			font-size: 20px;
+			font-size: 1.2em;
 			text-align: center;
 			color: white;
 			font-weight: bold;
@@ -176,10 +132,10 @@
 		#rightArrow {
 			display: inline-block;
 			position: absolute;
-			top: 16%;
+			top: 10%;
 			left: 90%;
-			max-width: 100%;
-			max-height: 30px;
+			max-width: 20%;
+			max-height: 80%;
 			opacity: 1;
 		}
 
@@ -205,60 +161,131 @@
 		#reset{
 			position: absolute;
 			z-index: 9999999999999;
-			left: 8%;
+			left: 3%;
 			top: 5%;
 			color: #ffffff;
 			border: 0px solid white;
-			background: -webkit-linear-gradient(180deg, #090974, #060754); /* For Safari 5.1 to 6.0 */
-	  		background: -moz-linear-gradient(180deg, #090974, #060754); /* For Firefox 3.6 to 15 */
-	  		background: linear-gradient(180deg, #090974, #060754); /* Standard syntax */		
+
+			/*background: #29A3CC;
+			box-shadow: 0px 1px 1px 2px #2f2f2f;*/
+
+			background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: linear-gradient(180deg, #29A3CC, #2593B8);
+
+	  		
+
+		}
+
+		#bottomcontainer {
+
+			position: absolute;
+			width: 100%;
+			height: 25%;
+			top: 75%;
+		}
+
+		#bottombox {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index: 10000;
+			background: #181818;
+			opacity: .4;
+
+		}
+
+		#timenavtime {
+			margin-left: 4%;
+			top: 20%;
+			margin-bottom: 0%;
+			font-size: 16px;
+			opacity: 99999999;
+			color: white;
+		}
+
+		#nav {
+
+			position: absolute;
+			display: none;
+			z-index: 9999999999999;
+			left: 89%;
+			top: 5%;
+			margin: 0;
+			padding: 0;
+			color: #ffffff;
+			border: 0px solid white;
+
+			/*background: #29A3CC;*/
+
+			background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: linear-gradient(180deg, #29A3CC, #2593B8);
+
+		}
+
+		#navInner {
+			background: none;
+			width: 100%;
+			border-radius: 5px;
+			height: 98%;
+			top: 1%;
+			border: none;
+			font-weight: bold;
+			text-align: center;
+
+
+		}
+
+
+		.timenavcontainer {
+			opacity: 1.0;
+			z-index: 99999999;
+			position: absolute;
+			border: none;
+			background: none;
+			left: 0;
+			top: 57%;
+			width: 100%;
 		}
 
 		.button {
-			position: absolute;
-			top: 80%;
-			height: 35px;
-			border-radius: 5px;
-			font-weight: bold;
+			font-size: 10px;
+			height: 30px;
+			width: 30px;
+			max-width: 50px;
+			overflow: hidden;
+			border-radius: 50%;
+			font-weight: 200;
+			text-align: center;
+
+			background: #9bb6e8;
+
+			/*background: -webkit-linear-gradient(180deg, #090974, #060754);
+	  		background: -moz-linear-gradient(180deg, #090974, #060754); 
+	  		background: linear-gradient(180deg, #090974, #060754);*/
 
 		}
 		
-		#reset:hover {
-			background: -webkit-linear-gradient(180deg, #060754, #090974); /* For Safari 5.1 to 6.0 */
-	  		background: -moz-linear-gradient(180deg, #060754, #090974); /* For Firefox 3.6 to 15 */
-	  		background: linear-gradient(180deg, #060754, #090974); /* Standard syntax */
-		}
+		/*#reset:hover {
+			background: -webkit-linear-gradient(180deg, #060754, #090974);
+	  		background: -moz-linear-gradient(180deg, #060754, #090974);
+	  		background: linear-gradient(180deg, #060754, #090974);
+		}*/
 
-		
 		#eventInfoList {
 			position: absolute;
 			padding: 0px;
 			margin: 0px;
+			width: 70%;
+			left: 15%;
+			top: 3%;
 			list-style: none;
 			color: white;
 			opacity: 1.0;
 			z-index: 99999999;
+			font-size: 12px;
 		}
-
-		/*.eventInfoShell {
-			display: none;
-			position: absolute;
-			z-index: 1000000;
-			width: 25%;
-			top: 80%;
-			left: 70.7%;
-			background: #ffffff;
-			border-radius: 3px;
-		}
-
-		
-
-		.place {
-
-			border-bottom: 1px solid #e6e6e6;
-			font-size: 16px;
-			line-height: 2.0em;
-		}*/
 
 		.eventsListArrow {
 			position: absolute;
@@ -281,65 +308,17 @@
 			display: block;
 			left: 80%;
 		}
-
-	
-		.data{
-			float: left;
-			text-align:center;
-			margin-top:10%;
-			margin-left:5%;
-			font-size:24px;
-			color:#009900;
-			border: 2px solid #009900;
-		}
-		
-		#amt {
-		font-size: 36px;
-		}
 		
 		ul {
 		list-style-type: none;
 		text-align: center;
-		margin-right: 20px;	
+		/*margin-right: 20px;	*/
 		}
 		
 		#sidebar {
 		display: none;
 		}
 		
-		.list {
-		left: -10%;
-		}
-
-		/*.leaflet-popup-pane {
-			position: fixed;
-			top: 50%;
-			left: 50%;
-			z-index: 1000000;
-		}
-
-		.leaflet-popup {
-			position: fixed;
-			top: 70%;
-			border: none;
-			box-shadow: none;
-			padding: 0;
-			color: white;
-			background: none;
-		}
-
-		
-
-
-		.leaflet-popup-close-button {
-			display: none;
-			visibility: hidden;
-			background: none;
-		}
-
-		*/
-
-
 		.leaflet-popup-content-wrapper {
 			box-shadow: none;
 			margin: 0;
@@ -347,7 +326,6 @@
 			background: #080808;
 			border-radius: 5px;
 		}
-
 
 		.leaflet-popup-content {
 			text-align: center;
@@ -360,15 +338,26 @@
 			background: #080808;
 		}
 
+		a.leaflet-popup-close-button {
+			border: none;
+			background: #cccccc;
+			z-index: 99999999;
+		}
+
 
 		a:link {
 			text-decoration: none;
-			color: #75b5e3;
+			color: #ffffff;
 		}
 
 		a:hover {
 			text-decoration: none;
-			color: #75b5e3;
+			color: #ffffff;
+		}
+
+		a:visited {
+			text-decoration: none;
+			color: #ffffff;
 		}
 
 
@@ -386,12 +375,12 @@
 			}
 
 		#slider .bar {
-			width: 86%;
+			width: 94%;
 			height: 3px;
 
 			position: relative;
-			top: 10px;
-			left: 7%;	
+			top: 20px;
+			left: 3%;	
 			
 			background: #dbdbdb;
 			
@@ -405,33 +394,30 @@
 			position: relative;
 			top: 0px;
 			z-index: 1;
-			width: 55px;
-			height: 25px;
+			width: 50px;
+			height: 24px;
 			cursor: pointer;
-
-			/*border: 1px solid #dcdcdc;
-			-webkit-box-shadow: 0px 1px 2px 0px #dadada;
-			-moz-box-shadow: 0px 1px 2px 0px #dadada;
-			box-shadow: 0px 1px 2px 0px #dadada;*/
-
 
 			-webkit-border-radius: 7px;
 			-moz-border-radius: 7px;
 			border-radius: 7px;
 
-			background: -webkit-linear-gradient(180deg, #090974, #060754); /* For Safari 5.1 to 6.0 */
-	  		background: -moz-linear-gradient(180deg, #090974, #060754); /* For Firefox 3.6 to 15 */
-	  		background: linear-gradient(180deg, #090974, #060754); /* Standard syntax */
+			/*background: #29A3CC;
 
-			
+			box-shadow: 0px 1px 0px 1px #4a4a4a; */
+
+			background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: linear-gradient(180deg, #29A3CC, #2593B8);
+
+
 		}
-		
-		
-		
+
+					
 	</style>
 
-	
 </head>
+
 <body>
 	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="navbarcontainer">
@@ -443,7 +429,7 @@
 	            <span class="icon-bar"></span>
 	            <span class="icon-bar"></span>
 	          	</button>
-	         	<a class="navbar-brand" href="#">Evdex</a>
+	         	<a class="navbar-brand" href="#">Swoop</a>
         	</div>
         	<div class="collapse navbar-collapse">
 	          	<ul class="nav navbar-nav">
@@ -489,7 +475,7 @@
 
 		<div id="bottombox"></div>
 
-		<button class="button" id="reset">EVDEX NOW</button>
+		<button class="button" id="reset">C</button>
 
 		<div id="eventinfo">
 			
@@ -497,6 +483,13 @@
 			</ol>
 
 		</div>
+
+
+		<button class="button" id="nav">
+    		<a href="" target="_blank" id="navInner">NAV</a>
+		</button>
+
+		<!--<button class="button" id="nav">NAV</button>-->
 
 		<div data-role="main" class="timenavcontainer" id="slider">
 		    <form method="post" action="demoform.asp">
@@ -510,14 +503,7 @@
 			
 		</div>
 	</div>
-
-	<div class="nav navbar-nav"  class="eventInfoShell">
-
-	<!--<ol id="eventInfoList">
-	</ol>-->
-
-	<!--<button class="eventsListArrow" id="eventsArrowLeft">Prev 5</button>
-	<button class="eventsListArrow" id="eventsArrowRight">Next 5</button>-->		
+		
 	</div>
 
 
