@@ -1,0 +1,579 @@
+/* Evdex CSS */
+
+	
+
+		body {
+			width: 100%;
+			padding-top: 50px;
+			padding-left: 0;
+			padding-right: 0;
+			overflow: hidden;
+			font-family: 'Lato', sans-serif;
+		}
+
+		.navbar {
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			left: 0;
+			overflow: hidden;
+		}
+
+		.navbar-header {
+			margin-left: -100px;
+		}
+
+		/* navbar-inverse navbar-fixed-top */
+
+		.logo {
+			display: relative;
+			width: 100px;
+			margin-left: 10px;
+			margin-top: 3px;
+			float: left;
+			margin-right: 30px;
+		}
+		
+		#uberlogo {
+			display: none;
+			max-width: 100%;
+			max-height: 100%;
+		}
+
+
+		.container {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			left: 0;
+			overflow: hidden;
+		}
+
+		.navbarcontainer {
+			margin: 0;
+			padding: 0;
+			left: 0;
+		}
+		
+		.navcontainer {
+			position: absolute;
+			width: 80%;
+			height: 30px;
+			left: 10%;
+			z-index: 1000;
+			/*background: black;
+			opacity: .3;*/
+		}
+		
+		.daynavcontainer {
+			border: none;
+			background: none;
+			top: 8px;
+		}
+
+		#daysbox {
+			position: absolute;
+			z-index: -1;
+			width: 100%;
+			height: 100%;
+			background: #181818;
+			opacity: .4;
+			border-bottom-right-radius: 5px;
+			border-bottom-left-radius: 5px;
+		}
+
+		#leftArrow {
+			display: inline-block;
+			position: absolute;
+			top: 10%;
+			left: 5%;
+			max-width: 20%;
+			max-height: 80%;
+			opacity: 1;
+		}
+
+		#dayofweek {
+			position: absolute;
+			width: 80%;
+			left: 0;
+			margin-left: 10%;
+			margin-right: 10%;
+			top: 0.2em;
+			display: inline-block;
+			font-size: 1.2em;
+			text-align: center;
+			color: white;
+			font-weight: bold;
+			opacity: 1;
+		}
+
+		#rightArrow {
+			display: inline-block;
+			position: absolute;
+			top: 10%;
+			left: 90%;
+			max-width: 20%;
+			max-height: 80%;
+			opacity: 1;
+		}
+
+
+		.buttoncontainer {
+			display: absolute;
+			/*padding: 40px 15px;*/
+			text-align: center;
+			overflow: hidden;
+			width: 100%;
+			height: 100%;
+			top: 30%;
+			left: 0;
+		}
+		
+		#map{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			left: 0;
+		}
+		
+		#reset{
+			position: absolute;
+			z-index: 99999;
+			left: 3%;
+			top: 5%;
+			color: #ffffff;
+			border: 0px solid white;
+
+			/*background: #29A3CC;*/
+			box-shadow: 0px 1px 1px 1px #262626;
+
+			background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: linear-gradient(180deg, #29A3CC, #2593B8);
+
+	  		
+
+		}
+
+		#bottomcontainer {
+
+			position: absolute;
+			width: 100%;
+			height: 25%;
+			top: 75%;
+		}
+
+		#bottombox {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index: 10000;
+			background: #181818;
+			opacity: .4;
+
+		}
+
+
+		#timenavtime {
+			margin-left: 4%;
+			top: 20%;
+			margin-bottom: 0%;
+			font-size: 16px;
+			opacity: 99999999;
+			color: white;
+		}
+
+		#nav {
+
+			position: absolute;
+			display: none;
+			z-index: 9999999999999;
+			right: 3%;
+			top: 5%;
+			margin: 0;
+			padding: 0;
+			color: #ffffff;
+			border: 0px solid white;
+
+			box-shadow: 0px 1px 1px 1px #262626;
+
+			background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: linear-gradient(180deg, #29A3CC, #2593B8);
+
+		}
+
+		#navInner {
+			background: none;
+			width: 100%;
+			border-radius: 5px;
+			height: 98%;
+			top: 1%;
+			border: none;
+			font-weight: bold;
+			text-align: center;
+
+
+		}
+
+
+		.timenavcontainer {
+			opacity: 1.0;
+			z-index: 99999999;
+			position: absolute;
+			border: none;
+			background: none;
+			left: 0;
+			top: 57%;
+			width: 100%;
+		}
+
+		.button {
+			font-size: 10px;
+			height: 40px;
+			width: 40px;
+			max-width: 50px;
+			overflow: hidden;
+			border-radius: 50%;
+			font-weight: 200;
+			text-align: center;
+
+			background: #9bb6e8;
+
+			/*background: -webkit-linear-gradient(180deg, #090974, #060754);
+	  		background: -moz-linear-gradient(180deg, #090974, #060754); 
+	  		background: linear-gradient(180deg, #090974, #060754);*/
+
+		}
+		
+		/*#reset:hover {
+			background: -webkit-linear-gradient(180deg, #060754, #090974);
+	  		background: -moz-linear-gradient(180deg, #060754, #090974);
+	  		background: linear-gradient(180deg, #060754, #090974);
+		}*/
+
+		#eventInfoList {
+			position: absolute;
+			padding: 0px;
+			margin: 0px;
+			width: 70%;
+			left: 15%;
+			top: 3%;
+			list-style: none;
+			color: white;
+			opacity: 1.0;
+			z-index: 99999999;
+			font-size: 12px;
+		}
+
+		.eventsListArrow {
+			position: absolute;
+			width: 18%;
+			height: 12%;
+			top: 86%;
+			font-weight: bold;
+			font-size: 12px;
+			background: none;
+			border: none;
+			box-shadow: none;
+		}
+
+		#eventsArrowLeft {
+			display: block;
+			left: 2%;
+		}
+
+		#eventsArrowRight {
+			display: block;
+			left: 80%;
+		}
+		
+		ul {
+		list-style-type: none;
+		text-align: center;
+		/*margin-right: 20px;	*/
+		}
+		
+		#sidebar {
+		display: none;
+		}
+		
+		.leaflet-popup-content-wrapper {
+			box-shadow: none;
+			margin: 0;
+			padding: 0;
+			background: #080808;
+			border-radius: 5px;
+		}
+
+		.leaflet-popup-content {
+			text-align: center;
+			font-weight: bold;
+			color: white;
+		}
+
+		.leaflet-popup-tip {
+			border: 0;
+			background: #080808;
+		}
+
+		a.leaflet-popup-close-button {
+			border: none;
+			background: #cccccc;
+			z-index: 99999999;
+		}
+
+
+		a:link {
+			text-decoration: none;
+			color: #ffffff;
+		}
+
+		a:hover {
+			text-decoration: none;
+			color: #ffffff;
+		}
+
+		a:visited {
+			text-decoration: none;
+			color: #ffffff;
+		}
+
+
+		 input[type="range"]{
+		   -webkit-appearance:none !important;
+		 }
+
+		 input[type="range"]::-webkit-slider-thumb{
+		   -webkit-appearance:none !important;  
+		 }
+
+		#slider {
+			width: 100%;
+			margin-top: -3%;
+			}
+
+		#slider .bar {
+			width: 94%;
+			height: 3px;
+
+			position: relative;
+			top: 20px;
+			left: 3%;	
+			
+			background: #dbdbdb;
+			
+			-webkit-border-radius: 40px;
+			-moz-border-radius: 40px;
+			border-radius: 40px;
+		}
+
+		input[type="range"]::-webkit-slider-thumb {
+			-webkit-appearance: none;
+			position: relative;
+			top: 0px;
+			z-index: 1;
+			width: 10%;
+			min-width: 40px;
+			height: 24px;
+			cursor: pointer;
+
+			-webkit-border-radius: 7px;
+			-moz-border-radius: 7px;
+			border-radius: 7px;
+
+			/*background: #29A3CC;
+
+			box-shadow: 0px 1px 0px 1px #4a4a4a; */
+
+			background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
+	  		background: linear-gradient(180deg, #29A3CC, #2593B8);
+
+	  	}
+
+		#inputs, #errors {
+			visibility: hidden;
+		    position: absolute;
+		    width: 33.3333%;
+		    max-width: 300px;
+		    min-width: 200px;
+		}
+
+		#directions {
+
+			visibility: hidden;
+			display: none;
+		    position: absolute;
+
+			width: 100%;
+			height: 20%;
+			left: 0;
+			top: 55%;
+			max-width: 100%;
+		    min-width: 0;
+		    z-index: 99;
+		    background: #181818;
+		    opacity: 1;
+
+		    border-bottom: 1px thin black;
+
+		    overflow: auto;
+		    color: #e0e0e0;
+
+		}
+
+		#inputs {
+			visibility: hidden;
+		    z-index: 10;
+		    top: 10px;
+		    left: 10px;
+		}
+
+
+
+		#errors {
+		    z-index: 8;
+		    opacity: 0;
+		    padding: 10px;
+		    border-radius: 0 0 3px 3px;
+		    background: rgba(0,0,0,.25);
+		    top: 90px;
+		    left: 10px;
+		}
+
+		@media only screen and (max-width: 600px) {
+
+		input[type="range"]::-webkit-slider-thumb {
+			
+			width: 32px;
+			min-width: 32px;		
+			height: 32px;
+
+			-webkit-border-radius: 50%;
+			-moz-border-radius: 50%;
+			border-radius: 50%;
+
+	  	}
+
+	}
+
+		@media only screen and (min-width: 1028px) {
+
+
+
+			#directions {
+
+				width: 33.3333%;
+				height: 75%;
+		    	max-width: 300px;
+		    	min-width: 200px;
+			    z-index: 99;
+			    background: #181818;
+			    opacity: 0.4;
+			    top: 0;
+			    left: auto;
+			    right: 0;
+			    bottom: 0;
+			    overflow: auto;
+			    border-bottom: none;
+    
+			}
+
+			.navcontainer {
+				position: absolute;
+				width: 33.34%;
+				height: 55px;
+				left: 33.33%;
+				z-index: 1000;
+				/*background: black;
+				opacity: .3;*/
+			}	
+		
+			.daynavcontainer {
+				border: none;
+				background: none;
+				top: 8px;
+			}
+
+			#daysbox {
+				position: absolute;
+				z-index: -1;
+				width: 100%;
+				height: 100%;
+				background: #181818;
+				opacity: 0.4;
+				border-bottom-right-radius: 5px;
+				border-bottom-left-radius: 5px;
+			}
+
+			#leftArrow {
+				display: inline-block;
+				position: absolute;
+				top: 10%;
+				left: 5%;
+				max-width: 20%;
+				max-height: 65%;
+				opacity: 1;
+			}
+
+			#dayofweek {
+				position: absolute;
+				width: 80%;
+				left: 0;
+				margin-left: 10%;
+				margin-right: 10%;
+				top: 0.4em;
+				display: inline-block;
+				font-size: 1.6em;
+				text-align: center;
+				color: white;
+				font-weight: bold;
+				opacity: 1;
+			}
+
+			#rightArrow {
+				display: inline-block;
+				position: absolute;
+				top: 10%;
+				left: 90%;
+				max-width: 20%;
+				max-height: 65%;
+				opacity: 1;
+			}
+
+
+
+
+			#slider .bar {
+				position: relative;
+				top: 40px;
+				
+				-webkit-border-radius: 40px;
+				-moz-border-radius: 40px;
+				border-radius: 40px;
+			}
+
+			input[type="range"]::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				height: 28px;
+				cursor: pointer;
+
+				-webkit-border-radius: 7px;
+				-moz-border-radius: 7px;
+				border-radius: 7px;
+
+		  	}
+
+		  	#timenavtime {
+				margin-left: 8%;
+				top: 30%;
+				margin-bottom: 0;
+				font-size: 1.5em;
+				opacity: 999;
+				color: white;
+			}
+		}
+
+					

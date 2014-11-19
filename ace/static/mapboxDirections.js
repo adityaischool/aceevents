@@ -1746,22 +1746,14 @@ var Layer = L.LayerGroup.extend({
         this._drag = debounce(L.bind(this._drag, this), 100);
 
         this.originMarker = L.marker([0, 0], {
-            draggable: true,
-            icon: L.mapbox.marker.icon({
-                'marker-size': 'medium',
-                'marker-color': '#3BB2D0',
-                'marker-symbol': 'a'
-            })
-        }).on('drag', this._drag, this);
+            draggable: false,
+            opacity: 0
+        });
 
         this.destinationMarker = L.marker([0, 0], {
-            draggable: true,
-            icon: L.mapbox.marker.icon({
-                'marker-size': 'medium',
-                'marker-color': '#444',
-                'marker-symbol': 'b'
-            })
-        }).on('drag', this._drag, this);
+            draggable: false,
+            opacity: 0
+        });
 
         this.stepMarker = L.marker([0, 0], {
             icon: L.divIcon({

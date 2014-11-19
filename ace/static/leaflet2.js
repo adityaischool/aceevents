@@ -1,5 +1,107 @@
-//var center = [37.756631, -122.442222];
 var center = [37.756631, -122.442222];
+
+var map = L.map('map').setView(center, 12);
+
+L.mapbox.accessToken = 'pk.eyJ1IjoiYWpvbmVzNjIwIiwiYSI6IlJ1eEdISkUifQ.whSWoswC0sLHG_kS9q-JRQ';
+
+//getLocation();
+
+L.tileLayer('https://{s}.tiles.mapbox.com/v3/ajones620.k4bkhnfi/{z}/{x}/{y}.png', {
+    attribution: '© <a href="http://www.mapbox.com/about/maps/" target="_blank"> Mapbox Terms &amp; Feedback</a>'
+}).addTo(map);
+
+// move the attribution control out of the way
+map.attributionControl.setPosition('bottomleft');
+
+
+
+// create the initial directions object, from which the layer
+// and inputs will pull data.
+
+
+var directions = new L.mapbox.directions();
+
+var directionsLayer = new L.mapbox.directions.layer(directions)
+    .addTo(map);
+
+var directionsInputControl = new L.mapbox.directions.inputControl('inputs', directions)
+    .addTo(map);
+
+var directionsErrorsControl = new L.mapbox.directions.errorsControl('errors', directions)
+    .addTo(map);
+
+var directionsRoutesControl = new L.mapbox.directions.routesControl('routes', directions)
+    .addTo(map);
+
+var directionsInstructionsControl = new L.mapbox.directions.instructionsControl('instructions', directions)
+    .addTo(map);
+
+var origLng = '';
+
+var origLat = '';
+
+var destLng = '';
+
+var destLat = '';
+
+var origin = String(origLng)+","+String(origLat);
+
+var dest = String(destLng)+","+String(destLat);
+
+function setDirs(origin, dest) {
+
+
+
+    var origin = origin;
+
+    var dest = dest;
+
+    $('#mapbox-directions-origin-input').val(origin);
+
+    $('#mapbox-directions-destination-input').val(dest);
+
+    console.log($('#mapbox-directions-origin-input').val());
+
+    console.log($('#mapbox-directions-destination-input').val());
+
+    directions.setOrigin(origin);
+
+    directions.setDestination(dest);
+
+    console.log(directions.getOrigin());
+
+    console.log(directions.getDestination());
+
+    console.log(directions);
+
+    directions.query();
+
+
+
+    //console.log($('.mapbox-directions-route-active').children().eq(2).html());
+
+    //console.log(directions.directions);
+
+    //console.log(directions['directions']['routes'][0]['duration']);
+
+     
+
+    /*for (var i = 0; i < directions.waypointMarkers.length; i++) {
+            directions.removeLayer(directions.waypointMarkers[i]);
+    };*/
+
+    //directions.removeWaypoint(0);
+    //directions.removeWaypoint(0);
+
+
+};
+
+//setDirs(origin, dest);
+
+
+
+//var center = [37.756631, -122.442222];
+
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -22,16 +124,6 @@ function showPosition(position) {
 };
 
 //$(document).ready(getLocation);
-
-
-
-var map = L.map('map').setView(center, 12);
-
-//getLocation();
-
-L.tileLayer('https://{s}.tiles.mapbox.com/v3/ajones620.k4bkhnfi/{z}/{x}/{y}.png', {
-    attribution: '© <a href="http://www.mapbox.com/about/maps/" target="_blank"> Mapbox Terms &amp; Feedback</a>'
-}).addTo(map);
 
 
 
@@ -259,7 +351,7 @@ function changeDay() {
 
 	dateTime = [];
 
-	map.setView(center, 12)
+	//map.setZoom(12);
 
 	eventCoords = [];
 	
@@ -478,6 +570,8 @@ function getData() {
 
 	//markerSwitch = true;
 
+	setDirs(origin, '');
+
 	eventCoords = [];
 
 	markersIndex = 0;
@@ -584,7 +678,7 @@ function drawMarkerList() {
 };
 
 
-function directions() {
+/*function directions() {
 
 	var start = "37.788869,-122.402059";
 	var finish = "37.777436,-122.453513";
@@ -597,7 +691,7 @@ function directions() {
 
 }
 
-directions();
+directions();*/
 
 
 
@@ -615,7 +709,7 @@ function drawInfo(marker) {
 
 	//$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li><li><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a></li>");
 
-	$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li>");
+	$('#eventInfoList').html("<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+" | Capacity: "+zoomedEvents[i][3]+" | ETA:"+eta+"</li>");
 
 };
 
@@ -654,6 +748,7 @@ function drawMarkers() {
 
 			console.log(markerNames);
 			console.log(markerNames[i]);
+			console.log(zoomedEvents.length);
 
 			markerNames[i] = new L.marker([zoomedEvents[i][0], zoomedEvents[i][1]], {riseOnHover: true, icon: markerIconBlue});
 			//bindPopup("Event: "+zoomedEvents[i][2]+"<br>Location: "+zoomedEvents[i][4]+"<br>Capacity: "+zoomedEvents[i][3]+"<br><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a>");
@@ -677,6 +772,7 @@ function drawMarkers() {
 			markerNames[i].on("click", function() {
 
 
+
 				var i = this._leaflet_id - 1;
 
 				console.log(zoomedEvents);
@@ -693,11 +789,41 @@ function drawMarkers() {
 
 				redMarker(this);
 
-				$('#eventInfoList').html("<li>"+zoomedEvents[i][2]+"</li><li>"+zoomedEvents[i][4]+" | Capacity: "+zoomedEvents[i][3]+"</li>");
+				
 
 				$('#navInner').attr("href", link);
 
 				$('#nav').css({"display": "block"});
+
+				destLat = this._latlng.lat;
+
+				console.log(this._latlng.lat);
+
+				console.log(destLat);
+
+				destLng = this._latlng.lng;
+
+				dest = String(destLng)+","+String(destLat);
+
+
+				setDirs(origin, dest);
+
+				//setTimeout(setDirs(origin, dest), 500);
+
+				var routeDeets = $('.mapbox-directions-route-active').children().eq(2).html();
+
+    			console.log(routeDeets);
+
+    			var eta = routeDeets.split(",")[1];
+
+    			console.log(eta);
+
+    			var infoList = "<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+" | Capacity: "+zoomedEvents[i][3]+" | ETA:"+eta+"</li>";
+
+    			$('#eventInfoList').html(infoList);
+
+    			console.log(infoList);
+
 
 			});
 
@@ -705,14 +831,6 @@ function drawMarkers() {
 
 		};
 	}
-
-
-	/*if (selectedMarker.length > 0) {
-
-		redMarker(selectedMarker[0]);
-		console.log('BLAH!');
-
-	}*/
 };
 
 
@@ -739,7 +857,11 @@ $('#reset').click(function() {
 
 	setDefault();
 
-    map.setView(center, 12)
+	$('#nav').css({"display": "none"});
+
+	setDirs(origin, '');
+
+    //map.setView(center, 12)
 
 });
 
@@ -790,10 +912,6 @@ function clickMarkerButton() {
 
 		console.log("Marker length = ", document.getElementsByClassName('.leaflet-marker-icon').length);
 
-
-
-		
-
 	} else if (markerSwitch == true) {
 
 		console.log(eventMarkers);
@@ -810,6 +928,8 @@ function clickMarkerButton() {
 
 		markerSwitch = false;
 
+		setDirs(origin, '');
+
 	}	
 };
 
@@ -817,4 +937,79 @@ $("#selectedTime").change(changeTime);
 
 $(".daynavcontainer").click(changeDay);
 
+$("#nav").on('click', $('#directions').css({"visibility": "visible"}));
+
+
+
+
 setDefault();
+
+
+var myLayer = L.mapbox.featureLayer().addTo(map);
+
+// This uses the HTML5 geolocation API, which is available on
+// most mobile browsers and modern browsers, but not in Internet Explorer
+//
+// See this chart of compatibility for details:
+// http://caniuse.com/#feat=geolocation
+
+function getLoc() {
+
+	if (!navigator.geolocation) {
+
+	    geolocate.innerHTML = 'Geolocation is not available';
+
+	} else {
+	 
+	        map.locate();
+	}
+};
+
+// Once we've got a position, zoom and center the map
+// on it, and add a single marker.
+map.on('locationfound', drawGeolocation);
+
+
+function drawGeolocation(e) {
+	
+	//function(e) {
+    //map.fitBounds(e.bounds);
+
+    myLayer.setGeoJSON({
+        type: 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [e.latlng.lng, e.latlng.lat]
+        },
+        properties: {
+        	
+            'marker-color': '#5CD65C',
+            
+        }
+    });
+
+	origLng = e.latlng.lng;
+
+	origLat = e.latlng.lat;
+
+	origin = String(origLng)+","+String(origLat);
+
+	center = [origLat, origLng];
+
+	console.log(center);
+
+	map.setView(center, 10);
+
+	//setDirs(origin, dest);
+
+};
+
+// If the user chooses not to allow their location
+// to be shared, display an error message.
+map.on('locationerror', function() {
+    alert('Position could not be found!');
+});
+
+getLoc();
+
+//setInterval(getLoc, 3000);
