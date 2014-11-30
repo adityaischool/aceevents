@@ -15,6 +15,10 @@ def auth():
 		return
 	else:
 		return redirect(url_for('main'))
+		
+@app.route('/default')
+def default1():
+	return redirect(url_for('main'))
 
 @app.route('/myhome')
 @app.route('/oauth', methods=['GET', 'POST'])
