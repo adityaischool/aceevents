@@ -26,7 +26,7 @@ def oauth():
 	print "-------------     "+app.config['Callback']
 	if ('username' in session):
 		print "username exist!"
-		return redirect(url_for('main'))
+		return redirect(url_for('index'))
 
 	#return google.authorize(callback=url_for('oauth2callback',next=request.args.get('next') or request.referrer or None))
 	try:
