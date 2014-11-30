@@ -15,7 +15,7 @@ def auth():
 		return
 	else:
 		return redirect(url_for('main'))
-		
+
 @app.route('/default')
 def default1():
 	return redirect(url_for('main'))
@@ -23,13 +23,16 @@ def default1():
 @app.route('/myhome')
 @app.route('/oauth', methods=['GET', 'POST'])
 def oauth():
+	print "-------------     "+app.config['Callback']
 	if ('username' in session):
 		print "username exist!"
 		return redirect(url_for('main'))
 
 	#return google.authorize(callback=url_for('oauth2callback',next=request.args.get('next') or request.referrer or None))
 	try:
-		return google.authorize(callback='http://localhost:5000/oauth2callback')
+		#return google.authorize(callback='http://localhost:5000/oauth2callback')
+		print "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!          "+app.config['Callback']
+		return google.authorize(callback=app.config['Callback'])
 	except Exception as e:
 		print "Error @ Authorize : check callback variable"
 
