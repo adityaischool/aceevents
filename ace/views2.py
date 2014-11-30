@@ -8,7 +8,6 @@ import json
 from ace import authenticate,userController
 import urllib2
 
-#eventbrite library called 3 times below
 google=authenticate.auth2()
 
 def auth():
@@ -17,8 +16,13 @@ def auth():
 	else:
 		return redirect(url_for('main'))
 
+@app.route('/myhome')
 @app.route('/oauth', methods=['GET', 'POST'])
 def oauth():
+	if ('username' in session):
+		print "username exist!"
+		return redirect(url_for('main'))
+
 	#return google.authorize(callback=url_for('oauth2callback',next=request.args.get('next') or request.referrer or None))
 	try:
 		return google.authorize(callback='http://localhost:5000/oauth2callback')
@@ -50,13 +54,31 @@ def oauth2callback(resp):
 	print "\n\n\n----response 2     "+str(response)
 	session['username'] = response['emails'][0]['value']
 	print "username="+session['username']
-	userController.loadUserNow()
+	doesExist=userController.loadUserNow()
 	#	flash('You were signed in as %s' % resp['screen_name'])
 	return redirect(url_for('index'))
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-	return render_template('index.html')
+	#return render_template
+	if ('username' in session):
+		print "my session name = "+str(session['username'])
+		return render_template('index.html')
+	else:
+		return redirect(url_for('land'))
+
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+	if ('username' in session):
+		#session.pop('username')
+		del session['username']
+		print str(session)
+	return render_template('homepage.html')
+
+@app.route('/landing')
+def land():
+	return render_template('homepage.html')
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
@@ -71,44 +93,22 @@ def leaflet():
 
 @app.route('/_getEbData', methods=['GET', 'POST'])
 def getEbData():
-
-	"""val = eventbrite1.filterEvents("20141105", 21)
-	print type(val)
-
-	return jsonify(val)"""
-
-	#print json.loads(request.args.get('params'))
 	params = json.loads(request.args.get('params'))
-	
 	time = json.loads(request.args.get('time'))
-
-
-	print "PARAMS-----------", params
-	print "TIME-------------", time, type(time)
-
+	#print "PARAMS-----------", params
+	#print "TIME-------------", time, type(time)
 	eventDate = params[0][:4]+params[0][5:7]+params[0][8:10]
-
-	print "eventDate is:", eventDate
-
+	#print "eventDate is:", eventDate
 	val = eventbrite2.filterEvents(eventDate, float(time))
-
 	return jsonify(val)
 
 @app.route('/_refreshEvents', methods=['POST'])
 def refreshEvents():
-
 	grids = {}
-
 	#grid = request.form['grid'];
 	day = request.form['day'];
 	time = request.form['time'];
 	val = eventbrite1.callDateTime(day, time)
-	
-
-
-
-
-	
 
 @app.route('/_getData')
 def getUber():
