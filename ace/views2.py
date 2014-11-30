@@ -58,6 +58,11 @@ def oauth2callback(resp):
 def index():
 	return render_template('index.html')
 
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+	return render_template('contact.html')
+
+
 @app.route('/leaflet', methods=['GET', 'POST'])
 def leaflet():
 	grid=gridCalculator.initMap()
