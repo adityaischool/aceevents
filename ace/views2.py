@@ -18,7 +18,8 @@ def auth():
 
 @app.route('/default')
 def default1():
-	return redirect(url_for('main'))
+	session['username']='default@default.com'
+	return redirect(url_for('index'))
 
 @app.route('/myhome')
 @app.route('/oauth', methods=['GET', 'POST'])
