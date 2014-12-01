@@ -1,6 +1,6 @@
 var center = [37.756631, -122.442222];
 
-var map = L.map('map').setView(center, 12);
+var map = L.map('map', {zoomControl: false}).setView(center, 12);
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiYWpvbmVzNjIwIiwiYSI6IlJ1eEdISkUifQ.whSWoswC0sLHG_kS9q-JRQ';
 
