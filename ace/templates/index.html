@@ -97,10 +97,14 @@
 
 		</div>
 
+		<!-- uncomment this button and comment out the one below it for waze/gmaps target-->
+		<!--<button class="button" id="nav">
+    		<a href="" target="_blank" id="navInner">nav</a>
+		</button> -->
 
 		<button class="button" id="nav">
-    		<a href="" target="_blank" id="navInner">nav</a>
-		</button>
+    		<span id="navInner">nav</span>
+		</button> 
 
 		<!--<button class="button" id="nav">NAV</button>-->
 
@@ -121,29 +125,31 @@
 		
 		<button id="startFareButton">START<br>FARE</button>
 
-		<button id="cancelFareButton">CANCEL</button>
+		<button class="fareButton" id="cancelFareButton">cancel</button>
 
 		<button id="stopFareButton">STOP<br>FARE</button>
 
-		<span id="completedFareText">Fare Complete!</span>
+		<span id="completedFareText"></span>
+
+		<span id="selectedService"></span>
 
 		<span id="investmentText"></span>
 
 		<select id="serviceSelect">
 
-			<option value="">Select Service</option>
+			<option value="NA">Select Service</option>
 			
-			<option value="uber">Uber</option>
+			<option value="Uber">Uber</option>
 
-			<option value="lyft">Lyft</option>
+			<option value="Lyft">Lyft</option>
 
-			<option value="sidecar">SideCar</option>
+			<option value="SideCar">SideCar</option>
 
-			<option value="flywheel">Flywheel</option>
+			<option value="Flywheel">Flywheel</option>
 
 		</select>
 
-		<button id="serviceSkipButton">SKIP</button>
+		<button class="fareButton" id="serviceSkipButton">skip</button>
 
 		<div id="fareInput">
 
@@ -155,11 +161,11 @@
 
 		</div>
 
-		<button id="acceptFare">ACCEPT FARE</button>
+		<button class="fareButton" id="acceptFare">Accept Fare</button>
 
-		<button id="fareSkip">SKIP</button>
+		<button class="fareButton" id="fareSkip">skip</button>
 
-		<button id="fareBack">back</button>
+		<button class="fareButton" id="fareBack">back</button>
 
 	</div>
 

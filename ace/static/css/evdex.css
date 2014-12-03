@@ -462,22 +462,20 @@
 		}
 
 
-		#startFareButton {
-
+		#startFareButton, #stopFareButton {
 			position: absolute;
 			visibility: hidden;
 			z-index: 99999999999;
 			border: 3px solid white;
-			width: 50%;
-			height: 50%;
-			max-width: 150px;
-			max-height: 150px;
+			width: 150px;
+			height: 150px;
 			margin: 0;
 			padding: 0;
 
 			opacity: 1;
 			top: 25%;
-			left: 30%;
+			left: 50%;
+			margin-left: -75px;
 			border-radius: 50%;
 			background: #009648;
 			text-align: center;
@@ -486,63 +484,13 @@
 			font-weight: 400;
 
 			box-shadow: 0px 3px 3px 4px #232323;
-
-		}
-
-		#cancelFareButton {
-
-			position: absolute;
-			visibility: hidden;
-			z-index: 99999999999;
-			border: none;
-			margin: 0;
-			padding: 0;
-			width: 40%;
-			height: 15%;
-			max-height: 40px;
-			max-width: 250px;
-			opacity: 1;
-			top: 65%;
-			left: 30%;
-			border-radius: 5px;
-			background: #181718;
-			border: 2px solid #050405;
-			text-align: center;
-			color: #ffffff;
-			font-size: 16px;
-			font-weight: 400;
-
-			box-shadow: 0px 3px 3px 4px #232323;
-
 		}
 
 		#stopFareButton {
-
-			position: absolute;
-			visibility: hidden;
-			z-index: 99999999999;
-			border: 3px solid white;
-			width: 50%;
-			height: 50%;
-			max-width: 150px;
-			max-height: 150px;
-			margin: 0;
-			padding: 0;
-			opacity: 1;
-			top: 25%;
-			left: 30%;
-			border-radius: 50%;
 			background: #b1281a;
-			text-align: center;
-			color: #ffffff;
-			font-size: 24px;
-			font-weight: 400;
-
-			box-shadow: 0px 3px 3px 4px #232323;
-
 		}
 
-		#completedFareText, #investmentText {
+		#completedFareText, #investmentText, #selectedService {
 
 			position: absolute;
 			visibility: hidden;
@@ -561,40 +509,31 @@
 
 		}
 
+		#completedFareText {
+
+			color: #2593B8;
+			font-weight: 500;
+			font-size: 26px;
+			visibility: visible;
+		}
+
+		#selectedService {
+			top: 24%;
+			visibility: visible;
+			font-size: 18px;
+		}
+
 		#investmentText {
 
 			visibility: visible;
-			top: 27%;
-			font-size: 14px;
+			top: 34%;
+			font-size: 16px;
 
 		}
 
-		#serviceSelect {
-
-			visibility: hidden;
-			position: absolute;
-
-			z-index: 99999999999;
-			border: 2px solid white;
-			width: 50%;
-			height: 40px;
-			max-width: 450px;
-			margin: 0;
-			padding: 0;
-			opacity: 1;
-			top: 45%;
-			left: 25%;
-			border-radius: 5px;
-			background: #181718;
-			text-align: center;
-			color: #ffffff;
-			font-size: 24px;
-			font-weight: 400;
-
-
-		}
-
-		#serviceSkipButton, #fareSkip, #acceptFare, #fareBack {
+		
+		#cancelFareButton, #serviceSkipButton, #fareSkip,
+		#acceptFare, #fareBack, #serviceSelect, #fareInput {
 
 			position: absolute;
 			visibility: hidden;
@@ -602,13 +541,12 @@
 			border: none;
 			margin: 0;
 			padding: 0;
-			width: 40%;
-			height: 15%;
-			max-height: 40px;
-			max-width: 250px;
+			width: 150px;
+			height: 40px;
 			opacity: 1;
 			top: 75%;
-			left: 30%;
+			left: 50%;
+			margin-left: -75px;
 			border-radius: 5px;
 			background: #181718;
 			border: 2px solid #050405;
@@ -621,36 +559,27 @@
 
 		}
 
+		#fareInput {
+			border: 2px solid white;
+			height: 60px;
+			width: 220px;
+			top: 45%;
+			left: 50%;
+			margin-left: -110px;
+			border-radius: 5px;
+			font-size: 24px;
+		}
+
+		#serviceSelect {
+			width: 200px;
+			top: 45%;
+			margin-left: -100px;
+			font-size: 20px;
+			font-weight: 300;
+		}
+
 		#fareBack {
 			top: 85%;
-		}
-
-		#serviceSkipButton {
-			top: 65%;
-		}
-
-		#fareInput {
-
-			visibility: hidden;
-			position: absolute;
-
-			z-index: 99999999999;
-			border: 2px solid white;
-			width: 60%;
-			height: 40px;
-			max-width: 650px;
-			margin: 0;
-			padding: 0;
-			opacity: 1;
-			top: 45%;
-			left: 20%;
-			border-radius: 5px;
-			background: #181718;
-			text-align: center;
-			color: #ffffff;
-			font-size: 24px;
-			font-weight: 400;
-
 		}
 
 		#fareMinus {
@@ -664,7 +593,7 @@
 			font-size: 40px;
 			font-weight: 500;
 			left: 5px;
-			top: -12px;
+			top: -3px;
 			
 		}
 
@@ -679,7 +608,7 @@
 			font-size: 36px;
 			font-weight: 500;
 			right: 5px;
-			top: -10px;
+			top: 0px;
 			
 		}
 
@@ -692,12 +621,14 @@
 			width: 60%;
 			height: 40px;
 			left: 20%;
+			top: 10px;
 			color: #ffffff;
 			font-size: 24px;
 			font-weight: 500;
 			text-align: center;
 
 		}
+
 
 		#acceptFare {
 
@@ -719,6 +650,16 @@
 			border-radius: 50%;
 
 	  	}
+
+	}
+
+	@media only screen and (min-width: 600px) {
+
+		#serviceSkipButton, #fareSkip, #acceptFare, #fareBack {
+			left: 50%;
+			margin-left: -75px;
+		}
+
 
 	}
 

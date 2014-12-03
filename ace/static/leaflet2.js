@@ -115,15 +115,85 @@ function getLocation() {
 function showPosition(position) {
 
 	//UNCOMMENT THE NEXT LINE IN ORDER TO ACTIVATE GEOLOCATED-CENTERING
-	//center = [position.coords.latitude, position.coords.longitude];
+	trackingCenter = [position.coords.latitude, position.coords.longitude];
 
-	map.setView(center, 12);
+	console.log(trackingCenter);
+
+	//map.setView(center, 12);
 
     //alert("Latitude: " + position.coords.latitude + 
     //"Longitude: " + position.coords.longitude);	
 };
 
-//$(document).ready(getLocation);
+
+function pingLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPing);
+    } else { 
+        alert("Geolocation is not supported by this browser.");
+    }
+};
+
+function showPing(position) {
+
+	//UNCOMMENT THE NEXT LINE IN ORDER TO ACTIVATE GEOLOCATED-CENTERING
+	pingCenter = [position.coords.latitude, position.coords.longitude];
+
+	var testPing = [selectedMarker[0]._latlng.lat+.0001, selectedMarker[0]._latlng.lng-.0001];
+
+	console.log("pingCenter is", pingCenter);
+
+	console.log("destination lat lng is ", selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng);
+
+	if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng])) {
+
+		console.log('current ping within 100 meters of destination!');
+
+		getLocation();
+
+		end_lat = trackingCenter[0];
+
+		end_long = trackingCenter[1];
+
+		end_datetime = new Date();
+
+		writeRideData();
+
+		start_datetime = new Date();
+
+		setTimeout(function() {
+
+			start_lat = trackingCenter[0];
+
+			console.log(start_lat);
+
+			start_long = trackingCenter[1];
+
+			driveType = driveTypes[1];
+
+		}, 1500);
+
+	} else if (checkRad(pingCenter,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng]) === false) {
+
+		console.log('current ping outside of 100 meter radius of destination!');
+
+	}
+
+	if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng])) {
+
+		console.log('test ping within 100 meters of destination!');
+
+	} else if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng]) === false) {
+
+		console.log('test ping outside of 100 meter radius of destination!');
+
+	}
+
+	//map.setView(center, 12);
+
+    //alert("Latitude: " + position.coords.latitude + 
+    //"Longitude: " + position.coords.longitude);	
+};
 
 
 
@@ -160,6 +230,20 @@ var markerSwitch = true;
 
 var gridCoords = [[37.81, -122.5155], [37.81, -122.369145],
 				[37.703206, -122.5155], [37.703206, -122.369145]];
+
+var pingCenter= [];
+var driverid = 'driver@example.com';
+var start_datetime = '';
+var end_datetime = '';
+var start_lat = 0;
+var start_long = 0;
+var end_lat = 0;
+var end_long = 0;
+var driveType = '';
+var service = 'NA';
+var collected_fare = 0;
+var driveTypes = ['onWayToEvent', 'waitingForFare',
+					'activeFare', 'betweenEvents']
 
 
 function getDayNow () {
@@ -515,13 +599,6 @@ function fenceEvents() {
 
 };
 
-$('#startFareButton').click(function() {
-
-
-
-
-});
-
 
 var markerZIndex = 200;
 
@@ -804,6 +881,8 @@ function drawMarkers() {
 
 				
 
+				//$('#navInner').attr("href", "#");
+
 				$('#navInner').attr("href", link);
 
 				$('#nav').css({"display": "block"});
@@ -871,7 +950,7 @@ function drawCluster() {
 
 function checkRad(currentLocation, destination) {
 
-	var rad = .01;
+	var rad = .2;
 
 	var ky = 40000 / 360;
 
@@ -972,14 +1051,42 @@ $("#selectedTime").change(changeTime);
 
 $(".daynavcontainer").click(changeDay);
 
-var currentTimer = 0;
 
-var timerClicked = false;
 
-var clock = '';
 
+var trackingCenter = [];
+
+var timer;
 
 $("#nav").on('click', function() {
+
+	timer = setInterval("pingLocation()", 3000);
+
+	getLocation();
+	
+	end_lat = trackingCenter[0];
+
+	console.log(trackingCenter[0]);
+
+	console.log(end_lat);
+
+	end_long = trackingCenter[1];
+
+	end_datetime = new Date();
+
+	writeRideData();
+
+	start_datetime = new Date();
+
+	setTimeout(function() {
+
+		start_lat = trackingCenter[0];
+
+		start_long = trackingCenter[1];
+
+		driveType = driveTypes[0];
+
+	}, 1500);
 
 	$("#farePanel").css({"visibility": "visible"});
 
@@ -989,21 +1096,37 @@ $("#nav").on('click', function() {
 
 	$("#cancelFareButton").css({"visibility": "visible"});
 
-	//WRITE TO DB
-
-	stopClock();
-
-	startClock();
-
 });
+
+//NEED GEOFENCING LOGIC TO AUTO-START THE 'WAITING FOR FARE' STAGE
 
 $("#startFareButton").on('click', function() {
 
-	//WRITE TO DB
+	window.clearInterval(timer);
 
-	stopClock();
+	getLocation();
 
-	startClock();
+	end_lat = trackingCenter[0];
+
+	end_long = trackingCenter[1];
+
+	end_datetime = new Date();
+
+	writeRideData();
+
+	start_datetime = new Date();
+
+	setTimeout(function() {
+
+		start_lat = trackingCenter[0];
+
+		console.log(start_lat);
+
+		start_long = trackingCenter[1];
+
+		driveType = driveTypes[2];
+
+	}, 1500);
 
 	$("#startFareButton").css({"visibility": "hidden"});
 
@@ -1018,20 +1141,25 @@ $("#stopFareButton").on('click', function() {
 
 	$("#stopFareButton").css({"visibility": "hidden"});
 
-	$("#completedFareText").css({"visibility": "visible"});
+	$("#completedFareText").css({"top": "13%"});
+
+	$("#completedFareText").html("Fare Complete");
 
 	$("#serviceSelect").css({"visibility": "visible"});
 
 	$("#serviceSkipButton").css({"visibility": "visible"});
 
-	$("#investmentText").html("Help us make Swoop even better by entering the car service for this fare");
-	
+	$("#investmentText").html("Track your driving data and help us make swoop even better by entering the service you used for this fare");
+
+	$("#farePanel").css({"opacity": "1.0"});
 
 });
 
 var fareText = 12;
 
 $("#serviceSelect").change(function() {
+
+	service = $("#serviceSelect").val();
 
 	$("#serviceSelect").css({"visibility": "hidden"});
 
@@ -1053,7 +1181,9 @@ $("#serviceSelect").change(function() {
 
 	$("#fareBack").css({"visibility": "visible"});
 
-	$("#investmentText").html("Help us make Swoop even better by entering the amount of this fare");
+	$("#selectedService").html("Service: "+$("#serviceSelect").val());
+
+	$("#investmentText").html("Track your driving data and help us make swoop even better by entering the fare amount");
 
 });
 
@@ -1080,7 +1210,9 @@ $("#serviceSkipButton").on('click', function() {
 
 	$("#fareBack").css({"visibility": "visible"});
 
-	$("#investmentText").html("Help us make Swoop even better by entering the amount of this fare");
+	$("#investmentText").html("Track your driving data and help us make swoop even better by entering the fare amount");
+
+	$("#selectedService").html("Service: None");
 
 });
 
@@ -1107,15 +1239,66 @@ $("#farePlus").on('click', function() {
 });
 
 
-$("#acceptFare").on('click', function() {
+function writeRideData() {
 
-	//WRITE TO DB
+	console.log(service);
 
-	stopClock();
+	$.getJSON('/_writeRideData', {
 
-	startClock();
+		driverid: JSON.stringify(driverid),
 
-	$("#completedFareText").html("Thank you!");
+		start_datetime: JSON.stringify(start_datetime),
+
+		end_datetime: JSON.stringify(end_datetime),
+
+		start_lat: JSON.stringify(start_lat),
+		start_long: JSON.stringify(start_long),
+
+		end_lat: JSON.stringify(end_lat),
+		end_long: JSON.stringify(end_long),
+
+		//one of the four cycles
+		driveType: JSON.stringify(driveType),
+
+		//if during fare cycle
+		service: JSON.stringify(service),
+
+		//if during fare cycle
+		collected_fare: JSON.stringify(collected_fare)
+
+
+	}, function(data) {
+
+		console.log(data);
+	});
+
+};
+
+function endFare() {
+
+	getLocation();
+
+	end_lat = trackingCenter[0];
+
+	end_long = trackingCenter[1];
+
+	end_datetime = new Date();
+
+	collected_fare = fareText;
+
+	writeRideData();
+
+	start_datetime = new Date();
+
+	start_lat = trackingCenter[0];
+
+	start_long = trackingCenter[1];
+
+	driveType = driveTypes[3];
+
+	collected_fare = 0;
+
+	$("#completedFareText").html("Swoop<br><br>Thank you!");
 
 	$("#completedFareText").css({"top": "40%"});
 
@@ -1133,6 +1316,8 @@ $("#acceptFare").on('click', function() {
 
 	$("#fareBack").css({"visibility": "hidden"});
 
+	$("#selectedService").html("");
+
 	$("#investmentText").html("");
 
 	setTimeout(function() {
@@ -1143,55 +1328,27 @@ $("#acceptFare").on('click', function() {
 
 	setTimeout(function() {
 
-		$("#completedFareText").css({"visibility": "hidden"});
+		$("#completedFareText").html("");
+
+		$("#farePanel").css({"opacity": ".9"});
+
+		$("#serviceSelect").val("NA");
 
 	}, 7000);
 
 	setDefault();
+
+};
+
+$("#acceptFare").on('click', function() {
+
+	endFare();
 
 });
 
 $("#fareSkip").on('click', function() {
 
-	//WRITE TO DB
-
-	stopClock();
-
-	startClock();
-
-	$("#completedFareText").html("Thank you!");
-
-	$("#completedFareText").css({"top": "40%"});
-
-	$("#fareInput").css({"visibility": "hidden"});
-
-	$("#fareMinus").css({"visibility": "hidden"});
-
-	$("#fareText").css({"visibility": "hidden"});
-
-	$("#farePlus").css({"visibility": "hidden"});
-
-	$("#acceptFare").css({"visibility": "hidden"});
-
-	$("#fareSkip").css({"visibility": "hidden"});
-
-	$("#fareBack").css({"visibility": "hidden"});
-
-	$("#investmentText").html("");
-
-	setTimeout(function() {
-
-		$('#farePanel').animate({top: "9999px"}, 7000, "linear");
-
-	}, 1500);
-
-	setTimeout(function() {
-
-		$("#completedFareText").css({"visibility": "hidden"});
-
-	}, 7000);
-
-	setDefault();
+	endFare();
 
 });
 
@@ -1213,11 +1370,13 @@ $("#fareBack").on('click', function() {
 
 	$("#serviceSelect").css({"visibility": "visible"});
 
-	$("#serviceSelect").val("");
+	$("#serviceSelect").val("NA");
+
+	$("#selectedService").html("");
 
 	$("#serviceSkipButton").css({"visibility": "visible"});
 
-	$("#investmentText").html("Help us make Swoop even better by entering the car service for this fare");
+	$("#investmentText").html("Track your driving data and help us make swoop even better by entering the service you used for this fare");
 
 });
 
@@ -1225,44 +1384,9 @@ $("#cancelFareButton").on('click', function() {
 
 	$('#farePanel').animate({top: "9999px"}, 7000, "linear");
 
-	stopClock();
-
-	startClock();
+	window.clearInterval(timer);
 
 });
-
-function startClock() {
-
-	if (timerClicked === false) {
-
-		clock = setInterval("stopWatch()", 1000);
-
-		timerClicked = true;
-
-	} else if (timerClicked === true) {
-
-		}
-
-}
-
-function stopWatch() {
-
-	currentTimer++;
-
-	console.log(currentTimer);
-
-}
-
-function stopClock() {
-
-	window.clearInterval(clock);
-
-	currentTimer = 0;
-
-	timerClicked = false;
-
-}
-
 
 
 
@@ -1287,8 +1411,12 @@ function getLoc() {
 	} else {
 	 
 	        map.locate();
+
+	        console.log(map.locate());
 	}
 };
+
+//setTimeout(getLoc, 5000);
 
 // Once we've got a position, zoom and center the map
 // on it, and add a single marker.
