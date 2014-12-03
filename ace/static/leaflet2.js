@@ -192,6 +192,12 @@ function getTimeNow () {
 
 function setDefault() {
 
+	$("#nav").css({"display": "none"});
+
+	selectedMarker = [];
+
+	map.setView(center, 10);
+
 	var x = new Date();
 	
 	var formattedDate = new Date();
@@ -509,7 +515,8 @@ function fenceEvents() {
 
 };
 
-$('.leaflet-control-zoom-in').click(function() {
+$('#startFareButton').click(function() {
+
 
 
 
@@ -781,7 +788,13 @@ function drawMarkers() {
 				console.log(i);
 				console.log(zoomedEvents[i]);
 
-				var link = ("http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]);
+				var lat = zoomedEvents[i][0];
+				var lng = zoomedEvents[i][1];
+
+				var link = '';
+
+				var link = ("http://waze.to/?ll="+lat+","+lng+"&navigate=yes");
+				//var link = ("http://maps.google.com/?daddr='+zoomedEvents[i][0]+','+zoomedEvents[i][1]+'target=_blank");
 
 				console.log(link);
 
@@ -810,6 +823,9 @@ function drawMarkers() {
 
 				//setTimeout(setDirs(origin, dest), 500);
 
+				
+				setTimeout(function() {
+
 				var routeDeets = $('.mapbox-directions-route-active').children().eq(2).html();
 
     			console.log(routeDeets);
@@ -823,6 +839,9 @@ function drawMarkers() {
     			$('#eventInfoList').html(infoList);
 
     			console.log(infoList);
+
+				}, 400);
+				
 
 
 			});
@@ -847,6 +866,22 @@ function drawCluster() {
 		clusterMarkers.addLayer(marker);
 
 	}
+
+};
+
+function checkRad(currentLocation, destination) {
+
+	var rad = .01;
+
+	var ky = 40000 / 360;
+
+	var kx = Math.cos(Math.PI * destination[0] / 180.0) * ky;
+
+	var dx = Math.abs(destination[1] - currentLocation[1]) * kx;
+
+	var dy = Math.abs(destination[0] - currentLocation[0]) * ky;
+
+	return Math.sqrt(dx * dx + dy * dy) <= rad;
 
 };
 
@@ -937,7 +972,297 @@ $("#selectedTime").change(changeTime);
 
 $(".daynavcontainer").click(changeDay);
 
-$("#nav").on('click', $('#directions').css({"visibility": "visible"}));
+var currentTimer = 0;
+
+var timerClicked = false;
+
+var clock = '';
+
+
+$("#nav").on('click', function() {
+
+	$("#farePanel").css({"visibility": "visible"});
+
+	$('#farePanel').animate({top:"0px"}, 900, "swing");
+
+	$("#startFareButton").css({"visibility": "visible"});
+
+	$("#cancelFareButton").css({"visibility": "visible"});
+
+	//WRITE TO DB
+
+	stopClock();
+
+	startClock();
+
+});
+
+$("#startFareButton").on('click', function() {
+
+	//WRITE TO DB
+
+	stopClock();
+
+	startClock();
+
+	$("#startFareButton").css({"visibility": "hidden"});
+
+	$("#cancelFareButton").css({"visibility": "hidden"});
+
+	$("#stopFareButton").css({"visibility": "visible"});
+
+});
+
+
+$("#stopFareButton").on('click', function() {
+
+	$("#stopFareButton").css({"visibility": "hidden"});
+
+	$("#completedFareText").css({"visibility": "visible"});
+
+	$("#serviceSelect").css({"visibility": "visible"});
+
+	$("#serviceSkipButton").css({"visibility": "visible"});
+
+	$("#investmentText").html("Help us make Swoop even better by entering the car service for this fare");
+	
+
+});
+
+var fareText = 12;
+
+$("#serviceSelect").change(function() {
+
+	$("#serviceSelect").css({"visibility": "hidden"});
+
+	$("#serviceSkipButton").css({"visibility": "hidden"});
+
+	$("#fareInput").css({"visibility": "visible"});
+
+	$("#fareMinus").css({"visibility": "visible"});
+
+	$("#fareText").css({"visibility": "visible"});
+
+	$("#fareText").html("$"+String(fareText));
+
+	$("#farePlus").css({"visibility": "visible"});
+
+	$("#acceptFare").css({"visibility": "visible"});
+
+	$("#fareSkip").css({"visibility": "visible"});
+
+	$("#fareBack").css({"visibility": "visible"});
+
+	$("#investmentText").html("Help us make Swoop even better by entering the amount of this fare");
+
+});
+
+
+$("#serviceSkipButton").on('click', function() {
+
+	$("#serviceSelect").css({"visibility": "hidden"});
+
+	$("#serviceSkipButton").css({"visibility": "hidden"});
+
+	$("#fareInput").css({"visibility": "visible"});
+
+	$("#fareMinus").css({"visibility": "visible"});
+
+	$("#fareText").css({"visibility": "visible"});
+
+	$("#fareText").html("$"+String(fareText));
+
+	$("#farePlus").css({"visibility": "visible"});
+
+	$("#acceptFare").css({"visibility": "visible"});
+
+	$("#fareSkip").css({"visibility": "visible"});
+
+	$("#fareBack").css({"visibility": "visible"});
+
+	$("#investmentText").html("Help us make Swoop even better by entering the amount of this fare");
+
+});
+
+
+
+$("#fareMinus").on('click', function() {
+
+	if (fareText > 0) {
+
+		fareText -= 1;
+
+		$("#fareText").html("$"+String(fareText));
+
+	}
+
+});
+
+$("#farePlus").on('click', function() {
+
+	fareText += 1;
+
+	$("#fareText").html("$"+String(fareText));
+
+});
+
+
+$("#acceptFare").on('click', function() {
+
+	//WRITE TO DB
+
+	stopClock();
+
+	startClock();
+
+	$("#completedFareText").html("Thank you!");
+
+	$("#completedFareText").css({"top": "40%"});
+
+	$("#fareInput").css({"visibility": "hidden"});
+
+	$("#fareMinus").css({"visibility": "hidden"});
+
+	$("#fareText").css({"visibility": "hidden"});
+
+	$("#farePlus").css({"visibility": "hidden"});
+
+	$("#acceptFare").css({"visibility": "hidden"});
+
+	$("#fareSkip").css({"visibility": "hidden"});
+
+	$("#fareBack").css({"visibility": "hidden"});
+
+	$("#investmentText").html("");
+
+	setTimeout(function() {
+
+		$('#farePanel').animate({top: "9999px"}, 7000, "linear");
+
+	}, 1500);
+
+	setTimeout(function() {
+
+		$("#completedFareText").css({"visibility": "hidden"});
+
+	}, 7000);
+
+	setDefault();
+
+});
+
+$("#fareSkip").on('click', function() {
+
+	//WRITE TO DB
+
+	stopClock();
+
+	startClock();
+
+	$("#completedFareText").html("Thank you!");
+
+	$("#completedFareText").css({"top": "40%"});
+
+	$("#fareInput").css({"visibility": "hidden"});
+
+	$("#fareMinus").css({"visibility": "hidden"});
+
+	$("#fareText").css({"visibility": "hidden"});
+
+	$("#farePlus").css({"visibility": "hidden"});
+
+	$("#acceptFare").css({"visibility": "hidden"});
+
+	$("#fareSkip").css({"visibility": "hidden"});
+
+	$("#fareBack").css({"visibility": "hidden"});
+
+	$("#investmentText").html("");
+
+	setTimeout(function() {
+
+		$('#farePanel').animate({top: "9999px"}, 7000, "linear");
+
+	}, 1500);
+
+	setTimeout(function() {
+
+		$("#completedFareText").css({"visibility": "hidden"});
+
+	}, 7000);
+
+	setDefault();
+
+});
+
+$("#fareBack").on('click', function() {
+
+	$("#fareInput").css({"visibility": "hidden"});
+
+	$("#fareMinus").css({"visibility": "hidden"});
+
+	$("#fareText").css({"visibility": "hidden"});
+
+	$("#farePlus").css({"visibility": "hidden"});
+
+	$("#acceptFare").css({"visibility": "hidden"});
+
+	$("#fareSkip").css({"visibility": "hidden"});
+
+	$("#fareBack").css({"visibility": "hidden"});
+
+	$("#serviceSelect").css({"visibility": "visible"});
+
+	$("#serviceSelect").val("");
+
+	$("#serviceSkipButton").css({"visibility": "visible"});
+
+	$("#investmentText").html("Help us make Swoop even better by entering the car service for this fare");
+
+});
+
+$("#cancelFareButton").on('click', function() {
+
+	$('#farePanel').animate({top: "9999px"}, 7000, "linear");
+
+	stopClock();
+
+	startClock();
+
+});
+
+function startClock() {
+
+	if (timerClicked === false) {
+
+		clock = setInterval("stopWatch()", 1000);
+
+		timerClicked = true;
+
+	} else if (timerClicked === true) {
+
+		}
+
+}
+
+function stopWatch() {
+
+	currentTimer++;
+
+	console.log(currentTimer);
+
+}
+
+function stopClock() {
+
+	window.clearInterval(clock);
+
+	currentTimer = 0;
+
+	timerClicked = false;
+
+}
+
 
 
 
