@@ -570,7 +570,7 @@ function fenceEvents() {
 	var lngs = [bounds['_northEast'].lng, bounds['_southWest'].lng];
 
 
-	for (var i=0; i < eventCoords.length; i++) {
+	for (var i=0; i < 10; i++) {
 
 		//console.log('event lat =', eventCoords[i][0]);
 		//console.log('event lng =', eventCoords[i][1]);
