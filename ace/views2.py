@@ -24,7 +24,8 @@ def default1():
 
 @app.route('/mypage')
 def mypage():
-	return render_template('mypage.html',username=session['userdisplayname'])
+	#return render_template('mypage.html',username=session['userdisplayname'])
+	return render_template('analytics.html',username=session['userdisplayname'])
 
 @app.route('/loadUserPage', methods=['GET', 'POST'])
 def loadUserPage():
