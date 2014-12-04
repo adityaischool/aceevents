@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css"/>
     <link rel="stylesheet" href="/static/css/leaflet-label.css"/>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
 	<link rel='stylesheet' href='/static/css/mapbox.directions.css' type='text/css' />
 
@@ -43,7 +44,7 @@
 	            <li class="active"><a href="#">Home</a></li>
 	            <li><a id="markers">Markers</a></li>
 	            <li><a href="contact">Contact</a></li>
-   	            <li><a href="/mypage">{{session['username']}}</a></li>
+	            <li><a href="/mypage">{{username}}</a></li>
 
           		</ul>
         	</div>
@@ -55,70 +56,9 @@
 
 	<div class="container">
 		
-		<div class="navcontainer">
-			<div id="daysbox"></div>
-			<button class="daynavcontainer"><img id="leftArrow" src="/static/leftArrow.png"</img></button>
-
-			<p class="daynavcontainer" id="dayofweek"></p>
-
-
-			<button class="daynavcontainer"><img id="rightArrow" src="/static/rightArrow.png"</img></button>
-
-		</div>
-
-			<!--<button class="daynavcontainer"><img id="daynav" src="/static/devexDayNav.png"</img></button>-->
-
-
-
-
-		<div class="buttoncontainer">	
-			
-			<div id="map"></div>
-
-			<div id='inputs'></div>
-			<div id='errors'></div>
-			<div id='directions'>
-			  <div id='routes'></div>
-			  <div id='instructions'></div>
-			</div>
-
-
-				
-		</div>
 		
-		<div id="bottomcontainer">
-
-		<div id="bottombox"></div>
-
-		<button class="button" id="reset">C</button>
-
-		<div id="eventinfo">
-			
-			<ol id="eventInfoList">
-			</ol>
-
-		</div>
 
 
-		<button class="button" id="nav">
-    		<a href="" target="_blank" id="navInner">NAV</a>
-		</button>
-
-		<!--<button class="button" id="nav">NAV</button>-->
-
-		<div data-role="main" class="timenavcontainer" id="slider">
-		    <form method="post" action="demoform.asp">
-		      <label for="points" id="timenavtime"></label>
-		      <input type="range" class="bar" name="points" id="selectedTime" value="20" min="0" max="23.5" step=".5">
-		    </form>
-		</div>
-
-		</div>
-			
-			
-		</div>
-	</div>
-		
 	</div>
 
 

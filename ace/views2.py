@@ -21,6 +21,15 @@ def default1():
 	session['username']='default@default.com'
 	return redirect(url_for('index'))
 
+@app.route('/mypage')
+def mypage():
+	return render_template('mypage.html',username=session['userdisplayname'])
+
+@app.route('/loadUserPage', methods=['GET', 'POST'])
+def loadUserPage():
+	val = eventbrite2.filterEvents(eventDate, float(time))
+	return jsonify(val)
+
 @app.route('/myhome')
 @app.route('/oauth', methods=['GET', 'POST'])
 def oauth():
@@ -58,10 +67,13 @@ def oauth2callback(resp):
 	#ya29.wABkksuJoRL5GmqdZVixB9MMeN8lhUpvJLJmWP8Ox8mpZUJGbb9dAxYdDYp8e-6RKQE8NsWm4qmWSA
 	goojson=urllib2.urlopen(urlgetid)
 	#print "response=="+str(json.load(goojson))
+	#	response=={u'kind': u'plus#person', u'displayName': u'Aditya Mishra', u'name': {u'givenName': u'Aditya', u'familyName': u'Mishra'}, u'isPlusUser': True, u'url': u'https://plus.google.com/109677758325457736767', u'gender': u'male', u'image': {u'url': u'https://lh5.googleusercontent.com/-UCSjI64MkIc/AAAAAAAAAAI/AAAAAAAABj0/PvrG9C2PaCs/photo.jpg?sz=50', u'isDefault': False}, u'emails': [{u'type': u'account', u'value': u'aditya86254@gmail.com'}], u'etag': u'"RqKWnRU4WW46-6W3rWhLR9iFZQM/iyftTXHd4nmO25TGEhN0BPCG8DQ"', u'verified': False, u'circledByCount': 53, u'id': u'109677758325457736767', u'objectType': u'person'}
+
 	response=json.load(goojson)
 	print "\n\n\n----response 2     "+str(response)
 	session['username'] = response['emails'][0]['value']
-	print "username="+session['username']
+	session['userdisplayname']=response['displayName']
+	print "username="+session['username']+" displayName="+session['userdisplayname']
 	doesExist=userController.loadUserNow()
 	#	flash('You were signed in as %s' % resp['screen_name'])
 	return redirect(url_for('index'))
