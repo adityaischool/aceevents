@@ -7,6 +7,7 @@ import uber
 import json
 from ace import authenticate,userController
 import urllib2
+import travelManager
 
 google=authenticate.auth2()
 
@@ -108,6 +109,19 @@ def getEbData():
 	eventDate = params[0][:4]+params[0][5:7]+params[0][8:10]
 	#print "eventDate is:", eventDate
 	val = eventbrite2.filterEvents(eventDate, float(time))
+	return jsonify(val)
+
+@app.route('/analytics', methods=['GET', 'POST'])
+def analytics():
+	#ADITYA - PLEASE CHECK THIS
+	return render_template('analytics.html')
+
+@app.route('/_getAnalytics', methods=['GET', 'POST'])
+def _getAnalytics():
+	driverID = json.loads(request.args.get('driverID'))
+	time = json.loads(request.args.get('time'))
+	timeperiod = json.loads(request.args.get('timeperiod'))
+	val = travelManager.GetRides(driverid,time,timeperiod)
 	return jsonify(val)
 
 @app.route('/_writeRideData', methods=['GET', 'POST'])
