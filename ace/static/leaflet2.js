@@ -570,21 +570,26 @@ function fenceEvents() {
 	var lngs = [bounds['_northEast'].lng, bounds['_southWest'].lng];
 
 
-	for (var i=0; i < 10; i++) {
+	if (eventCoords.length > 0) {
+
+	for (var i=0; i < Math.min(10, eventCoords.length); i++) {
 
 		//console.log('event lat =', eventCoords[i][0]);
 		//console.log('event lng =', eventCoords[i][1]);
 		//console.log('lat bounds =', lats);
 		//console.log('lng bounds =', lngs);
 
-		if (eventCoords[i][0] <= lats[0] && eventCoords[i][0] >= lats[1] && eventCoords[i][1] <= lngs[0] && eventCoords[i][1] >= lngs[1]) {
+			if (eventCoords[i][0] <= lats[0] && eventCoords[i][0] >= lats[1] && eventCoords[i][1] <= lngs[0] && eventCoords[i][1] >= lngs[1]) {
 
-			console.log("Event "+String(i + 1)+" is in the bounding box!");
+				console.log("Event "+String(i + 1)+" is in the bounding box!");
 
-			zoomedEvents.push(eventCoords[i]);
+				zoomedEvents.push(eventCoords[i]);
 
-		};
+			};
 
+		}
+
+		console.log(zoomedEvents);
 	}
 
 	console.log(zoomedEvents);
