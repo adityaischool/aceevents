@@ -41,10 +41,8 @@
         	<div class="collapse navbar-collapse">
 	          	<ul class="nav navbar-nav">
 	            <li class="active"><a href="#">Home</a></li>
-	            <li><a id="markers">Markers</a></li>
+	            <!--<li><a id="markers">Markers</a></li>-->
 	            <li><a href="contact">Contact</a></li>
-   	            <li><a href="/mypage">{{session['username']}}</a></li>
-
           		</ul>
         	</div>
 		</div>
@@ -73,15 +71,7 @@
 
 		<div class="buttoncontainer">	
 			
-			<div id="map"></div>
-
-			<div id='inputs'></div>
-			<div id='errors'></div>
-			<div id='directions'>
-			  <div id='routes'></div>
-			  <div id='instructions'></div>
-			</div>
-
+			<div id="analyticsDashboard"></div>
 
 				
 		</div>
@@ -123,57 +113,7 @@
 			
 			
 		</div>
-	</div>
-
-	<div id="farePanel">
-		
-		<button id="startFareButton">START<br>FARE</button>
-
-		<button class="fareButton" id="cancelFareButton">cancel</button>
-
-		<button id="stopFareButton">STOP<br>FARE</button>
-
-		<span id="completedFareText"></span>
-
-		<span id="selectedService"></span>
-
-		<span id="investmentText"></span>
-
-		<select id="serviceSelect">
-
-			<option value="NA">select service</option>
-			
-			<option value="Uber">Uber</option>
-
-			<option value="Lyft">Lyft</option>
-
-			<option value="SideCar">SideCar</option>
-
-			<option value="Flywheel">Flywheel</option>
-
-		</select>
-
-		<button class="fareButton" id="serviceSkipButton">skip</button>
-
-		<div id="fareInput">
-
-			<button id="fareMinus">-</button>
-
-			<span id="fareText"></span>
-
-			<button id="farePlus">+</button>
-
-		</div>
-
-		<button class="fareButton" id="acceptFare">Accept Fare</button>
-
-		<button class="fareButton" id="fareSkip">skip</button>
-
-		<button class="fareButton" id="fareBack">back</button>
-
-	</div>
-
-	
+	</div>	
 
 
 		
@@ -185,33 +125,7 @@
 
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-
-
-
-	
-
-	<script src="/static/mapbox.js"></script>
-
-
-	<script src="/static/mapboxDirections.js"></script>
-
-	<script src="http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
-
-	<script src="/static/leaflet-label.js"></script>
-
 	<script src="/static/leaflet2.js"></script>
-
-
-
-
-
-
-	<!--<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js'></script>
-	
-
-	<script src="https://maps.googleapis.com/maps/api/js?sensor=false">
-	</script>-->
 	
 </body>
 </html>

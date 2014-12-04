@@ -1,6 +1,6 @@
 var center = [37.756631, -122.442222];
 
-var map = L.map('map').setView(center, 12);
+var map = L.map('map', {zoomControl: false}).setView(center, 12);
 
 L.mapbox.accessToken = 'pk.eyJ1IjoiYWpvbmVzNjIwIiwiYSI6IlJ1eEdISkUifQ.whSWoswC0sLHG_kS9q-JRQ';
 
@@ -11,7 +11,7 @@ L.tileLayer('https://{s}.tiles.mapbox.com/v3/ajones620.k4bkhnfi/{z}/{x}/{y}.png'
 }).addTo(map);
 
 // move the attribution control out of the way
-map.attributionControl.setPosition('bottomleft');
+map.attributionControl.setPosition('bottomright');
 
 
 
@@ -115,15 +115,87 @@ function getLocation() {
 function showPosition(position) {
 
 	//UNCOMMENT THE NEXT LINE IN ORDER TO ACTIVATE GEOLOCATED-CENTERING
-	//center = [position.coords.latitude, position.coords.longitude];
+	trackingCenter = [position.coords.latitude, position.coords.longitude];
 
-	map.setView(center, 12);
+	console.log(trackingCenter);
+
+	//map.setView(center, 12);
 
     //alert("Latitude: " + position.coords.latitude + 
     //"Longitude: " + position.coords.longitude);	
 };
 
-//$(document).ready(getLocation);
+
+function pingLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPing);
+    } else { 
+        alert("Geolocation is not supported by this browser.");
+    }
+};
+
+function showPing(position) {
+
+	//UNCOMMENT THE NEXT LINE IN ORDER TO ACTIVATE GEOLOCATED-CENTERING
+	pingCenter = [position.coords.latitude, position.coords.longitude];
+
+	var testPing = [selectedMarker[0]._latlng.lat+.0001, selectedMarker[0]._latlng.lng-.0001];
+
+	console.log("pingCenter is", pingCenter);
+
+	console.log("destination lat lng is ", selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng);
+
+	if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng])) {
+
+		console.log('current ping within 100 meters of destination!');
+
+		window.clearInterval(timer);
+
+		getLocation();
+
+		end_lat = trackingCenter[0];
+
+		end_long = trackingCenter[1];
+
+		end_datetime = new Date();
+
+		writeRideData();
+
+		start_datetime = new Date();
+
+		setTimeout(function() {
+
+			start_lat = trackingCenter[0];
+
+			console.log(start_lat);
+
+			start_long = trackingCenter[1];
+
+			driveType = driveTypes[1];
+
+		}, 1500);
+
+	} else if (checkRad(pingCenter,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng]) === false) {
+
+		console.log('current ping outside of 100 meter radius of destination!');
+
+	}
+
+	if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng])) {
+
+		console.log('test ping within 100 meters of destination!');
+
+	} else if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng]) === false) {
+
+		console.log('test ping outside of 100 meter radius of destination!');
+
+	}
+
+	//map.setView(center, 12);
+
+    //alert("Latitude: " + position.coords.latitude + 
+    //"Longitude: " + position.coords.longitude);	
+};
 
 
 
@@ -150,7 +222,7 @@ var grid = new L.featureGroup();
 
 var heatCoords = [];
 
-var heat = L.heatLayer(heatCoords, {opacity: 0.2, radius: 13, blur: 15, max: 1, gradient:{.1: '#7cd1fc', .2: 'lime', .3: 'yellow', .5: 'orange', .8: 'red'}}).addTo(map);
+var heat = L.heatLayer(heatCoords, {opacity: 0.2, radius: 13, blur: 15, max: 1, gradient:{.1: 'yellow', .2: 'orange', .3: '#e22500', .5: '#e21a1a', .8: 'red'}}).addTo(map);
 
 var eventMarkers = new L.featureGroup();
 
@@ -160,6 +232,21 @@ var markerSwitch = true;
 
 var gridCoords = [[37.81, -122.5155], [37.81, -122.369145],
 				[37.703206, -122.5155], [37.703206, -122.369145]];
+
+var pingCenter= [];
+var driverid = 'driver@example.com';
+var start_datetime = '';
+var end_datetime = '';
+var start_lat = 0;
+var start_long = 0;
+var end_lat = 0;
+var end_long = 0;
+var driveTypes = ['onWayToEvent', 'waitingForFare',
+					'activeFare', 'betweenEvents']
+var driveType = driveTypes[3];
+var service = 'NA';
+var collected_fare = 0;
+
 
 
 function getDayNow () {
@@ -191,6 +278,12 @@ function getTimeNow () {
 
 
 function setDefault() {
+
+	$("#nav").css({"display": "none"});
+
+	selectedMarker = [];
+
+	map.setView(center, 10);
 
 	var x = new Date();
 	
@@ -509,12 +602,6 @@ function fenceEvents() {
 
 };
 
-$('.leaflet-control-zoom-in').click(function() {
-
-
-
-});
-
 
 var markerZIndex = 200;
 
@@ -709,11 +796,13 @@ function drawInfo(marker) {
 
 	//$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li><li><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a></li>");
 
-	$('#eventInfoList').html("<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+" | Capacity: "+zoomedEvents[i][3]+" | ETA:"+eta+"</li>");
+	$('#eventInfoList').html("<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,36)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>");
 
 };
 
 var markerNames = [];
+
+var link = '';
 
 function drawMarkers() {
 
@@ -781,7 +870,13 @@ function drawMarkers() {
 				console.log(i);
 				console.log(zoomedEvents[i]);
 
-				var link = ("http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]);
+				var lat = zoomedEvents[i][0];
+				var lng = zoomedEvents[i][1];
+
+				
+
+				link = ("http://waze.to/?ll="+lat+","+lng+"&navigate=yes");
+				//var link = ("http://maps.google.com/?daddr='+zoomedEvents[i][0]+','+zoomedEvents[i][1]+'target=_blank");
 
 				console.log(link);
 
@@ -790,6 +885,8 @@ function drawMarkers() {
 				redMarker(this);
 
 				
+
+				//$('#navInner').attr("href", "#");
 
 				$('#navInner').attr("href", link);
 
@@ -810,6 +907,9 @@ function drawMarkers() {
 
 				//setTimeout(setDirs(origin, dest), 500);
 
+				
+				setTimeout(function() {
+
 				var routeDeets = $('.mapbox-directions-route-active').children().eq(2).html();
 
     			console.log(routeDeets);
@@ -818,11 +918,14 @@ function drawMarkers() {
 
     			console.log(eta);
 
-    			var infoList = "<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+" | Capacity: "+zoomedEvents[i][3]+" | ETA:"+eta+"</li>";
+    			var infoList = "<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,36)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>";
 
     			$('#eventInfoList').html(infoList);
 
     			console.log(infoList);
+
+				}, 400);
+				
 
 
 			});
@@ -847,6 +950,22 @@ function drawCluster() {
 		clusterMarkers.addLayer(marker);
 
 	}
+
+};
+
+function checkRad(currentLocation, destination) {
+
+	var rad = .2;
+
+	var ky = 40000 / 360;
+
+	var kx = Math.cos(Math.PI * destination[0] / 180.0) * ky;
+
+	var dx = Math.abs(destination[1] - currentLocation[1]) * kx;
+
+	var dy = Math.abs(destination[0] - currentLocation[0]) * ky;
+
+	return Math.sqrt(dx * dx + dy * dy) <= rad;
 
 };
 
@@ -937,9 +1056,422 @@ $("#selectedTime").change(changeTime);
 
 $(".daynavcontainer").click(changeDay);
 
-$("#nav").on('click', $('#directions').css({"visibility": "visible"}));
 
 
+
+var trackingCenter = [];
+
+var timer;
+
+$("#nav").on('click', function() {
+
+	window.open(link);
+
+	timer = setInterval("pingLocation()", 3000);
+
+	getLocation();
+	
+	end_lat = trackingCenter[0];
+
+	console.log(trackingCenter[0]);
+
+	console.log(end_lat);
+
+	end_long = trackingCenter[1];
+
+	end_datetime = new Date();
+
+	writeRideData();
+
+	start_datetime = new Date();
+
+	setTimeout(function() {
+
+		start_lat = trackingCenter[0];
+
+		start_long = trackingCenter[1];
+
+		driveType = driveTypes[0];
+
+	}, 1500);
+
+	$("#farePanel").css({"visibility": "visible"});
+
+	$('#farePanel').animate({top:"0px"}, 1500, "swing");
+
+	$('#startFareButton').animate({opacity: "1.0"}, 1000, "swing");
+
+	$('#cancelFareButton').animate({opacity: "1.0"}, 1000, "swing");
+
+	$("#startFareButton").css({"visibility": "visible"});
+
+	$("#cancelFareButton").css({"visibility": "visible"});
+
+});
+
+//NEED GEOFENCING LOGIC TO AUTO-START THE 'WAITING FOR FARE' STAGE
+
+$("#startFareButton").on('click', function() {
+
+	//window.clearInterval(timer);
+
+	getLocation();
+
+	end_lat = trackingCenter[0];
+
+	end_long = trackingCenter[1];
+
+	end_datetime = new Date();
+
+	writeRideData();
+
+	start_datetime = new Date();
+
+	setTimeout(function() {
+
+		start_lat = trackingCenter[0];
+
+		console.log(start_lat);
+
+		start_long = trackingCenter[1];
+
+		driveType = driveTypes[2];
+
+		$("#startFareButton").css({"visibility": "hidden"});
+
+	}, 1500);
+
+
+	$("#cancelFareButton").css({"visibility": "hidden"});
+
+	$("#stopFareButton").css({"visibility": "visible"});
+
+	$('#startFareButton').animate({opacity: "0"}, 100, "swing");
+
+	$('#stopFareButton').animate({opacity: "1.0"}, 1100, "swing");
+
+	fareText = 12;
+
+});
+
+
+$("#cancelFareButton").on('click', function() {
+
+	driveType = driveTypes[3];
+
+	getLocation();
+	
+	end_lat = trackingCenter[0];
+
+	console.log(trackingCenter[0]);
+
+	console.log(end_lat);
+
+	end_long = trackingCenter[1];
+
+	end_datetime = new Date();
+
+	writeRideData();
+
+	start_datetime = new Date();
+
+	setTimeout(function() {
+
+		start_lat = trackingCenter[0];
+
+		start_long = trackingCenter[1];
+
+		driveType = driveTypes[3];
+
+	}, 1500);
+
+
+
+	$('#farePanel').animate({top: "4000px"}, 7000, "linear");
+
+	window.clearInterval(timer);
+
+});
+
+
+$("#stopFareButton").on('click', function() {
+
+	$("#stopFareButton").css({"visibility": "hidden"});
+
+	$("#completedFareText").css({"top": "13%"});
+
+	$("#completedFareText").html("Fare Complete");
+
+	$('#stopFareButton').animate({opacity: "0"}, 100, "swing");
+
+	$("#serviceSelect").css({"visibility": "visible"});
+
+	$("#serviceSkipButton").css({"visibility": "visible"});
+
+	$('#serviceSelect').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#serviceSkipButton').animate({opacity: "1.0"}, 1100, "swing");
+
+	$("#investmentText").html("Track your data and make Swoop better");
+
+	//$("#farePanel").css({"opacity": "1.0"});
+
+});
+
+var fareText = 12;
+
+$("#serviceSelect").change(function() {
+
+	service = $("#serviceSelect").val();
+
+	advanceServiceSelect();
+
+	$("#selectedService").html("Service: "+$("#serviceSelect").val());
+
+});
+
+
+$("#serviceSkipButton").on('click', function() {
+
+	advanceServiceSelect();
+
+	$("#selectedService").html("Service: None");
+
+});
+
+function advanceServiceSelect() {
+
+	$('#serviceSelect').animate({opacity: "0"}, 100, "swing");
+
+	$('#serviceSkip').animate({opacity: "0"}, 100, "swing");
+
+	setTimeout(function() {
+
+		$("#serviceSelect").css({"visibility": "hidden"});
+
+		$("#serviceSkipButton").css({"visibility": "hidden"});
+
+	}, 1500);
+
+	$("#fareInput").css({"visibility": "visible"});
+
+	$("#fareMinus").css({"visibility": "visible"});
+
+	$("#fareText").css({"visibility": "visible"});
+
+	$("#farePlus").css({"visibility": "visible"});
+
+	$("#acceptFare").css({"visibility": "visible"});
+
+	$("#fareSkip").css({"visibility": "visible"});
+
+	$("#fareBack").css({"visibility": "visible"});
+
+	$('#fareInput').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#fareMinus').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#fareText').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#farePlus').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#acceptFare').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#fareSkip').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#fareBack').animate({opacity: "1.0"}, 1100, "swing");
+
+	$("#fareText").html("$"+String(fareText));
+
+	$("#investmentText").html("Track your data and make Swoop better<br><br>Enter fare amount");
+
+}
+
+
+
+$("#fareMinus").on('click', function() {
+
+	if (fareText > 0) {
+
+		fareText -= 1;
+
+		$("#fareText").html("$"+String(fareText));
+
+	}
+
+});
+
+$("#farePlus").on('click', function() {
+
+	fareText += 1;
+
+	$("#fareText").html("$"+String(fareText));
+
+});
+
+
+function writeRideData() {
+
+	console.log(service);
+
+	$.getJSON('/_writeRideData', {
+
+		driverid: JSON.stringify(driverid),
+
+		start_datetime: JSON.stringify(start_datetime),
+
+		end_datetime: JSON.stringify(end_datetime),
+
+		start_lat: JSON.stringify(start_lat),
+		start_long: JSON.stringify(start_long),
+
+		end_lat: JSON.stringify(end_lat),
+		end_long: JSON.stringify(end_long),
+
+		//one of the four cycles
+		driveType: JSON.stringify(driveType),
+
+		//if during fare cycle
+		service: JSON.stringify(service),
+
+		//if during fare cycle
+		collected_fare: JSON.stringify(collected_fare)
+
+
+	}, function(data) {
+
+		console.log(data);
+	});
+
+};
+
+function endFare() {
+
+	getLocation();
+
+	end_lat = trackingCenter[0];
+
+	end_long = trackingCenter[1];
+
+	end_datetime = new Date();
+
+	collected_fare = fareText;
+
+	writeRideData();
+
+	start_datetime = new Date();
+
+	start_lat = trackingCenter[0];
+
+	start_long = trackingCenter[1];
+
+	driveType = driveTypes[3];
+
+	collected_fare = 0;
+
+	$("#completedFareText").html("Thank you!<br><br>Swoop");
+
+	$("#completedFareText").css({"top": "40%"});
+
+	$("#fareInput").css({"visibility": "hidden"});
+
+	$("#fareMinus").css({"visibility": "hidden"});
+
+	$("#fareText").css({"visibility": "hidden"});
+
+	$("#farePlus").css({"visibility": "hidden"});
+
+	$("#acceptFare").css({"visibility": "hidden"});
+
+	$("#fareSkip").css({"visibility": "hidden"});
+
+	$("#fareBack").css({"visibility": "hidden"});
+
+	$("#selectedService").html("");
+
+	$("#investmentText").html("");
+
+	setTimeout(function() {
+
+		$('#farePanel').animate({top: "9999px"}, 7000, "linear");
+
+	}, 1500);
+
+	setTimeout(function() {
+
+		$("#completedFareText").html("");
+
+		$("#farePanel").css({"opacity": ".9"});
+
+		$("#serviceSelect").val("NA");
+
+	}, 7000);
+
+	setDefault();
+
+};
+
+$("#acceptFare").on('click', function() {
+
+	endFare();
+
+});
+
+$("#fareSkip").on('click', function() {
+
+	fareText = 0;
+
+	endFare();
+
+});
+
+$("#fareBack").on('click', function() {
+
+	$("#fareSkip").css({"visibility": "hidden"});
+
+	$('#fareInput').animate({opacity: "0"}, 100, "swing");
+
+	$('#fareMinus').animate({opacity: "0"}, 100, "swing");
+
+	$('#fareText').animate({opacity: "0"}, 100, "swing");
+
+	$('#farePlus').animate({opacity: "0"}, 100, "swing");
+
+	$('#acceptFare').animate({opacity: "0"}, 100, "swing");
+
+	$('#fareSkip').animate({opacity: "0"}, 100, "swing");
+
+	$('#fareBack').animate({opacity: "0"}, 100, "swing");
+
+	setTimeout(function() {
+
+		$("#fareInput").css({"visibility": "hidden"});
+
+		$("#fareMinus").css({"visibility": "hidden"});
+
+		$("#fareText").css({"visibility": "hidden"});
+
+		$("#farePlus").css({"visibility": "hidden"});
+
+		$("#acceptFare").css({"visibility": "hidden"});
+
+		$("#fareBack").css({"visibility": "hidden"});
+
+	}, 150);
+
+	$("#serviceSelect").css({"visibility": "visible"});
+
+	$('#serviceSelect').animate({opacity: "1.0"}, 1100, "swing");
+
+	$("#serviceSelect").val("NA");
+
+	$("#selectedService").html("");
+
+	$("#serviceSkipButton").css({"visibility": "visible"});
+
+	$("#investmentText").html("Track your data and make Swoop better");
+
+});
 
 
 setDefault();
@@ -962,8 +1494,12 @@ function getLoc() {
 	} else {
 	 
 	        map.locate();
+
+	        console.log(map.locate());
 	}
 };
+
+//setTimeout(getLoc, 5000);
 
 // Once we've got a position, zoom and center the map
 // on it, and add a single marker.

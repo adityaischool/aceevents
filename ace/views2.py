@@ -7,6 +7,7 @@ import uber
 import json
 from ace import authenticate,userController
 import urllib2
+import travelManager
 
 google=authenticate.auth2()
 
@@ -122,20 +123,77 @@ def getEbData():
 	val = eventbrite2.filterEvents(eventDate, float(time))
 	return jsonify(val)
 
-@app.route('/_refreshEvents', methods=['POST'])
-def refreshEvents():
-	grids = {}
-	#grid = request.form['grid'];
-	day = request.form['day'];
-	time = request.form['time'];
-	val = eventbrite1.callDateTime(day, time)
+@app.route('/analytics', methods=['GET', 'POST'])
+def analytics():
+	#ADITYA - PLEASE CHECK THIS
+	return render_template('analytics.html')
 
-@app.route('/_getData')
-def getUber():
-	#a = request.args.get('a', 0, type=int)
-	val=uber.getUber()
-	print "----------------------jsonify----",val
-	return jsonify(result=val) 
-	print "called!!!!"
-	#b = request.args.get('b', 0, type=int)
-		#return jsonify(result=a + b)
+@app.route('/_getAnalytics', methods=['GET', 'POST'])
+def _getAnalytics():
+	driverID = json.loads(request.args.get('driverID'))
+	time = json.loads(request.args.get('time'))
+	timeperiod = json.loads(request.args.get('timeperiod'))
+	val = travelManager.GetRides(driverid,time,timeperiod)
+	return jsonify(val)
+
+@app.route('/_writeRideData', methods=['GET', 'POST'])
+def writeRideData():
+
+
+	driverData = {}
+
+	print
+
+	print "------Completed Segment Data------"
+
+	driverid = json.loads(request.args.get('driverid'))
+	print "DRIVER ID", driverid
+	driverData['driverID'] = driverid
+
+	start_datetime = json.loads(request.args.get('start_datetime'))
+	print "START DATETIME", start_datetime
+	driverData['start_time'] = start_datetime
+
+	end_datetime = json.loads(request.args.get('end_datetime'))
+	print "END DATETIME", end_datetime
+	driverData['end_time'] = end_datetime
+
+	start_lat = str(request.args.get('start_lat'))
+	print "START LAT", start_lat
+	driverData['start_lat'] = start_lat
+
+	start_long = str(request.args.get('start_long'))
+	print "START LONG", start_long
+	driverData['start_long'] = start_long
+
+	end_lat = str(request.args.get('end_lat'))
+	print "END LAT", end_lat
+	driverData['end_lat'] = end_lat
+
+	end_long = str(request.args.get('end_long'))
+	print "END LONG", end_long
+	driverData['end_long'] = end_long
+
+	#one of the four cycles
+	driveType = json.loads(request.args.get('driveType'))
+	print "DRIVE TYPE", driveType
+	driverData['driveType'] = driveType
+
+	#if during fare cycle
+	service = json.loads(request.args.get('service'))
+	print "SERVICE", service
+	driverData['service'] = service
+
+	# during fare cycle
+	collected_fare = str(request.args.get('collected_fare'))
+	print "COLLECTED FARE", collected_fare
+	driverData['collected_fare'] = collected_fare
+
+	print
+
+	print driverData
+
+	#travelManager.InsertDriverData(driverData)
+	
+
+	return jsonify({"status": "received"})

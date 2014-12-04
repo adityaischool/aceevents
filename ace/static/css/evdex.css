@@ -4,7 +4,7 @@
 
 		body {
 			width: 100%;
-			padding-top: 50px;
+			padding-top: 0px;
 			padding-left: 0;
 			padding-right: 0;
 			overflow: hidden;
@@ -19,8 +19,10 @@
 			overflow: hidden;
 		}
 
-		.navbar-header {
-			margin-left: -100px;
+		
+
+		.navbar-brand {
+			margin-left: -25px;
 		}
 
 		/* navbar-inverse navbar-fixed-top */
@@ -62,6 +64,7 @@
 			height: 30px;
 			left: 10%;
 			z-index: 1000;
+			top: 52px;
 			/*background: black;
 			opacity: .3;*/
 		}
@@ -120,13 +123,13 @@
 
 
 		.buttoncontainer {
-			display: absolute;
+			position: absolute;
 			/*padding: 40px 15px;*/
 			text-align: center;
 			overflow: hidden;
 			width: 100%;
 			height: 100%;
-			top: 30%;
+			top: 0px;
 			left: 0;
 		}
 		
@@ -144,6 +147,7 @@
 			top: 5%;
 			color: #ffffff;
 			border: 0px solid white;
+			font-size: 12px;
 
 			/*background: #29A3CC;*/
 			box-shadow: 0px 1px 1px 1px #262626;
@@ -204,6 +208,12 @@
 
 		}
 
+		#navimage {
+			max-height: 41px;
+			max-width: 41px;
+
+		}
+
 		#navInner {
 			background: none;
 			width: 100%;
@@ -257,8 +267,8 @@
 			position: absolute;
 			padding: 0px;
 			margin: 0px;
-			width: 70%;
-			left: 15%;
+			width: 68%;
+			left: 17%;
 			top: 3%;
 			list-style: none;
 			color: white;
@@ -443,6 +453,211 @@
 		    left: 10px;
 		}
 
+		#farePanel {
+
+			position: fixed;
+			visibility: hidden;
+			z-index: 9999999999999999;
+
+			width: 100%;
+			height: 100%;
+			overflow: none;
+			top: 4000px;
+			margin: 0;
+			padding: 0;
+
+			background: #252525;
+			opacity: 1.0;
+
+		}
+
+
+		#startFareButton, #stopFareButton {
+			position: absolute;
+			visibility: hidden;
+			z-index: 99999999999;
+			border: 3px solid white;
+			width: 150px;
+			height: 150px;
+			margin: 0;
+			padding: 0;
+
+			opacity: 1;
+			top: 30%;
+			left: 50%;
+			margin-left: -75px;
+			border-radius: 50%;
+			background: #009648;
+			text-align: center;
+			color: #ffffff;
+			font-size: 24px;
+			font-weight: 400;
+
+			box-shadow: 0px 3px 3px 4px #232323;
+		}
+
+		#stopFareButton {
+			background: #b1281a;
+			opacity: 0;
+		}
+
+		#completedFareText, #investmentText, #selectedService {
+
+			position: absolute;
+			visibility: hidden;
+			z-index: 9999999999999;
+
+			width: 50%;
+			left: 25%;
+
+			font-size: 24px;
+			font-weight: 300;
+			text-align: center;
+
+			color: #ffffff;
+			background: none;
+
+		}
+
+		#completedFareText {
+
+			top: 5%;
+			color: #2593B8;
+			font-weight: 500;
+			font-size: 26px;
+			visibility: visible;
+		}
+
+		#selectedService {
+			top: 22%;
+			visibility: visible;
+			font-size: 18px;
+		}
+
+		#investmentText {
+
+			visibility: visible;
+			top: 30%;
+			font-size: 16px;
+
+		}
+
+		
+		#cancelFareButton, #serviceSkipButton, #fareSkip,
+		#acceptFare, #fareBack, #serviceSelect, #fareInput {
+
+			position: absolute;
+			visibility: hidden;
+			z-index: 99999999999;
+			border: none;
+			margin: 0;
+			padding: 0;
+			width: 150px;
+			height: 40px;
+			opacity: 0;
+			top: 75%;
+			left: 50%;
+			margin-left: -75px;
+			border-radius: 5px;
+			background: #181718;
+			border: 1px solid #050405;
+			text-align: center;
+			color: #ffffff;
+			font-size: 16px;
+			font-weight: 400;
+
+			box-shadow: 0px 3px 3px 4px #232323;
+
+		}
+
+		#fareInput {
+			border: 2px solid white;
+			height: 60px;
+			width: 220px;
+			top: 45%;
+			left: 50%;
+			margin-left: -110px;
+			border-radius: 5px;
+			font-size: 24px;
+		}
+
+		#serviceSelect {
+			width: 200px;
+			top: 45%;
+			margin-left: -100px;
+			font-size: 20px;
+			font-weight: 300;
+		}
+
+		#fareBack {
+			top: 85%;
+		}
+
+		#fareMinus {
+
+			position: absolute;
+			visibility: hidden;
+			border: none;
+			background: none;
+			color: #ffffff;
+			text-align: center;
+			font-size: 40px;
+			font-weight: 500;
+			left: 5px;
+			top: -3px;
+			
+		}
+
+		#farePlus {
+
+			position: absolute;
+			visibility: hidden;
+			border: none;
+			background: none;
+			color: #ffffff;
+			text-align: center;
+			font-size: 36px;
+			font-weight: 500;
+			right: 5px;
+			top: 0px;
+			
+		}
+
+		#fareText {
+
+			position: absolute;
+			visibility: hidden;
+			border: none;
+			background: none;
+			width: 60%;
+			height: 40px;
+			left: 20%;
+			top: 10px;
+			color: #ffffff;
+			font-size: 24px;
+			font-weight: 500;
+			text-align: center;
+
+		}
+
+
+		#acceptFare {
+			top: 60%;
+		}
+
+
+		@media only screen and (max-height: 480px) {
+
+		#acceptFare {
+			top: 65%;
+		}
+
+		#fareInput {
+			top: 50%;
+		}
+
+		}
+
 		@media only screen and (max-width: 600px) {
 
 		input[type="range"]::-webkit-slider-thumb {
@@ -456,6 +671,16 @@
 			border-radius: 50%;
 
 	  	}
+
+	}
+
+	@media only screen and (min-width: 600px) {
+
+		#serviceSkipButton, #fareSkip, #acceptFare, #fareBack {
+			left: 50%;
+			margin-left: -75px;
+		}
+
 
 	}
 
@@ -487,6 +712,7 @@
 				height: 55px;
 				left: 33.33%;
 				z-index: 1000;
+				top: 0px;
 				/*background: black;
 				opacity: .3;*/
 			}	
