@@ -11,7 +11,7 @@ L.tileLayer('https://{s}.tiles.mapbox.com/v3/ajones620.k4bkhnfi/{z}/{x}/{y}.png'
 }).addTo(map);
 
 // move the attribution control out of the way
-map.attributionControl.setPosition('bottomleft');
+map.attributionControl.setPosition('bottomright');
 
 
 
@@ -149,6 +149,8 @@ function showPing(position) {
 
 		console.log('current ping within 100 meters of destination!');
 
+		window.clearInterval(timer);
+
 		getLocation();
 
 		end_lat = trackingCenter[0];
@@ -220,7 +222,7 @@ var grid = new L.featureGroup();
 
 var heatCoords = [];
 
-var heat = L.heatLayer(heatCoords, {opacity: 0.2, radius: 13, blur: 15, max: 1, gradient:{.1: '#7cd1fc', .2: 'lime', .3: 'yellow', .5: 'orange', .8: 'red'}}).addTo(map);
+var heat = L.heatLayer(heatCoords, {opacity: 0.2, radius: 13, blur: 15, max: 1, gradient:{.1: 'yellow', .2: 'orange', .3: '#e22500', .5: '#e21a1a', .8: 'red'}}).addTo(map);
 
 var eventMarkers = new L.featureGroup();
 
@@ -239,11 +241,12 @@ var start_lat = 0;
 var start_long = 0;
 var end_lat = 0;
 var end_long = 0;
-var driveType = '';
-var service = 'NA';
-var collected_fare = 0;
 var driveTypes = ['onWayToEvent', 'waitingForFare',
 					'activeFare', 'betweenEvents']
+var driveType = driveTypes[3];
+var service = 'NA';
+var collected_fare = 0;
+
 
 
 function getDayNow () {
@@ -793,11 +796,13 @@ function drawInfo(marker) {
 
 	//$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li><li><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a></li>");
 
-	$('#eventInfoList').html("<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+" | Capacity: "+zoomedEvents[i][3]+" | ETA:"+eta+"</li>");
+	$('#eventInfoList').html("<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,36)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>");
 
 };
 
 var markerNames = [];
+
+var link = '';
 
 function drawMarkers() {
 
@@ -868,9 +873,9 @@ function drawMarkers() {
 				var lat = zoomedEvents[i][0];
 				var lng = zoomedEvents[i][1];
 
-				var link = '';
+				
 
-				var link = ("http://waze.to/?ll="+lat+","+lng+"&navigate=yes");
+				link = ("http://waze.to/?ll="+lat+","+lng+"&navigate=yes");
 				//var link = ("http://maps.google.com/?daddr='+zoomedEvents[i][0]+','+zoomedEvents[i][1]+'target=_blank");
 
 				console.log(link);
@@ -913,7 +918,7 @@ function drawMarkers() {
 
     			console.log(eta);
 
-    			var infoList = "<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+" | Capacity: "+zoomedEvents[i][3]+" | ETA:"+eta+"</li>";
+    			var infoList = "<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,36)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>";
 
     			$('#eventInfoList').html(infoList);
 
@@ -1060,6 +1065,8 @@ var timer;
 
 $("#nav").on('click', function() {
 
+	window.open(link);
+
 	timer = setInterval("pingLocation()", 3000);
 
 	getLocation();
@@ -1090,7 +1097,11 @@ $("#nav").on('click', function() {
 
 	$("#farePanel").css({"visibility": "visible"});
 
-	$('#farePanel').animate({top:"0px"}, 900, "swing");
+	$('#farePanel').animate({top:"0px"}, 1500, "swing");
+
+	$('#startFareButton').animate({opacity: "1.0"}, 1000, "swing");
+
+	$('#cancelFareButton').animate({opacity: "1.0"}, 1000, "swing");
 
 	$("#startFareButton").css({"visibility": "visible"});
 
@@ -1102,7 +1113,7 @@ $("#nav").on('click', function() {
 
 $("#startFareButton").on('click', function() {
 
-	window.clearInterval(timer);
+	//window.clearInterval(timer);
 
 	getLocation();
 
@@ -1126,13 +1137,59 @@ $("#startFareButton").on('click', function() {
 
 		driveType = driveTypes[2];
 
+		$("#startFareButton").css({"visibility": "hidden"});
+
 	}, 1500);
 
-	$("#startFareButton").css({"visibility": "hidden"});
 
 	$("#cancelFareButton").css({"visibility": "hidden"});
 
 	$("#stopFareButton").css({"visibility": "visible"});
+
+	$('#startFareButton').animate({opacity: "0"}, 100, "swing");
+
+	$('#stopFareButton').animate({opacity: "1.0"}, 1100, "swing");
+
+	fareText = 12;
+
+});
+
+
+$("#cancelFareButton").on('click', function() {
+
+	driveType = driveTypes[3];
+
+	getLocation();
+	
+	end_lat = trackingCenter[0];
+
+	console.log(trackingCenter[0]);
+
+	console.log(end_lat);
+
+	end_long = trackingCenter[1];
+
+	end_datetime = new Date();
+
+	writeRideData();
+
+	start_datetime = new Date();
+
+	setTimeout(function() {
+
+		start_lat = trackingCenter[0];
+
+		start_long = trackingCenter[1];
+
+		driveType = driveTypes[3];
+
+	}, 1500);
+
+
+
+	$('#farePanel').animate({top: "4000px"}, 7000, "linear");
+
+	window.clearInterval(timer);
 
 });
 
@@ -1145,13 +1202,19 @@ $("#stopFareButton").on('click', function() {
 
 	$("#completedFareText").html("Fare Complete");
 
+	$('#stopFareButton').animate({opacity: "0"}, 100, "swing");
+
 	$("#serviceSelect").css({"visibility": "visible"});
 
 	$("#serviceSkipButton").css({"visibility": "visible"});
 
-	$("#investmentText").html("Track your driving data and help us make swoop even better by entering the service you used for this fare");
+	$('#serviceSelect').animate({opacity: "1.0"}, 1100, "swing");
 
-	$("#farePanel").css({"opacity": "1.0"});
+	$('#serviceSkipButton').animate({opacity: "1.0"}, 1100, "swing");
+
+	$("#investmentText").html("Track your data and make Swoop better");
+
+	//$("#farePanel").css({"opacity": "1.0"});
 
 });
 
@@ -1161,46 +1224,40 @@ $("#serviceSelect").change(function() {
 
 	service = $("#serviceSelect").val();
 
-	$("#serviceSelect").css({"visibility": "hidden"});
-
-	$("#serviceSkipButton").css({"visibility": "hidden"});
-
-	$("#fareInput").css({"visibility": "visible"});
-
-	$("#fareMinus").css({"visibility": "visible"});
-
-	$("#fareText").css({"visibility": "visible"});
-
-	$("#fareText").html("$"+String(fareText));
-
-	$("#farePlus").css({"visibility": "visible"});
-
-	$("#acceptFare").css({"visibility": "visible"});
-
-	$("#fareSkip").css({"visibility": "visible"});
-
-	$("#fareBack").css({"visibility": "visible"});
+	advanceServiceSelect();
 
 	$("#selectedService").html("Service: "+$("#serviceSelect").val());
-
-	$("#investmentText").html("Track your driving data and help us make swoop even better by entering the fare amount");
 
 });
 
 
 $("#serviceSkipButton").on('click', function() {
 
-	$("#serviceSelect").css({"visibility": "hidden"});
+	advanceServiceSelect();
 
-	$("#serviceSkipButton").css({"visibility": "hidden"});
+	$("#selectedService").html("Service: None");
+
+});
+
+function advanceServiceSelect() {
+
+	$('#serviceSelect').animate({opacity: "0"}, 100, "swing");
+
+	$('#serviceSkip').animate({opacity: "0"}, 100, "swing");
+
+	setTimeout(function() {
+
+		$("#serviceSelect").css({"visibility": "hidden"});
+
+		$("#serviceSkipButton").css({"visibility": "hidden"});
+
+	}, 1500);
 
 	$("#fareInput").css({"visibility": "visible"});
 
 	$("#fareMinus").css({"visibility": "visible"});
 
 	$("#fareText").css({"visibility": "visible"});
-
-	$("#fareText").html("$"+String(fareText));
 
 	$("#farePlus").css({"visibility": "visible"});
 
@@ -1210,11 +1267,25 @@ $("#serviceSkipButton").on('click', function() {
 
 	$("#fareBack").css({"visibility": "visible"});
 
-	$("#investmentText").html("Track your driving data and help us make swoop even better by entering the fare amount");
+	$('#fareInput').animate({opacity: "1.0"}, 1100, "swing");
 
-	$("#selectedService").html("Service: None");
+	$('#fareMinus').animate({opacity: "1.0"}, 1100, "swing");
 
-});
+	$('#fareText').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#farePlus').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#acceptFare').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#fareSkip').animate({opacity: "1.0"}, 1100, "swing");
+
+	$('#fareBack').animate({opacity: "1.0"}, 1100, "swing");
+
+	$("#fareText").html("$"+String(fareText));
+
+	$("#investmentText").html("Track your data and make Swoop better<br><br>Enter fare amount");
+
+}
 
 
 
@@ -1298,7 +1369,7 @@ function endFare() {
 
 	collected_fare = 0;
 
-	$("#completedFareText").html("Swoop<br><br>Thank you!");
+	$("#completedFareText").html("Thank you!<br><br>Swoop");
 
 	$("#completedFareText").css({"top": "40%"});
 
@@ -1348,27 +1419,49 @@ $("#acceptFare").on('click', function() {
 
 $("#fareSkip").on('click', function() {
 
+	fareText = 0;
+
 	endFare();
 
 });
 
 $("#fareBack").on('click', function() {
 
-	$("#fareInput").css({"visibility": "hidden"});
-
-	$("#fareMinus").css({"visibility": "hidden"});
-
-	$("#fareText").css({"visibility": "hidden"});
-
-	$("#farePlus").css({"visibility": "hidden"});
-
-	$("#acceptFare").css({"visibility": "hidden"});
-
 	$("#fareSkip").css({"visibility": "hidden"});
 
-	$("#fareBack").css({"visibility": "hidden"});
+	$('#fareInput').animate({opacity: "0"}, 100, "swing");
+
+	$('#fareMinus').animate({opacity: "0"}, 100, "swing");
+
+	$('#fareText').animate({opacity: "0"}, 100, "swing");
+
+	$('#farePlus').animate({opacity: "0"}, 100, "swing");
+
+	$('#acceptFare').animate({opacity: "0"}, 100, "swing");
+
+	$('#fareSkip').animate({opacity: "0"}, 100, "swing");
+
+	$('#fareBack').animate({opacity: "0"}, 100, "swing");
+
+	setTimeout(function() {
+
+		$("#fareInput").css({"visibility": "hidden"});
+
+		$("#fareMinus").css({"visibility": "hidden"});
+
+		$("#fareText").css({"visibility": "hidden"});
+
+		$("#farePlus").css({"visibility": "hidden"});
+
+		$("#acceptFare").css({"visibility": "hidden"});
+
+		$("#fareBack").css({"visibility": "hidden"});
+
+	}, 150);
 
 	$("#serviceSelect").css({"visibility": "visible"});
+
+	$('#serviceSelect').animate({opacity: "1.0"}, 1100, "swing");
 
 	$("#serviceSelect").val("NA");
 
@@ -1376,19 +1469,9 @@ $("#fareBack").on('click', function() {
 
 	$("#serviceSkipButton").css({"visibility": "visible"});
 
-	$("#investmentText").html("Track your driving data and help us make swoop even better by entering the service you used for this fare");
+	$("#investmentText").html("Track your data and make Swoop better");
 
 });
-
-$("#cancelFareButton").on('click', function() {
-
-	$('#farePanel').animate({top: "9999px"}, 7000, "linear");
-
-	window.clearInterval(timer);
-
-});
-
-
 
 
 setDefault();
