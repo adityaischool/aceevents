@@ -17,4 +17,25 @@ function createDrivesTable(arr) {
         }
         data += '</table>'	
         document.getElementById("analyticsDashboard").innerHTML = data;
-    }
+    };
+
+setDefaults();
+
+function setDefaults(){
+	data = getData()
+	createDrivesTable()
+};
+
+
+function getData() {
+
+	selectedTime = $("#selectedTime").val();
+	
+	$.getJSON('/_getAnalytics', {
+		driverID: "",
+		time: selectedTime,
+		timeperiod: "DAY"
+	}, function(data) {
+		createDrivesTable(data)
+	});
+};
