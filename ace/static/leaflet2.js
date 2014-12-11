@@ -2,23 +2,55 @@ var center = [37.756631, -122.442222];
 
 var map = L.map('map', {zoomControl: false}).setView(center, 12);
 
+
+//mapbox access token
 L.mapbox.accessToken = 'pk.eyJ1IjoiYWpvbmVzNjIwIiwiYSI6IlJ1eEdISkUifQ.whSWoswC0sLHG_kS9q-JRQ';
 
-//getLocation();
 
+//draw map using mapbox tiles
 L.tileLayer('https://{s}.tiles.mapbox.com/v3/ajones620.k4bkhnfi/{z}/{x}/{y}.png', {
+
     attribution: '© <a href="http://www.mapbox.com/about/maps/" target="_blank"> Mapbox Terms &amp; Feedback</a>'
+
 }).addTo(map);
 
-// move the attribution control out of the way
+//set attribution to bottom-right corner
 map.attributionControl.setPosition('bottomright');
 
+//geofence events to map size
+map.on('load', fenceEvents);
+
+//draw markers
+map.on('load', drawMarkers);
+
+//once driver's geolocation is discovered, draw marker
+map.on('locationfound', drawGeolocation);
+
+//error handler for driver geolocation
+map.on('locationerror', function() {
+
+    alert('Position could not be found - please check geolocation settings');
+
+});
+
+//set initial map state
+
+$(document).ready(function() {
+
+	setDefault();
+
+	getLocation();
+
+});
+
+//geofence events when zoomed in or out
+map.on('zoomend', fenceEvents);
+
+//geofence events when map is dragged
+map.on('dragend', fenceEvents);
 
 
-// create the initial directions object, from which the layer
-// and inputs will pull data.
-
-
+//VARIABLE INITS
 var directions = new L.mapbox.directions();
 
 var directionsLayer = new L.mapbox.directions.layer(directions)
@@ -48,9 +80,105 @@ var origin = String(origLng)+","+String(origLat);
 
 var dest = String(destLng)+","+String(destLat);
 
+var selectedTime;
+
+var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
+			'Thursday', 'Friday', 'Saturday'];
+
+var eventCoords = [];
+
+var markersPages = [];
+
+var markersIndex = 0;
+
+var today = new Date();
+
+var selectedDate = today;
+
+var dateTime = [];
+
+var dayCounter = 0;
+
+var grid = new L.featureGroup();
+
+var heatCoords = [];
+
+var heat = L.heatLayer(heatCoords, {opacity: 0.2, radius: 13, blur: 15, max: 1, gradient:{.1: 'yellow', .2: 'orange', .3: '#e22500', .5: '#e21a1a', .8: 'red'}}).addTo(map);
+
+var eventMarkers = new L.featureGroup();
+
+map.addLayer(eventMarkers);
+
+var markerSwitch = true;
+
+var gridCoords = [[37.81, -122.5155], [37.81, -122.369145],
+				[37.703206, -122.5155], [37.703206, -122.369145]];
+
+var pingCenter= [];
+
+var driverid = 'driver@example.com';
+
+var start_datetime = '';
+
+var end_datetime = '';
+
+var start_lat = 0;
+
+var start_long = 0;
+
+var end_lat = 0;
+
+var end_long = 0;
+
+var driveTypes = ['onWayToEvent', 'waitingForFare',
+					'activeFare', 'betweenEvents']
+var driveType = driveTypes[3];
+
+var service = 'NA';
+
+var collected_fare = 0;
+
+var zoomedEvents = [];
+
+var iconScale = 1.3;
+
+var markerIconBlue = L.icon({
+
+	iconUrl: '/static/markerblue1.png',
+	iconAnchor: [11, 38],
+	iconSize: [17 * iconScale, 29.5 * iconScale]
+
+});
+
+var markerIconRed = L.icon({
+
+	iconUrl: '/static/markerred.png',
+	iconAnchor: [11, 38],
+	iconSize: [17 * iconScale, 29.5 * iconScale]
+
+});
+
+var markerZIndex = 200;
+
+var selectedMarker = [];
+
+var markerNames = [];
+
+var link = '';
+
+var trackingCenter = [];
+
+var timer;
+
+var fareText = 12;
+
+var myLayer = L.mapbox.featureLayer().addTo(map);
+
+
+//setDirs takes an origin latlng (current geolocation) and
+//a destination point (selected marker) and returns a
+//mapbox directions object using those args
 function setDirs(origin, dest) {
-
-
 
     var origin = origin;
 
@@ -60,83 +188,63 @@ function setDirs(origin, dest) {
 
     $('#mapbox-directions-destination-input').val(dest);
 
-    console.log($('#mapbox-directions-origin-input').val());
-
-    console.log($('#mapbox-directions-destination-input').val());
-
     directions.setOrigin(origin);
 
     directions.setDestination(dest);
 
-    console.log(directions.getOrigin());
-
-    console.log(directions.getDestination());
-
-    console.log(directions);
-
     directions.query();
 
-
-
-    //console.log($('.mapbox-directions-route-active').children().eq(2).html());
-
-    //console.log(directions.directions);
-
-    //console.log(directions['directions']['routes'][0]['duration']);
-
-     
-
-    /*for (var i = 0; i < directions.waypointMarkers.length; i++) {
-            directions.removeLayer(directions.waypointMarkers[i]);
-    };*/
-
-    //directions.removeWaypoint(0);
-    //directions.removeWaypoint(0);
-
-
 };
 
-//setDirs(origin, dest);
 
-
-
-//var center = [37.756631, -122.442222];
-
-
+//getLocation gets driver's current geolocation
 function getLocation() {
+
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+
+    	map.locate();
+
+        navigator.geolocation.getCurrentPosition(setTrackingCenter);
+
     } else { 
+
         alert("Geolocation is not supported by this browser.");
+
     }
 };
 
 
-function showPosition(position) {
+//setTrackingCenter sets trackingCenter var to
+//driver's current geolocation
+function setTrackingCenter(position) {
 
-	//UNCOMMENT THE NEXT LINE IN ORDER TO ACTIVATE GEOLOCATED-CENTERING
 	trackingCenter = [position.coords.latitude, position.coords.longitude];
 
-	console.log(trackingCenter);
-
-	//map.setView(center, 12);
-
-    //alert("Latitude: " + position.coords.latitude + 
-    //"Longitude: " + position.coords.longitude);	
 };
 
 
+//pingLocation & showPing ping the driver's location for
+//the purposes of detecting if they're within a certain
+//radius of the navigation destination (the event location)
 function pingLocation() {
+
     if (navigator.geolocation) {
+
         navigator.geolocation.getCurrentPosition(showPing);
+
     } else { 
+
         alert("Geolocation is not supported by this browser.");
+
     }
 };
 
+
+//pingLocation & showPing ping the driver's location for
+//the purposes of detecting if they're within a certain
+//radius of the navigation destination (the event location)
 function showPing(position) {
 
-	//UNCOMMENT THE NEXT LINE IN ORDER TO ACTIVATE GEOLOCATED-CENTERING
 	pingCenter = [position.coords.latitude, position.coords.longitude];
 
 	var testPing = [selectedMarker[0]._latlng.lat+.0001, selectedMarker[0]._latlng.lng-.0001];
@@ -190,65 +298,10 @@ function showPing(position) {
 		console.log('test ping outside of 100 meter radius of destination!');
 
 	}
-
-	//map.setView(center, 12);
-
-    //alert("Latitude: " + position.coords.latitude + 
-    //"Longitude: " + position.coords.longitude);	
 };
 
 
-
-var selectedTime;
-
-var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
-			'Thursday', 'Friday', 'Saturday'];
-
-var eventCoords = [];
-
-var markersPages = [];
-
-var markersIndex = 0;
-
-var today = new Date();
-
-var selectedDate = today;
-
-var dateTime = [];
-
-var dayCounter = 0;
-
-var grid = new L.featureGroup();
-
-var heatCoords = [];
-
-var heat = L.heatLayer(heatCoords, {opacity: 0.2, radius: 13, blur: 15, max: 1, gradient:{.1: 'yellow', .2: 'orange', .3: '#e22500', .5: '#e21a1a', .8: 'red'}}).addTo(map);
-
-var eventMarkers = new L.featureGroup();
-
-map.addLayer(eventMarkers);
-
-var markerSwitch = true;
-
-var gridCoords = [[37.81, -122.5155], [37.81, -122.369145],
-				[37.703206, -122.5155], [37.703206, -122.369145]];
-
-var pingCenter= [];
-var driverid = 'driver@example.com';
-var start_datetime = '';
-var end_datetime = '';
-var start_lat = 0;
-var start_long = 0;
-var end_lat = 0;
-var end_long = 0;
-var driveTypes = ['onWayToEvent', 'waitingForFare',
-					'activeFare', 'betweenEvents']
-var driveType = driveTypes[3];
-var service = 'NA';
-var collected_fare = 0;
-
-
-
+//getDayNow gets current datetime
 function getDayNow () {
 
 	var x = [];
@@ -263,6 +316,8 @@ function getDayNow () {
 
 };
 
+
+//getTimeNow returns current time as a float
 function getTimeNow () {
 
 	var x = new Date();
@@ -274,9 +329,11 @@ function getTimeNow () {
 	selectedTime = h + m;
 
 	return (h + m);
+
 };
 
 
+//setDefault sets map state to current date & time
 function setDefault() {
 
 	$("#nav").css({"display": "none"});
@@ -317,14 +374,9 @@ function setDefault() {
 
 	getTimeNow();
 
-	//console.log(x.getHours());
-
 	document.getElementById("selectedTime").value = x.getHours();
 
-	//console.log(selectedTime);
-
 	document.getElementById('dayofweek').innerHTML = (days[n]+'&nbsp;'+dateMonthString);
-
 
 	if (x.getMinutes() < 10) {
 
@@ -356,24 +408,18 @@ function setDefault() {
 
 	var prettyTime = "Events ending&nbsp;" + hours + ":" + minutes + " " + ampm;
 
-	//console.log(prettyTime);
-
 	document.getElementById('timenavtime').innerHTML = (prettyTime);
-
-	//console.log(dateTime);
 
 	getData();
 
 };
 
+
+//changeTime takes the currently selected time from the time slider
+//and queries the database with the updated date & time
 function changeTime() {
 
-	//console.log(dateTime);
-
-	//console.log($("#selectedTime").val());
 	selectedTime = $("#selectedTime").val();
-
-	//console.log(selectedTime);
 
 	//map.setView(center, 12)
 
@@ -384,10 +430,6 @@ function changeTime() {
 	var x = selectedTime * 2;
 
 	var min = '';
-
-	//console.log(x);
-
-	//console.log((x) % 2);
 
 	if (x % 2 == 1) {
 
@@ -425,11 +467,7 @@ function changeTime() {
 
 	}
 
-	//console.log(hours);
-
 	var prettyTime = "Events ending&nbsp;" + hours + ":" + min + " " + ampm;
-
-	//console.log(prettyTime);
 
 	document.getElementById('timenavtime').innerHTML = prettyTime;
 
@@ -438,13 +476,13 @@ function changeTime() {
 };
 
 
+//changeDay takes the currently selected date from the date selector
+//and queries the database with the updated date & time
 function changeDay() {
 
 	selectedMarker = [];
 
 	dateTime = [];
-
-	//map.setZoom(12);
 
 	eventCoords = [];
 	
@@ -469,29 +507,23 @@ function changeDay() {
 
 	dateTime.push(formattedDate);
 
-	//console.log(dateTime);
-
 	var dateString = (formattedDate.getDate().toString());
 
 	var monthString = ((formattedDate.getMonth()+1).toString());
 
 	var dateMonthString = (monthString + '/' + dateString);
 
-	//console.log(formattedDate);
-
 	var n = formattedDate.getDay();
 
 	document.getElementById('dayofweek').innerHTML = (days[n]+'&nbsp;'+dateMonthString);
-
-	//console.log(dateTime);
-
-	//console.log(selectedTime);
 
 	getData();
 
 };
 
 
+//createHeatCoords updates the heat plot with the current
+//eventCoords list
 function createHeatCoords() {
 
 	heatCoords = [];
@@ -507,111 +539,59 @@ function createHeatCoords() {
 		for (var i2=0; i2 < cap/6; i2++) {
 
 		heatCoords.push([Number(lat), Number(lng)]);
-		//console.log('heatcoords i ', [lat, lng]);
 		
 		}
 	};
 
-	//console.log(heatCoords);
-
-	//console.log(eventCoords);
-
 	heat.setLatLngs(heatCoords);
-
-	console.log('new heat loaded!');
 
 };
 
-var zoomedEvents = [];
 
-
-map.on('load', fenceEvents);
-
-map.on('zoomend', fenceEvents);
-
-map.on('dragend', fenceEvents);
-
-
-
-var iconScale = 1.3;
-
-var markerIconBlue = L.icon({
-
-	iconUrl: '/static/markerblue1.png',
-
-	iconAnchor: [11, 38],
-
-	iconSize: [17 * iconScale, 29.5 * iconScale]
-
-});
-
-var markerIconRed = L.icon({
-
-	iconUrl: '/static/markerred.png',
-
-	iconAnchor: [11, 38],
-
-	iconSize: [17 * iconScale, 29.5 * iconScale]
-
-});
-
-
+//fenceEvents takes current map bounds and redraws event 
+//markers based on events within those bounds
 function fenceEvents() {
 
 	markersIndex = 0;
 
 	zoomedEvents = [];
 
-	console.log(eventCoords);
-
 	var bounds = map.getBounds();
 
 	var lats = [bounds['_northEast'].lat, bounds['_southWest'].lat];
-	var lngs = [bounds['_northEast'].lng, bounds['_southWest'].lng];
 
+	var lngs = [bounds['_northEast'].lng, bounds['_southWest'].lng];
 
 	if (eventCoords.length > 0) {
 
-	for (var i=0; i < Math.min(10, eventCoords.length); i++) {
-
-		//console.log('event lat =', eventCoords[i][0]);
-		//console.log('event lng =', eventCoords[i][1]);
-		//console.log('lat bounds =', lats);
-		//console.log('lng bounds =', lngs);
+		for (var i=0; i < eventCoords.length; i++) {
 
 			if (eventCoords[i][0] <= lats[0] && eventCoords[i][0] >= lats[1] && eventCoords[i][1] <= lngs[0] && eventCoords[i][1] >= lngs[1]) {
 
-				console.log("Event "+String(i + 1)+" is in the bounding box!");
+				//console.log("Event "+String(i + 1)+" is in the bounding box!");
 
 				zoomedEvents.push(eventCoords[i]);
 
 			};
-
 		}
 
-		console.log(zoomedEvents);
+	} else if (eventCoords.length === 0) {
+
+		$('#eventInfoList').html("<br><li>No events at this time!</li>");
+
 	}
 
-	console.log(zoomedEvents);
+	//console.log(zoomedEvents);
 
-	
 	if (markerSwitch == true) {
 
 		drawMarkers();
 
 	}
-
-	//createMarkersPages(zoomedEvents);
-
-	//console.log('before zoomed bounds: '+[bounds['_northEast'].lat, bounds['_northEast'].lng], [bounds['_southWest'].lat, bounds['_southWest'].lng]);
-
 };
 
 
-var markerZIndex = 200;
-
-var selectedMarker = [];
-
+//redMarker sets the selected marker icon to red instead of blue
 function redMarker(marker) {
 
 	var newSelection = marker;
@@ -622,19 +602,13 @@ function redMarker(marker) {
 
 		selectedMarker[0].setZIndexOffset(0);
 
-		//selectedMarker[0].style.zIndex= "100";
-
 		selectedMarker = [];
 
 		selectedMarker.push(newSelection);
 
-		console.log(selectedMarker[0]);
-
 		selectedMarker[0].setIcon(markerIconRed);
 
 		selectedMarker[0].setZIndexOffset(markerZIndex);
-
-		console.log(selectedMarker[0]);
 
 		markerZIndex++;
 
@@ -642,25 +616,19 @@ function redMarker(marker) {
 
 		selectedMarker.push(newSelection);
 
-		console.log(selectedMarker[0]);
-
 		selectedMarker[0].setIcon(markerIconRed);
 
 		selectedMarker[0].setZIndexOffset(markerZIndex);
 
-		console.log(selectedMarker[0]);
-
 		markerZIndex++;
 
 	}
-
-	
-
 };
 
-function getData() {
 
-	//markerSwitch = true;
+//getData is the main connection between the client and server
+//that queries the database with the clientside-selected date & time
+function getData() {
 
 	setDirs(origin, '');
 
@@ -670,17 +638,14 @@ function getData() {
 
 	$('#eventInfoList').html("");
 
-	//clickMarkerButton();
+	$("#nav").css({"display": "none"});
 
 	$.getJSON('/_getEbData', {
+
 		params: JSON.stringify(dateTime),
 		time: selectedTime
 
 	}, function(data) {
-
-		//console.log(data[0]);
-
-		//console.log(data[0][0].length);
 
 		for (var i2=0; i2 < data[0][0].length; i2++) {
 
@@ -701,11 +666,7 @@ function getData() {
 			}
 		};	
 
-		//console.log(eventCoords[eventCoords.length-1]);
-		//console.log(eventCoords);
-
 		fenceEvents();
-    	
 
     	createHeatCoords();
 
@@ -713,40 +674,8 @@ function getData() {
 };
 
 
-
-function createMarkersPages(boundedEvents) {
-
-	var events = boundedEvents;
-
-	console.log(events);
-
-	var count = 0;
-
-	markersPages = [];
-
-	for (var i2=0; i2 < events.length; i2++) {
-
-
-		//CHANGE MODULO DIVISOR TO HOWEVER MANY EVENTS YOU WANT PER PAGE
-		if (count % 1 == 0) {
-
-			markersPages.push([]);
-
-		}
-
-		markersPages[markersPages.length - 1].push(events[count]);
-
-		count += 1;
-
-	};
-
-	console.log(markersPages);
-
-	drawMarkerList();
-
-};
-
-
+//drawMarkerList is a deprecated function that was originally
+//used to draw a paginated event list on the ui
 function drawMarkerList() {
 
 		var markerList = "<br>No Events Found!<br><br>Try selecting a different date or time.";
@@ -770,128 +699,51 @@ function drawMarkerList() {
 };
 
 
-/*function directions() {
-
-	var start = "37.788869,-122.402059";
-	var finish = "37.777436,-122.453513";
-	var apikey = "sk.eyJ1IjoiYWpvbmVzNjIwIiwiYSI6Ii10Ym9PVGsifQ.WiIr55f28UxPAk-cxQtRiQ";
-
-	var req = "http://api.tiles.mapbox.com/v4/directions/mapbox.driving/"+start+";"+finish+".json?access_token="+apikey;
-
-
-	console.log('alert!');
-
-}
-
-directions();*/
-
-
-
-function drawInfo(marker) {
-
-	//$('#eventInfoList').html('');
-
-	var i = marker._leaflet_id;
-
-	console.log(zoomedEvents);
-	console.log(markersIndex);
-	console.log(zoomedEvents.length);
-	console.log(i);
-	console.log(zoomedEvents[i]);
-
-	//$('#eventInfoList').html("<li>Event: "+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4]+"</li><li>Capacity: "+zoomedEvents[i][3]+"</li><li><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a></li>");
-
-	$('#eventInfoList').html("<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,36)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>");
-
-};
-
-var markerNames = [];
-
-var link = '';
-
+//drawMarkers plots the top 5 (by capacity) event markers on the map
 function drawMarkers() {
-
-	console.log(markerNames);
-
-	console.log(eventMarkers);
-
-	console.log(eventMarkers.getLayers());
 
 	markerNames = [];
 
 	eventMarkers.clearLayers();
 
-	console.log(zoomedEvents);
-
-	console.log(zoomedEvents.length);
-
-	console.log(markerNames);
-
 	var tempName = '';
 
-	for (var i=0; i< zoomedEvents.length; i++) {
+	for (var i=0; i < zoomedEvents.length; i++) {
+
 		tempName = "marker" + i;
+
 		markerNames.push(tempName);
+
 	};
 
 	if (zoomedEvents.length > 0) {
 
-		//for (var i=0; i < zoomedEvents.length; i++) {
-
-		for (var i=0; i < Math.min(20, zoomedEvents.length); i++) {
-
-			console.log(markerNames);
-			console.log(markerNames[i]);
-			console.log(zoomedEvents.length);
+		for (var i=0; i < Math.min(5, zoomedEvents.length); i++) {
 
 			markerNames[i] = new L.marker([zoomedEvents[i][0], zoomedEvents[i][1]], {riseOnHover: true, icon: markerIconBlue});
-			//bindPopup("Event: "+zoomedEvents[i][2]+"<br>Location: "+zoomedEvents[i][4]+"<br>Capacity: "+zoomedEvents[i][3]+"<br><a href=http://maps.google.com/?daddr="+zoomedEvents[i][0]+","+zoomedEvents[i][1]+" target=_blank>Navigate</a>");
 
 			markerNames[i]._leaflet_id = i + 1;
-
-			console.log(markerNames[i]);
-			console.log(selectedMarker[0]);
 
 			if ((selectedMarker.length > 0) &&
 				(selectedMarker[0]._latlng.lat == markerNames[i]._latlng.lat) &&
 				(selectedMarker[0]._latlng.lng == markerNames[i]._latlng.lng)) {
 
-				console.log('MARKERS MATCH!');
-
 				redMarker(markerNames[i]);
 
 			}
 
-
 			markerNames[i].on("click", function() {
-
-
 
 				var i = this._leaflet_id - 1;
 
-				console.log(zoomedEvents);
-				console.log(markersIndex);
-				console.log(zoomedEvents.length);
-				console.log(i);
-				console.log(zoomedEvents[i]);
-
 				var lat = zoomedEvents[i][0];
-				var lng = zoomedEvents[i][1];
 
-				
+				var lng = zoomedEvents[i][1];
 
 				link = ("http://waze.to/?ll="+lat+","+lng+"&navigate=yes");
 				//var link = ("http://maps.google.com/?daddr='+zoomedEvents[i][0]+','+zoomedEvents[i][1]+'target=_blank");
 
-				console.log(link);
-
-				//markerNames[i].bringToFront();
-
 				redMarker(this);
-
-				
-
-				//$('#navInner').attr("href", "#");
 
 				$('#navInner').attr("href", link);
 
@@ -899,39 +751,23 @@ function drawMarkers() {
 
 				destLat = this._latlng.lat;
 
-				console.log(this._latlng.lat);
-
-				console.log(destLat);
-
 				destLng = this._latlng.lng;
 
 				dest = String(destLng)+","+String(destLat);
 
-
 				setDirs(origin, dest);
-
-				//setTimeout(setDirs(origin, dest), 500);
-
-				
+			
 				setTimeout(function() {
 
 				var routeDeets = $('.mapbox-directions-route-active').children().eq(2).html();
 
-    			console.log(routeDeets);
-
     			var eta = routeDeets.split(",")[1];
 
-    			console.log(eta);
-
-    			var infoList = "<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,36)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>";
+    			var infoList = "<li>"+zoomedEvents[i][2]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,28)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>";
 
     			$('#eventInfoList').html(infoList);
 
-    			console.log(infoList);
-
 				}, 400);
-				
-
 
 			});
 
@@ -941,23 +777,14 @@ function drawMarkers() {
 	}
 };
 
+function clickMarker(i) {
 
-//var clusterMarkers = new L.MarkerClusterGroup();
-
-//map.addLayer(clusterMarkers);
-
-function drawCluster() {
-
-	for (var i=0; i < eventCoords.length; i++) {
-
-		var marker = new L.marker([eventCoords[i][0], eventCoords[i][1]]);
-
-		clusterMarkers.addLayer(marker);
-
-	}
 
 };
 
+
+//checkRad checks to see if current driver location is within
+//specified radius of destination
 function checkRad(currentLocation, destination) {
 
 	var rad = .2;
@@ -974,9 +801,8 @@ function checkRad(currentLocation, destination) {
 
 };
 
-//drawCluster();
 
-
+//"now" button handler
 $('#reset').click(function() {
 
 	setDefault();
@@ -985,66 +811,29 @@ $('#reset').click(function() {
 
 	setDirs(origin, '');
 
-    //map.setView(center, 12)
-
-});
-
-$('#eventsArrowLeft').click(function() {
-
-	if (markersIndex > 0) {
-
-		console.log('left arrow clicked! markers index = ', markersIndex);
-
-		markersIndex -= 1;
-
-		drawMarkerList();
-
-	}
 });
 
 
-$('#eventsArrowRight').click(function() {
-
-	if (markersIndex < markersPages.length - 1) {
-
-		console.log('right arrow clicked! markers index = ', markersIndex);
-
-		markersIndex += 1;
-
-		drawMarkerList();
-
-	}
-});
-
-drawMarkers();
-
+//"markers" menu nav button handler
 $('#markers').click(clickMarkerButton);
 
+
+//clickMarkerButton turns markers on/off, default is on
 function clickMarkerButton() {
 
 	markersIndex = 0;
 
 	if (markerSwitch == false) {
 
-		//getData();
-
 		markerSwitch = true;
 
 		fenceEvents();
 
-		//map.addLayer(eventMarkers);
-
-		console.log("Marker length = ", document.getElementsByClassName('.leaflet-marker-icon').length);
-
 	} else if (markerSwitch == true) {
-
-		console.log(eventMarkers);
 
 		eventMarkers.clearLayers();
 
 		var x = document.getElementsByClassName('.leaflet-marker-icon');
-
-		console.log("Marker length = ", x.length);
 
 		$('#nav').css({"display": "none"});
 
@@ -1054,20 +843,19 @@ function clickMarkerButton() {
 
 		setDirs(origin, '');
 
-	}	
+	}
 };
 
+
+//ui time slider handler
 $("#selectedTime").change(changeTime);
 
+
+//daynavcontainer left & right arrow handler
 $(".daynavcontainer").click(changeDay);
 
 
-
-
-var trackingCenter = [];
-
-var timer;
-
+//navigation button handler
 $("#nav").on('click', function() {
 
 	window.open(link);
@@ -1077,10 +865,6 @@ $("#nav").on('click', function() {
 	getLocation();
 	
 	end_lat = trackingCenter[0];
-
-	console.log(trackingCenter[0]);
-
-	console.log(end_lat);
 
 	end_long = trackingCenter[1];
 
@@ -1114,11 +898,9 @@ $("#nav").on('click', function() {
 
 });
 
-//NEED GEOFENCING LOGIC TO AUTO-START THE 'WAITING FOR FARE' STAGE
 
+//startFareButton handler
 $("#startFareButton").on('click', function() {
-
-	//window.clearInterval(timer);
 
 	getLocation();
 
@@ -1136,8 +918,6 @@ $("#startFareButton").on('click', function() {
 
 		start_lat = trackingCenter[0];
 
-		console.log(start_lat);
-
 		start_long = trackingCenter[1];
 
 		driveType = driveTypes[2];
@@ -1145,7 +925,6 @@ $("#startFareButton").on('click', function() {
 		$("#startFareButton").css({"visibility": "hidden"});
 
 	}, 1500);
-
 
 	$("#cancelFareButton").css({"visibility": "hidden"});
 
@@ -1160,6 +939,8 @@ $("#startFareButton").on('click', function() {
 });
 
 
+
+//cancelFareButton handler
 $("#cancelFareButton").on('click', function() {
 
 	driveType = driveTypes[3];
@@ -1167,10 +948,6 @@ $("#cancelFareButton").on('click', function() {
 	getLocation();
 	
 	end_lat = trackingCenter[0];
-
-	console.log(trackingCenter[0]);
-
-	console.log(end_lat);
 
 	end_long = trackingCenter[1];
 
@@ -1190,8 +967,6 @@ $("#cancelFareButton").on('click', function() {
 
 	}, 1500);
 
-
-
 	$('#farePanel').animate({top: "4000px"}, 7000, "linear");
 
 	window.clearInterval(timer);
@@ -1199,6 +974,7 @@ $("#cancelFareButton").on('click', function() {
 });
 
 
+//stopFareButton handler
 $("#stopFareButton").on('click', function() {
 
 	$("#stopFareButton").css({"visibility": "hidden"});
@@ -1219,12 +995,10 @@ $("#stopFareButton").on('click', function() {
 
 	$("#investmentText").html("Track your data and make Swoop better");
 
-	//$("#farePanel").css({"opacity": "1.0"});
-
 });
 
-var fareText = 12;
 
+//serviceSelect drop-down handler
 $("#serviceSelect").change(function() {
 
 	service = $("#serviceSelect").val();
@@ -1236,6 +1010,7 @@ $("#serviceSelect").change(function() {
 });
 
 
+//serviceSkipButton handler
 $("#serviceSkipButton").on('click', function() {
 
 	advanceServiceSelect();
@@ -1244,6 +1019,9 @@ $("#serviceSkipButton").on('click', function() {
 
 });
 
+
+//advanceServiceSelect moves from the service-selection screen to
+//the fare input screen
 function advanceServiceSelect() {
 
 	$('#serviceSelect').animate({opacity: "0"}, 100, "swing");
@@ -1293,7 +1071,7 @@ function advanceServiceSelect() {
 }
 
 
-
+//fareMinus handler
 $("#fareMinus").on('click', function() {
 
 	if (fareText > 0) {
@@ -1303,9 +1081,10 @@ $("#fareMinus").on('click', function() {
 		$("#fareText").html("$"+String(fareText));
 
 	}
-
 });
 
+
+//farePlus handler
 $("#farePlus").on('click', function() {
 
 	fareText += 1;
@@ -1315,33 +1094,24 @@ $("#farePlus").on('click', function() {
 });
 
 
+//writeRideData sends fare data to flask, which writes to the database
 function writeRideData() {
-
-	console.log(service);
 
 	$.getJSON('/_writeRideData', {
 
 		driverid: JSON.stringify(driverid),
-
 		start_datetime: JSON.stringify(start_datetime),
-
 		end_datetime: JSON.stringify(end_datetime),
-
 		start_lat: JSON.stringify(start_lat),
 		start_long: JSON.stringify(start_long),
-
 		end_lat: JSON.stringify(end_lat),
 		end_long: JSON.stringify(end_long),
-
 		//one of the four cycles
 		driveType: JSON.stringify(driveType),
-
 		//if during fare cycle
 		service: JSON.stringify(service),
-
 		//if during fare cycle
 		collected_fare: JSON.stringify(collected_fare)
-
 
 	}, function(data) {
 
@@ -1350,6 +1120,8 @@ function writeRideData() {
 
 };
 
+
+//endFare contains logic for when fare input screen is completed
 function endFare() {
 
 	getLocation();
@@ -1374,7 +1146,7 @@ function endFare() {
 
 	collected_fare = 0;
 
-	$("#completedFareText").html("Thank you!<br><br>Swoop");
+	$("#completedFareText").html("Thank you!<br><br><img id='swoopLogo' src='/static/css/swoop-logo.png'></img>");
 
 	$("#completedFareText").css({"top": "40%"});
 
@@ -1416,12 +1188,16 @@ function endFare() {
 
 };
 
+
+//acceptFare handler
 $("#acceptFare").on('click', function() {
 
 	endFare();
 
 });
 
+
+//fareSkip handler
 $("#fareSkip").on('click', function() {
 
 	fareText = 0;
@@ -1430,6 +1206,8 @@ $("#fareSkip").on('click', function() {
 
 });
 
+
+//fareBack handler
 $("#fareBack").on('click', function() {
 
 	$("#fareSkip").css({"visibility": "hidden"});
@@ -1479,53 +1257,22 @@ $("#fareBack").on('click', function() {
 });
 
 
-setDefault();
-
-
-var myLayer = L.mapbox.featureLayer().addTo(map);
-
-// This uses the HTML5 geolocation API, which is available on
-// most mobile browsers and modern browsers, but not in Internet Explorer
-//
-// See this chart of compatibility for details:
-// http://caniuse.com/#feat=geolocation
-
-function getLoc() {
-
-	if (!navigator.geolocation) {
-
-	    geolocate.innerHTML = 'Geolocation is not available';
-
-	} else {
-	 
-	        map.locate();
-
-	        console.log(map.locate());
-	}
-};
-
-//setTimeout(getLoc, 5000);
-
-// Once we've got a position, zoom and center the map
-// on it, and add a single marker.
-map.on('locationfound', drawGeolocation);
-
-
+//drawGeolocation draws driver's current location marker
 function drawGeolocation(e) {
-	
-	//function(e) {
-    //map.fitBounds(e.bounds);
 
     myLayer.setGeoJSON({
+
         type: 'Feature',
         geometry: {
+
             type: 'Point',
             coordinates: [e.latlng.lng, e.latlng.lat]
+
         },
         properties: {
         	
             'marker-color': '#5CD65C',
-            
+      
         }
     });
 
@@ -1541,16 +1288,4 @@ function drawGeolocation(e) {
 
 	map.setView(center, 10);
 
-	//setDirs(origin, dest);
-
 };
-
-// If the user chooses not to allow their location
-// to be shared, display an error message.
-map.on('locationerror', function() {
-    alert('Position could not be found!');
-});
-
-getLoc();
-
-//setInterval(getLoc, 3000);
