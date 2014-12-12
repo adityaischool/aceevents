@@ -4,6 +4,7 @@ import pprint
 import pymongo
 
 
+
 client = pymongo.MongoClient()
 
 db = client.evDexMaster
@@ -13,8 +14,23 @@ evDex = db.evDex
 print "TESTTTTT-------------", evDex
 
 
-def filterEvents(eventDate, eventEndTime):
+def filterEvents(region, eventDate, eventEndTime):
 	global db, client, evDex
+
+	if region == 'sf':
+
+		evDex = db.evDex
+
+	elif region == 'nyc':
+
+		evDex = db.evDexNyc
+
+	elif region == 'denver':
+		print "DENVER"
+		evDex = db.evDexDenver
+		
+
+	print evDex
 
 	print
 	print "TESTING -----NEW---- FILTER EVENTS FOR", eventDate

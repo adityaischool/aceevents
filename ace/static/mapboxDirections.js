@@ -1813,15 +1813,19 @@ var Layer = L.LayerGroup.extend({
     },
 
     _click: function(e) {
-        if (!this._directions.getOrigin()) {
-            this._directions.setOrigin(e.latlng);
-        } else if (!this._directions.getDestination()) {
-            this._directions.setDestination(e.latlng);
-        }
 
-        if (this._directions.queryable()) {
-            this._directions.query();
-        }
+        //UNCOMMENT BELOW TO REVERT TO ORIG MAPBOX DIRECTIONS
+        //SETTINGS USING MAP.CLICK TO SET ORIGIN & DESTINATION
+
+        //if (!this._directions.getOrigin()) {
+        //   this._directions.setOrigin(e.latlng);
+        //} else if (!this._directions.getDestination()) {
+        //    this._directions.setDestination(e.latlng);
+        //}
+
+        //if (this._directions.queryable()) {
+        //    this._directions.query();
+        //}
     },
 
     _mousemove: function(e) {

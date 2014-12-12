@@ -3,6 +3,7 @@ from flask import url_for
 from ace import app
 import gridCalculator
 import eventbrite2
+import eventFilter
 import uber
 import json
 from ace import authenticate,userController
@@ -115,13 +116,18 @@ def leaflet():
 
 @app.route('/_getEbData', methods=['GET', 'POST'])
 def getEbData():
+	region = json.loads(request.args.get('region'))
+	print region
 	params = json.loads(request.args.get('params'))
 	time = json.loads(request.args.get('time'))
 	#print "PARAMS-----------", params
 	#print "TIME-------------", time, type(time)
 	eventDate = params[0][:4]+params[0][5:7]+params[0][8:10]
 	#print "eventDate is:", eventDate
-	val = eventbrite2.filterEvents(eventDate, float(time))
+	
+	#val = eventbrite2.filterEvents(eventDate, float(time))
+	#val = eventFilter.filterEvents('nyc', eventDate, float(time))
+	val = eventFilter.filterEvents(region, eventDate, float(time))
 	return jsonify(val)
 
 @app.route('/analytics', methods=['GET', 'POST'])

@@ -1,4 +1,11 @@
-var center = [37.756631, -122.442222];
+//SF
+//var center = [37.756631, -122.442222];
+
+//NYC
+//var center = [40.6840531, -73.9859456];
+
+//DENVER
+var center = [39.730815, -104.986947];
 
 var map = L.map('map', {zoomControl: false}).setView(center, 12);
 
@@ -51,6 +58,12 @@ map.on('dragend', fenceEvents);
 
 
 //VARIABLE INITS
+var region = '';
+
+var regions = ['sf', 'nyc', 'denver']
+
+var regionCenters = {'sf': [37.756631, -122.442222], 'nyc': [40.6840531, -73.9859456], 'denver': [39.730815, -104.986947]}
+
 var directions = new L.mapbox.directions();
 
 var directionsLayer = new L.mapbox.directions.layer(directions)
@@ -642,6 +655,7 @@ function getData() {
 
 	$.getJSON('/_getEbData', {
 
+		region: JSON.stringify(region),
 		params: JSON.stringify(dateTime),
 		time: selectedTime
 
@@ -779,10 +793,6 @@ function drawMarkers() {
 	}
 };
 
-function clickMarker(i) {
-
-
-};
 
 
 //checkRad checks to see if current driver location is within
@@ -1289,5 +1299,42 @@ function drawGeolocation(e) {
 	console.log(center);
 
 	map.setView(center, 10);
+
+	var minDist = 99999999999999;
+
+	for (var i=0; i < regions.length; i++) {
+
+		var dist = checkRegion(center, regionCenters[regions[i]]);
+
+		if (dist < minDist) {
+
+			minDist = dist;
+
+			region = regions[i];
+
+			region = regions[2];
+
+		}
+	}
+};
+
+
+//checkRegion returns distance between driver geolocation and
+//given region center
+function checkRegion(currentLocation, regionCenter) {
+
+	var theta1 = currentLocation[0] * (Math.PI / 180);
+
+	var theta2 = regionCenter[0]* (Math.PI / 180);
+
+	var deltaLambda = (regionCenter[1] - currentLocation[1])* (Math.PI / 180);
+	
+	var r = 6371;
+
+	var d = Math.acos(Math.sin(theta1) * Math.sin(theta2) +
+			Math.cos(theta1) * Math.cos(theta2) * Math.cos(deltaLambda)) * r
+
+	//console.log(d);
+	return d;
 
 };

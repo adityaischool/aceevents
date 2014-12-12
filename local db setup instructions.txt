@@ -1,0 +1,20 @@
+MongoDB Setup:
+
+
+paste these into the cmd line:
+
+cd c:\Program Files\MongoDB 2.6 Standard\bin
+
+mongod --dbpath "c:/Users/Alex/Documents/newace/ace/dbase/data"
+
+
+
+
+Local Server Setup:
+
+
+for switching to directory in shell:
+
+cd c:/Users/Alex/Documents/newace
+
+python run.py

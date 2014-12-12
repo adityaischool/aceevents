@@ -9,19 +9,18 @@ class Payload(object):
     def __init__(self, j):
         self.__dict__ = json.loads(j)
 
-today = 20141021
-day = [today, today+1, today+2, today+3, today+4, today+5, today+6]
+
 client = pymongo.MongoClient()
 db = client.evDexMaster
 evDex = db.evDex
 #print "TESTTTTT-------------", evDex
+
 def refreshEvents(db):
-	evDex = db
+
 	if db.evDex:
 		db.evDex.remove()
-	centerCoords = []
-	centerCoords = gridCalculator.main()
-	grids = {}
+
+	evDex = db.evDex
 
 	#OAKLAND CENTERPOINT
 	x = '37.800264'
@@ -32,6 +31,7 @@ def refreshEvents(db):
 	#y = '-122.4423225'
 
 	rad = '20'
+
 	noEndCount = 0
 	request = Request('https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km')
 	obj1=''
@@ -57,14 +57,14 @@ def refreshEvents(db):
 	for page in range(1, int(pages) + 1):
 		request = Request('https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km&page='+str(page))
 		obj1=''
-		#print "000000000000000000000000000000000000000",'https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km&page='+str(page)
+		print
+		print "Processing page", page, "of", pages, "total pages of results"
+		print "000000000000000000000000000000000000000",'https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km&page='+str(page)
 		#print  request
 		try:
 			response = urlopen(request)
 			kittens = response.read()
 			obj1=Payload(kittens)
-			print
-			print "Processing page", page, "of", pages, "total pages of results"
 			#print " ---- PAYLOAD -------------- ",str(obj1)
 			#print "-------------------------OBJ LENGTH-------------------------------",len(obj1.events)
 			#print kittens[559:1000]
@@ -76,6 +76,24 @@ def refreshEvents(db):
 			tempDate = 0
 			date = ''
 			end = 0
+
+			print
+			#pprint.pprint(obj1.events[i])
+
+			try:
+				category = obj1.events[i]['category']['name']
+				print "CATEGORY =", category
+			except:
+				category = "None"
+				print "NO CATEGORY!"
+
+			try:
+				eventType = obj1.events[i]['format']['short_name']
+				print "EVENT TYPE =", eventType
+			except:
+				eventType = "None"
+				print "NO EVENT TYPE!"
+
 			name = obj1.events[i]['name']['html']
 			capacity = obj1.events[i]['capacity']
 			venue = obj1.events[i]['venue']['name']
@@ -87,6 +105,9 @@ def refreshEvents(db):
 			except:
 				lat = obj1.events[i]['venue']['location']['latitude']
 				lng = obj1.events[i]['venue']['location']['longitude']
+			
+			print "LAT =", lat, "LONG =", lng
+
 			try:
 
 				tempDate = obj1.events[i]['start']['local'][:4] + obj1.events[i]['start']['local'][5:7] + obj1.events[i]['start']['local'][8:10]
@@ -103,6 +124,8 @@ def refreshEvents(db):
 				end = 'NO END TIME!!'
 				noEndCount += 1
 
+			print 'DATE =', date, "TIME =", end
+
 			#source, start time, price, ebID
 
 			event = {"name": name,
@@ -114,7 +137,9 @@ def refreshEvents(db):
 						"lng": lng,
 						"date": date,
 						"startTime": start,
-						"endTime": end}
+						"endTime": end,
+						"category": category,
+						"eventType": eventType}
 
 			if event['ID'] not in eventIDs:
 				eventList.append(event)
@@ -128,71 +153,8 @@ def refreshEvents(db):
 		evDex.insert(event)
 
 
-	#print db.collection_names()
+	print db.collection_names()
 
-
-
-	#print evDex.find_one()
-	#print db.collectionName.find_one()
-
-
-
-
-def filterEvents(eventDate, eventEndTime):
-	global db, client, evDex
-
-	print
-	print "TESTING FILTER EVENTS FOR", eventDate
-	print
-
-	result = {}
-
-	eventList = []
-
-	grids = 16
-
-	capacityTotal = 0
-
-	print "EVENT END TIME!", eventEndTime
-	endTimeHigh = eventEndTime + .50
-	endTimeLow = eventEndTime - .50
-
-	print "endTimeHigh", endTimeHigh
-	print "endTimeLow", endTimeLow
-
-	tempEvent = {}
-
-	#print "EVENTS FOR GRID #", i
-	
-	for event in evDex.find({"date": eventDate, "endTime": {'$lte': endTimeHigh, '$gte': endTimeLow}}).sort("capacity", pymongo.DESCENDING):
-	#for event in evDex.find({"date": eventDate}):
-		tempEvent = {}
-
-		tempEvent['name'] = event['name']
-		tempEvent['capacity'] = event['capacity']
-		tempEvent['venue'] = event['venue']
-		tempEvent['lat'] = event['lat']
-		tempEvent['lng'] = event['lng']
-		tempEvent['date'] = event['date']
-		tempEvent['endTime'] = event['endTime']
-
-		eventList.append(tempEvent)
-
-		#print "TEMP EVENT=", tempEvent
-
-		#print "individual mongo events are type:", type(event)
-
-	result[0] = [eventList]
-
-	pprint.pprint(result)
-
-	#resultSorted = result.sort("capacity", 1)
-
-	#print resultSorted
-
-	#print "RESULT: ", type(result)
-	
-	return result
 
 
 def eventStats():
@@ -206,9 +168,6 @@ def eventStats():
 
 
 if __name__ == '__main__':
-	refreshEvents(evDex)
-
-	#filterEvents('20141031', 20.0)
-	#filterEvents("20141031", 20.0)
+	refreshEvents(db)
 
 	eventStats()
