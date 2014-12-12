@@ -1,11 +1,11 @@
 //SF
-//var center = [37.756631, -122.442222];
+var center = [37.756631, -122.442222];
 
 //NYC
 //var center = [40.6840531, -73.9859456];
 
 //DENVER
-var center = [39.730815, -104.986947];
+//var center = [39.730815, -104.986947];
 
 var map = L.map('map', {zoomControl: false}).setView(center, 12);
 
@@ -353,7 +353,7 @@ function setDefault() {
 
 	selectedMarker = [];
 
-	map.setView(center, 10);
+	map.setView(center, 12);
 
 	var x = new Date();
 	
@@ -409,7 +409,7 @@ function setDefault() {
 		ampm = 'pm';
 	}
 
-	if (x.getHours() % 12 == 0) {
+	if (x.getHours() % 12 === 0) {
 
 		hours = '12';
 
@@ -444,11 +444,11 @@ function changeTime() {
 
 	var min = '';
 
-	if (x % 2 == 1) {
+	if (x % 2 === 1) {
 
 		min = '30';
 
-	} else if (x % 2 == 0) {
+	} else if (x % 2 === 0) {
 
 		min = '00';
 
@@ -468,9 +468,9 @@ function changeTime() {
 
 	var hours = '';
 
-	if (x == 0 || x == 1 ||
-		x == 24 ||x == 25 ||
-		x == 48) {
+	if (x === 0 || x === 1 ||
+		x === 24 ||x === 25 ||
+		x === 48) {
 
 		hours = '12';
 
@@ -501,13 +501,13 @@ function changeDay() {
 	
 	var plusMinus = 0;
 
-	if (this.children[0].id == 'rightArrow') {
+	if (this.children[0].id === 'rightArrow') {
 
 		plusMinus = 1;
 
 		dayCounter += 1;
 
-	} else if (this.children[0].id == 'leftArrow' && dayCounter > 0) {
+	} else if (this.children[0].id === 'leftArrow' && dayCounter > 0) {
 
 		plusMinus = (-1);
 
@@ -588,7 +588,7 @@ function fenceEvents() {
 			};
 		}
 
-	} else if (eventCoords.length === 0) {
+	} else if (eventCoords.length ==== 0) {
 
 		$('#eventInfoList').html("<br><li>No events at this time!</li>");
 
@@ -596,7 +596,7 @@ function fenceEvents() {
 
 	//console.log(zoomedEvents);
 
-	if (markerSwitch == true) {
+	if (markerSwitch === true) {
 
 		drawMarkers();
 
@@ -739,8 +739,8 @@ function drawMarkers() {
 			markerNames[i]._leaflet_id = i + 1;
 
 			if ((selectedMarker.length > 0) &&
-				(selectedMarker[0]._latlng.lat == markerNames[i]._latlng.lat) &&
-				(selectedMarker[0]._latlng.lng == markerNames[i]._latlng.lng)) {
+				(selectedMarker[0]._latlng.lat === markerNames[i]._latlng.lat) &&
+				(selectedMarker[0]._latlng.lng === markerNames[i]._latlng.lng)) {
 
 				redMarker(markerNames[i]);
 
@@ -748,7 +748,7 @@ function drawMarkers() {
 
 			markerNames[i].on("click", function() {
 
-				console.log(markerNames[i]);
+				//console.log(markerNames[i]);
 
 				var i = this._leaflet_id - 1;
 
@@ -835,13 +835,13 @@ function clickMarkerButton() {
 
 	markersIndex = 0;
 
-	if (markerSwitch == false) {
+	if (markerSwitch === false) {
 
 		markerSwitch = true;
 
 		fenceEvents();
 
-	} else if (markerSwitch == true) {
+	} else if (markerSwitch === true) {
 
 		eventMarkers.clearLayers();
 
@@ -1294,13 +1294,15 @@ function drawGeolocation(e) {
 
 	origin = String(origLng)+","+String(origLat);
 
+	//COMMENT OR UNCOMMENT TO SET MAP CENTER BASED ON GEOLOCATION
 	center = [origLat, origLng];
 
 	console.log(center);
 
-	map.setView(center, 10);
+	map.setView(center, 12);
 
 	var minDist = 99999999999999;
+
 
 	for (var i=0; i < regions.length; i++) {
 
@@ -1312,15 +1314,18 @@ function drawGeolocation(e) {
 
 			region = regions[i];
 
-			region = regions[2];
+			//UNCOMMENT TO HARD-CODE A PARTICULAR REGION (FOR TESTING)
+			//region = regions[2];
 
 		}
 	}
+
+	console.log(region);
 };
 
 
 //checkRegion returns distance between driver geolocation and
-//given region center
+//given region center, used for matching nearest region of event data
 function checkRegion(currentLocation, regionCenter) {
 
 	var theta1 = currentLocation[0] * (Math.PI / 180);
