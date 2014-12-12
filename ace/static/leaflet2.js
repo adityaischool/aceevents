@@ -588,7 +588,7 @@ function fenceEvents() {
 			};
 		}
 
-	} else if (eventCoords.length ==== 0) {
+	} else if (eventCoords.length == 0) {
 
 		$('#eventInfoList').html("<br><li>No events at this time!</li>");
 
@@ -596,7 +596,7 @@ function fenceEvents() {
 
 	//console.log(zoomedEvents);
 
-	if (markerSwitch === true) {
+	if (markerSwitch == true) {
 
 		drawMarkers();
 

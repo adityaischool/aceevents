@@ -1,4 +1,4 @@
-from flask import render_template,request,session,redirect,jsonify
+from flask import render_template,request,session,redirect,jsonify,Response
 from flask import url_for
 from ace import app
 import gridCalculator
@@ -137,19 +137,27 @@ def analytics():
 
 @app.route('/_getAnalytics', methods=['GET', 'POST'])
 def _getAnalytics():
-	driverID = json.loads(request.args.get('driverID'))
-	time = json.loads(request.args.get('time'))
-	timeperiod = json.loads(request.args.get('timeperiod'))
-	val = travelManager.GetRides(driverid,time,timeperiod)
-	return jsonify(val)
+	print "Inside analytics"
+	# driverID = json.loads(request.args.get('driverID'))
+	# time = json.loads(request.args.get('time'))
+	# timeperiod = json.loads(request.args.get('timeperiod'))
+	driverID = ""
+	time = ""
+	timeperiod = ""
+	
+	val = travelManager.GetRides(driverID,time,timeperiod)
+	print ""
+	print type(val), "<-TYPE"
+	print "ACTUAL VALUE",val
+	print "JSON VALUE",json.dumps(val)
+	# return json.dumps(val)
+	return Response(json.dumps(val),mimetype='application/json')
 
 @app.route('/_writeRideData', methods=['GET', 'POST'])
 def writeRideData():
 
 
 	driverData = {}
-
-	print
 
 	print "------Completed Segment Data------"
 
@@ -204,3 +212,4 @@ def writeRideData():
 	
 
 	return jsonify({"status": "received"})
+
