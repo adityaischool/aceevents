@@ -22,9 +22,16 @@ def refreshEvents(db):
 	centerCoords = []
 	centerCoords = gridCalculator.main()
 	grids = {}
-	x = '37.756603'
-	y = '-122.4423225'
-	rad = '6'
+
+	#OAKLAND CENTERPOINT
+	x = '37.800264'
+	y = '-122.266301'
+
+	#SF CENTERPOINT
+	#x = '37.756603'
+	#y = '-122.4423225'
+
+	rad = '20'
 	noEndCount = 0
 	request = Request('https://www.eventbriteapi.com/v3/events/search/?token=BKKRDKVUVRC5WG4HAVLT&location.latitude='+x+'&location.longitude='+y+'&location.within='+rad+'km')
 	obj1=''
@@ -56,6 +63,8 @@ def refreshEvents(db):
 			response = urlopen(request)
 			kittens = response.read()
 			obj1=Payload(kittens)
+			print
+			print "Processing page", page, "of", pages, "total pages of results"
 			#print " ---- PAYLOAD -------------- ",str(obj1)
 			#print "-------------------------OBJ LENGTH-------------------------------",len(obj1.events)
 			#print kittens[559:1000]
@@ -81,10 +90,10 @@ def refreshEvents(db):
 			try:
 
 				tempDate = obj1.events[i]['start']['local'][:4] + obj1.events[i]['start']['local'][5:7] + obj1.events[i]['start']['local'][8:10]
-				print "TEMPDATE =", tempDate
+				#print "TEMPDATE =", tempDate
 
 				tempTime = float(obj1.events[i]['end']['local'][11:13]) + float(obj1.events[i]['end']['local'][14:16])/60
-				print "TEMPTIME =", round(tempTime, 4)
+				#print "TEMPTIME =", round(tempTime, 4)
 
 				end = tempTime
 				date = tempDate
@@ -93,8 +102,6 @@ def refreshEvents(db):
 				print "NO END TIME!!"
 				end = 'NO END TIME!!'
 				noEndCount += 1
-
-			#event = Event(name, capacity, venue, lat, lng, date, end)
 
 			#source, start time, price, ebID
 

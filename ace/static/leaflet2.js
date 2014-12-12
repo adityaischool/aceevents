@@ -734,6 +734,8 @@ function drawMarkers() {
 
 			markerNames[i].on("click", function() {
 
+				console.log(markerNames[i]);
+
 				var i = this._leaflet_id - 1;
 
 				var lat = zoomedEvents[i][0];
@@ -847,7 +849,7 @@ function clickMarkerButton() {
 };
 
 
-//ui time slider handler
+//time slider handler
 $("#selectedTime").change(changeTime);
 
 

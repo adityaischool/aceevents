@@ -33,7 +33,8 @@ body {
 
 .navbar-brand {
 	position: absolute;
-	margin-left: 30%;
+	padding: 8px;
+	margin-left: 35%;
 }
 
 /* navbar-inverse navbar-fixed-top */
@@ -148,7 +149,7 @@ body {
 	top: 5%;
 	color: #ffffff;
 	border: 0px solid white;
-	font-size: 12px;
+	font-size: 14px;
 	background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
 	background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
 	background: linear-gradient(180deg, #29A3CC, #2593B8);
@@ -184,6 +185,7 @@ body {
 	margin-bottom: 0%;
 	opacity: 99999999;
 	color: white;
+	font-weight: 200;
 }
 
 #nav {
@@ -202,7 +204,7 @@ body {
 }
 
 #reset, #nav {
-	box-shadow: 0px 3px 4px 2px #363636;
+	box-shadow: 0px 3px 10px 2px #262626;
 }
 
 #navimage {
@@ -244,9 +246,7 @@ body {
 	border-radius: 50%;
 	font-weight: 200;
 	text-align: center;
-
 	opacity: .9;
-
 	background: #9bb6e8;
 }
 
@@ -259,7 +259,7 @@ body {
 	padding: 0px;
 	margin: 0px;
 	width: 60%;
-	height: 65px;
+	height: 55px;
 	left: 20%;
 	top: 3%;
 	list-style: none;
@@ -267,6 +267,7 @@ body {
 	opacity: 1.0;
 	z-index: 99999999;
 	font-size: 12px;
+	font-weight: 200;
 	overflow: scroll;
 	border-bottom: 1px solid #393939;
 }
@@ -378,17 +379,16 @@ input[type="range"]::-webkit-slider-thumb {
 	position: relative;
 	top: 0px;
 	z-index: 1;
-	width: 45px;		
-	height: 45px;
+	width: 40px;		
+	height: 40px;
 	-webkit-border-radius: 50%;
 	-moz-border-radius: 50%;
 	border-radius: 50%;
 	cursor: pointer;
 
-	background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
-		background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
-		background: linear-gradient(180deg, #29A3CC, #2593B8);
-
+	background: -webkit-linear-gradient(300deg, #29A3CC, #2593B8);
+	background: -moz-linear-gradient(300deg, #29A3CC, #2593B8);
+	background: linear-gradient(300deg, #29A3CC, #2593B8);
 	}
 
 #inputs, #errors {
@@ -666,8 +666,6 @@ input[type="range"]::-webkit-slider-thumb {
 
 @media only screen and (max-height: 500px) {
 
-
-
 	input[type="range"]::-webkit-slider-thumb {
 		width: 35px;		
 		height: 35px;
@@ -685,8 +683,8 @@ input[type="range"]::-webkit-slider-thumb {
 	#eventInfoList {
 		left: 50%;
 		width: 48%;
+		height: 90%;
 		font-size: 14px;
-
 	}
 
 	#timenavtime {
@@ -798,15 +796,16 @@ input[type="range"]::-webkit-slider-thumb {
 
 	#reset, #nav {
 		top: -60px;
-		box-shadow: 0px 3px 4px 2px #464646;
+		box-shadow: 0px 3px 10px 2px #363636;
 	}
 
 	#eventInfoList {
 		left: 52%;
 		top: 6%;
-		width: 50%;
-		height: auto;
+		width: 48%;
+		height: 90%;
 		overflow: hidden;
+		border: none;
 	}
 
 	#slider {
@@ -822,14 +821,63 @@ input[type="range"]::-webkit-slider-thumb {
 
 }
 
-@media only screen and (orientation: landscape) and (min-height: 400px) {
+@media only screen and (orientation: landscape) {
 
 	#timenavtime {
 		margin-left: 12%;
 		margin-top: -10%;
 		font-size: 1.5em;
 	}
+}
+
+@media only screen and (orientation: landscape) and (max-height: 440px) {
+
+	#fareBack {
+		left: 15%;
+		margin-left: -50px;
+		top: 80%;
+		width: 100px;
+	}
+
+	#serviceSkipButton {
+		margin-left: -50px;
+		width: 100px;
+		top: 80%;
+	}
+
+	#fareSkip {
+		left: 85%;
+		margin-left: -50px;
+		top: 80%;
+		width: 100px;
+	}
+
+	#acceptFare {
+		top: 80%;
+	}
+
+	#fareInput {
+		top: 55%;
+	}
+}
+
+@media only screen and (orientation: landscape) and (min-height: 525px) {
+
+	
 
 }
 
+@media only screen and (orientation: landscape) and (min-width: 600px) {
+
+	#timenavtime {
+		margin-left: 12%;
+		margin-top: -5%;
+		font-size: 1.5em;
+	}
+
+	#slider .bar {
+		top: 40px;
+	}
+
+}
 				
