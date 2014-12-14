@@ -15,10 +15,9 @@ body {
 
 	visibility: visible;
 	position: absolute;
-	left: 0;
-	top: 50px;
+	left: 20%;
+	top: 20%;
 	width: 100%;
-	height: 100%;
 }
 
 .navbar {
