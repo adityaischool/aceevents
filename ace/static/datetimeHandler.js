@@ -69,7 +69,7 @@ function setDatetimeDefault() {
 	dateTime = getDayNow();
 	// getDayNow();
 	// getTimeNow();
-	document.getElementById("selectedTime").value = x.getHours();
+	document.getElementById("selectedTime").value = x.getHours() + (x.getMinutes()/60);
 	document.getElementById('dayofweek').innerHTML = (days[n]+'&nbsp;'+dateMonthString);
 	if (x.getMinutes() < 10) {
 		minutes = '0' + String(x.getMinutes());
@@ -82,11 +82,13 @@ function setDatetimeDefault() {
 		ampm = 'pm';
 	}
 
-	if (x.getHours() % 12 === 0) {
-		hours = '12';
+
+	if ((Math.floor(selectedTime) % 12) === 0) {
+		hours = 12;
 	} else {
 		hours = String(Math.floor(selectedTime) % 12);
 	}
+
 	var prettyTime = "Driver history from&nbsp;" + hours + ":" + minutes + " " + ampm;
 	document.getElementById('timenavtime').innerHTML = (prettyTime);
 	getData();
@@ -136,7 +138,7 @@ function changeDay() {
 	if (this.children[0].id === 'rightArrow') {
 		plusMinus = 1;
 		dayCounter += 1;
-	} else if (this.children[0].id === 'leftArrow' && dayCounter > 0) {
+	} else if (this.children[0].id === 'leftArrow') {
 		plusMinus = (-1);
 		dayCounter -= 1;
 	}
@@ -166,6 +168,8 @@ $(".daynavcontainer").click(changeDay);
 
 
 $(document).ready(function() {
+
+	getTimeNow();
 
 	setDatetimeDefault();
 
