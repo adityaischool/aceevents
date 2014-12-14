@@ -116,7 +116,7 @@ var grid = new L.featureGroup();
 
 var heatCoords = [];
 
-var heat = L.heatLayer(heatCoords, {opacity: 0.2, radius: 13, blur: 15, max: 1, gradient:{.1: 'yellow', .2: 'orange', .3: '#e22500', .5: '#e21a1a', .8: 'red'}}).addTo(map);
+var heat = L.heatLayer(heatCoords, {opacity: 0.3, radius: 14, blur: 24, max: 1, gradient:{.1: '#FFCC00', .2: '#E62E00', .3: '#e22500', .5: '#e21a1a', .8: '#ff0000'}}).addTo(map);
 
 var eventMarkers = new L.featureGroup();
 
@@ -260,13 +260,13 @@ function showPing(position) {
 
 	pingCenter = [position.coords.latitude, position.coords.longitude];
 
-	var testPing = [selectedMarker[0]._latlng.lat+.0001, selectedMarker[0]._latlng.lng-.0001];
+	//var testPing = [selectedMarker[0]._latlng.lat+.0001, selectedMarker[0]._latlng.lng-.0001];
 
 	console.log("pingCenter is", pingCenter);
 
 	console.log("destination lat lng is ", selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng);
 
-	if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng])) {
+	if (checkRad(pingCenter,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng])) {
 
 		console.log('current ping within 100 meters of destination!');
 
@@ -302,7 +302,7 @@ function showPing(position) {
 
 	}
 
-	if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng])) {
+	/*if (checkRad(testPing,[selectedMarker[0]._latlng.lat, selectedMarker[0]._latlng.lng])) {
 
 		console.log('test ping within 100 meters of destination!');
 
@@ -310,7 +310,7 @@ function showPing(position) {
 
 		console.log('test ping outside of 100 meter radius of destination!');
 
-	}
+	}*/
 };
 
 
@@ -588,7 +588,7 @@ function fenceEvents() {
 			};
 		}
 
-	} else if (eventCoords.length ==== 0) {
+	} else if (eventCoords.length === 0) {
 
 		$('#eventInfoList').html("<br><li>No events at this time!</li>");
 
