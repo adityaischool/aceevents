@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 #initializing connection to mongo and to specific database
 client = pymongo.MongoClient()
 #set the db name
-db = client.test
+db = client.Evdex
 #set the collection name
 ridersdb = db.drives
 
@@ -58,8 +58,11 @@ def GetRides(driverID,time=0,time_period=0):
 		It accepts the driverID, time_period and time as parameters.
 	"""
 	#temporary hard coded values
-	driverID = "JohnD@example.com"
-	time = datetime(2014,11,29)
+	# driverID = "JohnD@example.com"
+	
+	timevalues = time.split();
+	time = datetime(int(timevalues[2]),int(timevalues[1]),int(timevalues[0]))
+	# time = datetime(2014,11,29)
 	time_period = "DAY"
 	# get start and end times based on the time period value sent aas a query
 	start_time, end_time = GetStartAndEndTime(time, time_period)

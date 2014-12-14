@@ -1,0 +1,21 @@
+#analyticsBody{
+	background-color: black;
+	overflow: hidden;
+	color: white;
+}
+
+#driverhistorytable{
+	/*border: solid;*/
+	border-spacing: 5px;
+	color: white;
+	background: #181818;
+	}
+
+#driverhistorytable th{
+	text-align: center;
+}
+
+
+#driverhistorytable td{
+	padding: 5px;
+}

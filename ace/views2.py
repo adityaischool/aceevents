@@ -132,18 +132,19 @@ def getEbData():
 
 @app.route('/analytics', methods=['GET', 'POST'])
 def analytics():
-	#ADITYA - PLEASE CHECK THIS
 	return render_template('analytics.html')
 
 @app.route('/_getAnalytics', methods=['GET', 'POST'])
 def _getAnalytics():
 	print "Inside analytics"
-	# driverID = json.loads(request.args.get('driverID'))
-	# time = json.loads(request.args.get('time'))
-	# timeperiod = json.loads(request.args.get('timeperiod'))
-	driverID = ""
-	time = ""
-	timeperiod = ""
+	time = json.loads(request.args.get('time'))
+	timeperiod = "DAY"
+	print "TIME VALUE =",time
+	print timeperiod
+	
+	driverID = "default@default.com"
+	# time = ""
+	# timeperiod = ""
 	
 	val = travelManager.GetRides(driverID,time,timeperiod)
 	print ""
@@ -205,11 +206,9 @@ def writeRideData():
 	driverData['collected_fare'] = collected_fare
 
 	print
-
 	print driverData
 
 	#travelManager.InsertDriverData(driverData)
-	
 
 	return jsonify({"status": "received"})
 
