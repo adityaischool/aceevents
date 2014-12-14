@@ -588,11 +588,7 @@ function fenceEvents() {
 			};
 		}
 
-<<<<<<< HEAD
 	} else if (eventCoords.length === 0) {
-=======
-	} else if (eventCoords.length == 0) {
->>>>>>> 187ba6fb3ded1dd464fb00267ea60fedd1fb6e15
 
 		$('#eventInfoList').html("<br><li>No events at this time!</li>");
 

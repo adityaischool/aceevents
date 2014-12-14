@@ -1,4 +1,4 @@
-from flask import render_template,request,session,redirect,jsonify
+from flask import render_template,request,session,redirect,jsonify,Response
 from flask import url_for
 from ace import app
 import gridCalculator
@@ -132,24 +132,33 @@ def getEbData():
 
 @app.route('/analytics', methods=['GET', 'POST'])
 def analytics():
-	#ADITYA - PLEASE CHECK THIS
 	return render_template('analytics.html')
 
 @app.route('/_getAnalytics', methods=['GET', 'POST'])
 def _getAnalytics():
-	driverID = json.loads(request.args.get('driverID'))
+	print "Inside analytics"
 	time = json.loads(request.args.get('time'))
-	timeperiod = json.loads(request.args.get('timeperiod'))
-	val = travelManager.GetRides(driverid,time,timeperiod)
-	return jsonify(val)
+	timeperiod = "DAY"
+	print "TIME VALUE =",time
+	print timeperiod
+	
+	driverID = "default@default.com"
+	# time = ""
+	# timeperiod = ""
+	
+	val = travelManager.GetRides(driverID,time,timeperiod)
+	print ""
+	print type(val), "<-TYPE"
+	print "ACTUAL VALUE",val
+	print "JSON VALUE",json.dumps(val)
+	# return json.dumps(val)
+	return Response(json.dumps(val),mimetype='application/json')
 
 @app.route('/_writeRideData', methods=['GET', 'POST'])
 def writeRideData():
 
 
 	driverData = {}
-
-	print
 
 	print "------Completed Segment Data------"
 
@@ -197,10 +206,9 @@ def writeRideData():
 	driverData['collected_fare'] = collected_fare
 
 	print
-
 	print driverData
 
 	#travelManager.InsertDriverData(driverData)
-	
 
 	return jsonify({"status": "received"})
+
