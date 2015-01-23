@@ -7,7 +7,7 @@ var center = [37.756631, -122.442222];
 //DENVER
 //var center = [39.730815, -104.986947];
 
-var map = L.map('map', {zoomControl: false}).setView(center, 12);
+var map = L.map('map', {zoomControl: false}).setView(center, 10);
 
 
 //mapbox access token
@@ -351,11 +351,13 @@ function setDefault() {
 
 	$("#nav").css({"display": "none"});
 
+	$('#reset').animate({left: "-20%"}, 400, "linear");
+
 	$('#ellipsis').css({"visibility": "hidden"});
 
 	selectedMarker = [];
 
-	map.setView(center, 12);
+	map.setView(center, 10);
 
 	var x = new Date();
 	
@@ -421,9 +423,11 @@ function setDefault() {
 
 	}
 
-	var prettyTime = "Events @&nbsp;" + hours + ":" + minutes + " " + ampm;
+	//var prettyTime = "Events @&nbsp;" + hours + ":" + minutes + " " + ampm;
 
-	document.getElementById('timenavtime').innerHTML = (prettyTime);
+	var prettyTime = hours + ":" + minutes + " " + ampm;
+
+	document.getElementById('toptime').innerHTML = (prettyTime);
 
 	getData();
 
@@ -438,11 +442,16 @@ function changeTime() {
 
 	selectedTime = $("#selectedTime").val();
 
-	//map.setView(center, 12)
+	//map.setView(center, 10)
 
 	selectedMarker = [];
 
 	eventCoords = [];
+
+	$('#reset').animate({left: "4%"}, 600, "swing");
+
+	$('#eventinfo').animate({top:"200%"}, 1500, "swing");
+	//$('#eventinfo').css({"height": "0%"});
 
 	var x = selectedTime * 2;
 
@@ -484,9 +493,11 @@ function changeTime() {
 
 	}
 
-	var prettyTime = "Events @&nbsp;" + hours + ":" + min + " " + ampm;
+	//var prettyTime = "Events @&nbsp;" + hours + ":" + min + " " + ampm;
 
-	document.getElementById('timenavtime').innerHTML = prettyTime;
+	var prettyTime = hours + ":" + min + " " + ampm;
+
+	document.getElementById('toptime').innerHTML = prettyTime;
 
 	getData();
 
@@ -502,6 +513,11 @@ function changeDay() {
 	dateTime = [];
 
 	eventCoords = [];
+
+	$('#reset').animate({left: "4%"}, 600, "swing");
+
+	$('#eventinfo').animate({top:"200%"}, 1500, "swing");
+	//$('#eventinfo').css({"height": "0%"});
 	
 	var plusMinus = 0;
 
@@ -614,6 +630,31 @@ function capValueToHex(value) {
 
 	if (cap >= 0 && cap < 50) {
 
+		return '#0f0f10';
+
+	} else if (cap >= 50 && cap < 100) {
+
+		return '#D5EB0D';
+
+	} else if (cap >= 100 && cap < 500) {
+
+		return '#D58A0D';
+
+	} else if (cap >=500 && cap < 1000) {
+
+		return '#D55B0D';
+
+	} else if (cap >= 1000) {
+
+		return '#D5000D';
+
+	}
+
+	/*
+	green palette
+
+	if (cap >= 0 && cap < 50) {
+
 		return '#272727';
 
 	} else if (cap >= 50 && cap < 100) {
@@ -632,7 +673,7 @@ function capValueToHex(value) {
 
 		return '#0bff00';
 
-	}
+	}*/
 
 
 	/*
@@ -779,6 +820,9 @@ function getData() {
 
 	$('#eventInfoList').html("");
 
+	$('#eventinfo').animate({top:"200%"}, 1500, "swing");
+	//$('#eventinfo').css({"height": "0%"});
+
 	$('#ellipsis').css({"visibility": "hidden"});
 
 	$("#nav").css({"display": "none"});
@@ -895,6 +939,9 @@ function drawMarkers() {
 
 				$('#nav').css({"display": "block"});
 
+				$('#eventinfo').animate({top:"75%"}, 1000, "swing");
+				$('#eventinfo').css({"height": "15%"});
+
 				destLat = this._latlng.lat;
 
 				destLng = this._latlng.lng;
@@ -912,17 +959,25 @@ function drawMarkers() {
     			console.log(zoomedEvents[i]);
     			console.log("event type: ", zoomedEvents[i][7]);
 
-    			var infoList = "<li>Type: "+zoomedEvents[i][7]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,28)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>";
+    			var eventType = "Type: "+zoomedEvents[i][7].slice(0, 28)+"<br>";
+    			var eventLocation = "@ "+zoomedEvents[i][4].slice(0, 28)+"<br>";
+    			var eventCapacity = zoomedEvents[i][3]+" ";
 
-    			
+    			$("#eventType").html(eventType);
+    			$("#eventLocation").html(eventLocation);
+    			$("#eventCapacity").html(eventCapacity);
+    			$("#eventEta").html(eta);
 
-    			$('#eventInfoList').html(infoList);
 
-    			if (checkOverflow(child)) {
+    			//var infoList = "<li>Type: "+zoomedEvents[i][7]+"</li><li>Location: "+zoomedEvents[i][4].slice(0,28)+"</li><li>Capacity: "+zoomedEvents[i][3]+" | ETA: "+eta+"</li>";
 
-					$('#ellipsis').css({"visibility":"visible"});    				
+    			//$('#eventInfoList').html(infoList);
 
-    			}
+    			//if (checkOverflow(child)) {
+
+				//	$('#ellipsis').css({"visibility":"visible"});    				
+
+    			//}
 
 				}, 400);
 
@@ -997,6 +1052,9 @@ $('#reset').click(function() {
 	$('#nav').css({"display": "none"});
 
 	setDirs(origin, '');
+
+	$('#eventinfo').animate({top:"200%"}, 1500, "swing");
+	//$('#eventinfo').css({"height": "0%"});
 
 });
 
@@ -1474,7 +1532,7 @@ function drawGeolocation(e) {
 
 	console.log(center);
 
-	map.setView(center, 12);
+	map.setView(center, 10);
 
 	var minDist = 99999999999999;
 

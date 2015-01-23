@@ -89,10 +89,10 @@ body {
 #leftArrow {
 	display: inline-block;
 	position: absolute;
-	top: 10%;
+	top: 12%;
 	left: 5%;
 	max-width: 20%;
-	max-height: 80%;
+	max-height: 100%;
 	opacity: 1;
 }
 
@@ -111,13 +111,28 @@ body {
 	opacity: 1;
 }
 
+#toptime {
+	position: absolute;
+	width: 80%;
+	left: 0;
+	margin-left: 10%;
+	margin-right: 10%;
+	top: 2em;
+	display: inline-block;
+	font-size: 1.4em;
+	text-align: center;
+	color: white;
+	font-weight: bold;
+	opacity: 1;
+}
+
 #rightArrow {
 	display: inline-block;
 	position: absolute;
-	top: 10%;
+	top: 12%;
 	left: 90%;
 	max-width: 20%;
-	max-height: 80%;
+	max-height: 100%;
 	opacity: 1;
 }
 
@@ -138,26 +153,94 @@ body {
 	width: 100%;
 	height: 100%;
 	left: 0;
+	overflow: hidden;
 }
 
 #reset{
 	position: absolute;
 	z-index: 99999;
-	left: 3%;
-	top: 5%;
+	left: -20%;
+	top: 7px;
+	width: 35px;
+	height: 35px;
 	color: #ffffff;
 	border: 0px solid white;
-	font-size: 14px;
+	font-size: 12px;
 	background: -webkit-linear-gradient(180deg, #29A3CC, #2593B8);
 	background: -moz-linear-gradient(180deg, #29A3CC, #2593B8);
 	background: linear-gradient(180deg, #29A3CC, #2593B8);
 }
 
+#eventinfo {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 0%;
+	top: 200%;
+	z-index: 9999;
+	background: #222222;
+	opacity: 1.0;
+	/*border: 2px solid #0f0f10;*/
+	border: none;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+	overflow: hidden;
+}
+
+.eventInfoText {
+	color: white;
+	font-size: 20px;
+	font-weight: 200;
+}
+
+.eventInfoTextLabel {
+	color: white;
+	font-size: 16px;
+	font-weight: 200;
+}
+
+#eventType, #eventLocation {
+	margin-left: 3%;
+	width: 80%;
+}
+
+#capacity {
+	margin-left: 3%;
+}
+
 #bottomcontainer {
 	position: absolute;
 	width: 100%;
-	height: 25%;
-	top: 75%;
+	height: 12%;
+	top: 88%;
+	overflow: hidden;
+}
+
+#tickmark1, #tickmark2, #tickmark3, #tickmark4, #tickmark5 {
+
+	position: absolute;
+	z-index: 99999999;
+	font-size: 1em;
+	color: white;
+	top: 60%;
+	left: 2%;
+}
+
+#tickmark2 {
+	left: 25%;
+}
+
+#tickmark3 {
+	left: 46%;
+}
+
+#tickmark4 {
+	left: 69.5%;
+}
+
+#tickmark5 {
+	left: 88%;
 }
 
 #bottombox {
@@ -165,11 +248,8 @@ body {
 	width: 100%;
 	height: 100%;
 	z-index: 10000;
-	background: #181818;
-}
-
-#daysbox, #bottombox {
-	opacity: .6;
+	background: #0f0f10;
+	opacity: 1.0;
 }
 
 #daysbox {
@@ -232,12 +312,12 @@ body {
 	border: none;
 	background: none;
 	left: 0;
-	top: 57%;
+	top: 0%;
 	width: 100%;
 }
 
 .button {
-	font-size: 10px;
+	font-size: 8px;
 	height: 50px;
 	width: 50px;
 	overflow: hidden;
@@ -399,10 +479,10 @@ a:visited {
 
 #slider .bar {
 	width: 94%;
-	height: 25px;
+	height: 20px;
 
 	position: relative;
-	top: 20px;
+	top: 6px;
 	left: 3%;
 	opacity: .9;	
 	
@@ -422,11 +502,11 @@ input[type="range"]::-webkit-slider-thumb {
 	position: relative;
 	top: 0px;
 	z-index: 1;
-	width: 40px;		
-	height: 40px;
-	-webkit-border-radius: 50%;
-	-moz-border-radius: 50%;
-	border-radius: 50%;
+	width: 30px;		
+	height: 35px;
+	-webkit-border-radius: 30%;
+	-moz-border-radius: 30%;
+	border-radius: 30%;
 	cursor: pointer;
 
 	background: -webkit-linear-gradient(300deg, #29A3CC, #2593B8);
@@ -803,7 +883,7 @@ input[type="range"]::-webkit-slider-thumb {
 		top: 10%;
 		left: 5%;
 		max-width: 20%;
-		max-height: 65%;
+		max-height: 100%;
 		opacity: 1;
 	}
 
@@ -828,7 +908,7 @@ input[type="range"]::-webkit-slider-thumb {
 		top: 10%;
 		left: 90%;
 		max-width: 20%;
-		max-height: 65%;
+		max-height: 100%;
 		opacity: 1;
 	}
 
